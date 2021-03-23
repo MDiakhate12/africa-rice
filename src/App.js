@@ -1,7 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { GlobalContext } from "./store/GlobalProvider";
+import { useContext } from "react";
 
 function App() {
+  const { speculationState, getAllSpeculation } = useContext(GlobalContext);
+
   return (
     <div className="App">
       <header className="App-header">
