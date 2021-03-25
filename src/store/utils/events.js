@@ -1,4 +1,4 @@
-const events = {
+export const events = {
   speculation: {
     create: 'createSpeculation',
     getAll: 'getAllSpeculations',
@@ -27,7 +27,13 @@ const events = {
     delete: 'deleteCommande',
     getOne: 'getOneCommande',
   },
-
+  client: {
+    create: 'createClient',
+    getAll: 'getAllClients',
+    update: 'updateClient',
+    delete: 'deleteClient',
+    getOne: 'getOneClient',
+  },
   zoneAgro: {
     create: 'createZoneAgro',
     getAll: 'getAllZoneAgros',
@@ -35,9 +41,58 @@ const events = {
     delete: 'deleteZoneAgro',
     getOne: 'getOneZoneAgro',
   },
+  contact: {
+    create: 'createContact',
+    getAll: 'getAllContacts',
+    update: 'updateContact',
+    delete: 'deleteContact',
+    getOne: 'getOneContact',
+  },
+  institution: {
+    create: 'createInstitution',
+    getAll: 'getAllInstitutions',
+    update: 'updateInstitution',
+    delete: 'deleteInstitution',
+    getOne: 'getOneInstitution',
+  },
+  localisation: {
+    create: 'createLocalisation',
+    getAll: 'getAllLocalisations',
+    update: 'updateLocalisation',
+    delete: 'deleteLocalisation',
+    getOne: 'getOneLocalisation',
+  },
+  magasin: {
+    create: 'createMagasin',
+    getAll: 'getAllMagasins',
+    update: 'updateMagasin',
+    delete: 'deleteMagasin',
+    getOne: 'getOneMagasin',
+  },
+  niveauDeProduction: {
+    create: 'createNiveauDeProduction',
+    getAll: 'getAllNiveauDeProductions',
+    update: 'updateNiveauDeProduction',
+    delete: 'deleteNiveauDeProduction',
+    getOne: 'getOneNiveauDeProduction',
+  },
+  niveauInstitution: {
+    create: 'createNiveauInstitution',
+    getAll: 'getAllNiveauInstitutions',
+    update: 'updateNiveauInstitution',
+    delete: 'deleteNiveauInstitution',
+    getOne: 'getOneNiveauInstitution',
+  },
+  production: {
+    create: 'createProduction',
+    getAll: 'getAllProductions',
+    update: 'updateProduction',
+    delete: 'deleteProduction',
+    getOne: 'getOneProduction',
+  },
 }
 
-const eventResponse = {
+export const eventResponse = {
   speculation: {
     created: 'createdSpeculation',
     gotAll: 'gotAllSpeculations',
@@ -66,6 +121,13 @@ const eventResponse = {
     deleted: 'deletedCommande',
     gotOne: 'gotOneCommande',
   },
+  client: {
+    created: 'createdClient',
+    gotAll: 'gotAllClients',
+    updated: 'updatedClient',
+    deleted: 'deletedClient',
+    gotOne: 'gotOneClient',
+  },
   zoneAgro: {
     created: 'createdZoneAgro',
     gotAll: 'gotAllZoneAgros',
@@ -73,9 +135,53 @@ const eventResponse = {
     deleted: 'deletedZoneAgro',
     gotOne: 'gotOneZoneAgro',
   },
-}
-
-module.exports = {
-  events,
-  eventResponse,
+  contact: {
+    created: 'createdContact',
+    gotAll: 'gotAllContacts',
+    updated: 'updatedContact',
+    deleted: 'deletedContact',
+    gotOne: 'gotOneContact',
+  },
+  institution: {
+    created: 'createdInstitution',
+    gotAll: 'gotAllInstitutions',
+    updated: 'updatedInstitution',
+    deleted: 'deletedInstitution',
+    gotOne: 'gotOneInstitution',
+  },
+  localisation: {
+    created: 'createdLocalisation',
+    gotAll: 'gotAllLocalisations',
+    updated: 'updatedLocalisation',
+    deleted: 'deletedLocalisation',
+    gotOne: 'gotOneLocalisation',
+  },
+  magasin: {
+    created: 'createdMagasin',
+    gotAll: 'gotAllMagasins',
+    updated: 'updatedMagasin',
+    deleted: 'deletedMagasin',
+    gotOne: 'gotOneMagasin',
+  },
+  niveauDeProduction: {
+    created: 'createdNiveauDeProduction',
+    gotAll: 'gotAllNiveauDeProductions',
+    updated: 'updatedNiveauDeProduction',
+    deleted: 'deletedNiveauDeProduction',
+    gotOne: 'gotOneNiveauDeProduction',
+  },
+  niveauInstitution: {
+    created: 'createdNiveauInstitution',
+    gotAll: 'gotAllNiveauInstitutions',
+    updated: 'updatedNiveauInstitution',
+    deleted: 'deletedNiveauInstitution',
+    gotOne: 'gotOneNiveauInstitution',
+  },
+  production: {
+    created: 'createdProduction',
+    gotAll: 'gotAllProductions',
+    updated: 'updatedProduction',
+    deleted: 'deletedProduction',
+    gotOne: 'gotOneProduction',
+  },
 }

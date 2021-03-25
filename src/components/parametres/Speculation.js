@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
-import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
+import React, { useContext, useEffect, useReducer, useState } from 'react'
+import clsx from 'clsx'
+import { makeStyles } from '@material-ui/core/styles'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
 import {
   Box,
   Button,
@@ -12,20 +12,19 @@ import {
   InputAdornment,
   TextField,
   Typography,
-} from "@material-ui/core";
-import DataTable from "../common/DataTable";
-import { GlobalContext } from "../../store/GlobalProvider";
-import SingleLineGridList from "../common/SingleLineGridList";
-import riz from "../images/riz.jpg";
+} from '@material-ui/core'
+import DataTable from '../common/DataTable'
+import { GlobalContext } from '../../store/GlobalProvider'
+import SingleLineGridList from '../common/SingleLineGridList'
+import riz from '../images/riz.jpg'
+import { events, eventResponse } from '../../store/utils/events'
 
 const { ipcRenderer } = window.require('electron')
-const { events, eventResponse } = require("../../store/utils/events");
-
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     marginBottom: theme.spacing(1),
-    width: "25ch",
+    width: '25ch',
   },
   margin: {
     marginBottom: theme.spacing(1),
@@ -34,49 +33,49 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   textField: {
-    width: "25ch",
+    width: '25ch',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   addButton: {
-    width: "29ch",
+    width: '29ch',
   },
   gridContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-}));
+}))
 
 const columns = [
-  { type: "string", field: "id", headerName: "idVariete", hide: true },
-  { type: "string", field: "nomVariete", headerName: "Variété", width: 170 },
+  { type: 'string', field: 'id', headerName: 'idVariete', hide: true },
+  { type: 'string', field: 'nomVariete', headerName: 'Variété', width: 170 },
   {
-    type: "string",
-    field: "speculation",
-    headerName: "Spéculation",
+    type: 'string',
+    field: 'speculation',
+    headerName: 'Spéculation',
     width: 130,
-    renderCell: (params) => params.getValue("speculation").nomSpeculation,
+    renderCell: (params) => params.getValue('speculation').nomSpeculation,
   },
-  { type: "number", field: "longueurCycle", headerName: "Cycle", width: 100 },
+  { type: 'number', field: 'longueurCycle', headerName: 'Cycle', width: 100 },
   {
-    type: "number",
-    field: "stockDeSecurite",
-    headerName: "Stock De Sécurite",
+    type: 'number',
+    field: 'stockDeSecurite',
+    headerName: 'Stock De Sécurite',
     width: 170,
   },
   {
-    type: "string",
-    field: "zone",
-    headerName: "Zone",
+    type: 'string',
+    field: 'zone',
+    headerName: 'Zone',
     width: 100,
-    renderCell: (params) => params.getValue("zone").nomZone,
+    renderCell: (params) => params.getValue('zone').nomZone,
   },
-];
+]
 
 export default function Parametres() {
-  const classes = useStyles();
+  const classes = useStyles()
 
   const {
     varietes,
@@ -85,91 +84,100 @@ export default function Parametres() {
     allVarietes,
     addVariete,
     allZones,
-  } = useContext(GlobalContext);
+  } = useContext(GlobalContext)
 
   const reducer = (state, action) => {
-    let variete;
+    let variete
     switch (action.type) {
-      case "ON_SPECULATION_CHANGE":
-        variete = allVarietes.find((v) => v.speculation.idSpeculation === action.payload.idSpeculation)
-        console.log("VARIETE ZONE", variete.zone)
-        console.log("STATE ZONE", state.zone)
-        console.log("CORRESPONDING V:",allVarietes.find((v) => v.speculation.idSpeculation === action.payload.idSpeculation))
+      case 'ON_SPECULATION_CHANGE':
+        variete = allVarietes.find(
+          (v) => v.speculation.idSpeculation === action.payload.idSpeculation,
+        )
+        console.log('VARIETE ZONE', variete.zone)
+        console.log('STATE ZONE', state.zone)
+        console.log(
+          'CORRESPONDING V:',
+          allVarietes.find(
+            (v) => v.speculation.idSpeculation === action.payload.idSpeculation,
+          ),
+        )
         return {
           ...state,
           speculation: action.payload,
           variete,
           longueurCycle: variete.longueurCycle,
-          zone: variete.zone
-        };
-      case "ON_VARIETE_CHANGE":
-        variete = allVarietes.find((v) => v.idVariete === action.payload.idVariete)
-        console.log("VARIETE ZONE", variete.zone)
-        console.log("STATE ZONE", state.zone)
+          zone: variete.zone,
+        }
+      case 'ON_VARIETE_CHANGE':
+        variete = allVarietes.find(
+          (v) => v.idVariete === action.payload.idVariete,
+        )
+        console.log('VARIETE ZONE', variete.zone)
+        console.log('STATE ZONE', state.zone)
         return {
           ...state,
-          variete,  
-          longueurCycle:variete.longueurCycle,
-          zone: variete.zone
-        };
-        case "ON_STOCK_CHANGE":
+          variete,
+          longueurCycle: variete.longueurCycle,
+          zone: variete.zone,
+        }
+      case 'ON_STOCK_CHANGE':
         return {
           ...state,
           stockDeSecurite: action.payload,
-        };
+        }
       default:
-        break;
+        break
     }
-  };
+  }
 
   const initialState = {
     variete: {
       idVariete: 1,
-      nomVariete: "Sahel 108",
+      nomVariete: 'Sahel 108',
     },
     speculation: {
       idSpeculation: 1,
-      nomSpeculation: "riz",
+      nomSpeculation: 'riz',
       imageSpeculation: riz,
     },
     zone: {
-      nomZone: "Vallée du Fleuve Sénégal",
+      nomZone: 'Vallée du Fleuve Sénégal',
       idZone: 1,
     },
     stockDeSecurite: 200,
-  };
+  }
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   const handleChange = (e) => {
-    let { name, value } = e.target;
-    dispatch({ type: `ON_${name}_CHANGE`, payload: value });
-  };
+    let { name, value } = e.target
+    dispatch({ type: `ON_${name}_CHANGE`, payload: value })
+  }
 
   const handleSubmit = () => {
     for (let [, value] of Object.entries(state)) {
-      if (value === "") return;
+      if (value === '') return
     }
 
     let newVariete = {
       ...state.variete,
       ...state,
       id: state.variete.idVariete + Math.round(Math.random() * 100),
-    };
+    }
 
-    console.log("NEW VARIETE:", newVariete);
-    addVariete(newVariete);
-  };
+    console.log('NEW VARIETE:', newVariete)
+    addVariete(newVariete)
+  }
 
-   ipcRenderer.on(eventResponse.variete.gotAll, (e, data) => {
-    console.log("EVENT", e);
-    console.log("DATA", data);
-  });
-  
+  ipcRenderer.on(eventResponse.variete.gotAll, (e, data) => {
+    console.log('EVENT', e)
+    console.log('DATA', data)
+  })
+
   const handleIPC = () => {
-    console.log("BEFORE IPC")
+    console.log('BEFORE IPC')
     ipcRenderer.send(events.variete.getAll)
-    console.log("AFTER IPC")
+    console.log('AFTER IPC')
   }
 
   return (
@@ -191,7 +199,7 @@ export default function Parametres() {
                   ({ imageSpeculation, nomSpeculation }) => ({
                     img: imageSpeculation,
                     title: nomSpeculation,
-                  })
+                  }),
                 )}
               />
             </Grid>
@@ -218,8 +226,8 @@ export default function Parametres() {
         <Grid item sm={3}>
           <Box
             style={{
-              display: "flex",
-              justifyContent: "center",
+              display: 'flex',
+              justifyContent: 'center',
             }}
           >
             <Typography variant="button">Ajouter Une Variété</Typography>
@@ -264,7 +272,7 @@ export default function Parametres() {
                     .filter(
                       (variete) =>
                         variete.speculation.idSpeculation ===
-                        state.speculation.idSpeculation
+                        state.speculation.idSpeculation,
                     )
                     .map((variete) => (
                       <MenuItem key={variete.idVariete} value={variete}>
@@ -340,5 +348,5 @@ export default function Parametres() {
         </Grid>
       </Grid>
     </div>
-  );
+  )
 }
