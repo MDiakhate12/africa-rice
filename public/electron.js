@@ -1,11 +1,14 @@
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
-const isDev = require('electron-is-dev')
-const models = require('../backend/models').default
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
+const isDev = require("electron-is-dev");
+const models = require("../backend/models").default;
 
-const { createSpeculation } = require('../backend/services/speculation')
-const { createZone } = require('../backend/services/zoneAgroEcologique')
-const { createVariete, getAllVarietes } = require('../backend/services/variete')
+const { createSpeculation } = require("../backend/services/speculation");
+const { createZone } = require("../backend/services/zoneAgroEcologique");
+const {
+  createVariete,
+  getAllVarietes,
+} = require("../backend/services/variete");
 
 const createWindow = async () => {
   let win = new BrowserWindow({
@@ -14,60 +17,58 @@ const createWindow = async () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      devTools: true,
     },
-  })
+  });
+
+  // win.removeMenu()
 
   models.sequelize
     .sync()
     .then(() => {
       // createSpeculation({
-      //   nomSpeculation: 'Ara123',
-      //   imageSpeculation: 'image2',
+      //   nomSpeculation: "Diaf",
+      //   imageSpeculation: "DiafR",
       // })
       //   .then((data) => {
-      //     console.log(data)
-      //     createZone({ nomZone: 'Dakrar' })
+      //     createZone({ nomZone: "DakarDiaf" });
       //   })
       //   .then((dat) => {
-      //     console.log(dat)
       //     createVariete({
-      //       nomVariete: 'Guysd',
+      //       nomVariete: "GuysdDiaf",
       //       longueurCycle: 10,
-      //       speculationId: 2,
-      //       zoneId: 2,
-      //     })
+      //       speculationId: 1,
+      //       zoneId: 1,
+      //     });
       //   })
       //   .then((da) => {
-      //     console.log(da)
-      //     getAllVarietes().then((d) => {
-      //       console.log(d)
-      //     })
+      //     getAllVarietes().then((d) => {});
       //   })
-      //   .catch((err) => console.log(err))
+      //   .catch((err) => console.log(err));
 
       win.loadURL(
         isDev
-          ? 'http://localhost:3000'
-          : `file://${path.join(__dirname, '../build/index.html')}`,
-      )
+          ? "http://localhost:3000"
+          : `file://${path.join(__dirname, "../build/index.html")}`
+      );
     })
-    .catch((err) => console.log(err))
+    .catch((err) => console.log(err));
 
-  win.on('closed', () => {
-    win = null
-  })
-}
+  win.on("closed", () => {
+    win = null;
+  });
+};
 
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
 
-  app.on('activate', () => {
+  app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+      createWindow();
     }
-  })
-})
+  });
+});
 
-app.on('window-all-closed', () => {
-  if (process.platform === 'darwin') app.quit()
-})
+app.on("window-all-closed", () => {
+  if (process.platform === "darwin") app.quit();
+});

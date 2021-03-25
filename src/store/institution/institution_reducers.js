@@ -1,9 +1,10 @@
-import { allVarietes } from "./varietes";
+import { allInstitution } from "./institution";
+
+
 import riz from "../../components/images/riz.jpg"
 import sorgho from "../../components/images/sorgho.jpg"
 
-
-export const varietesInitialState = [
+export const institutionInitialState = [
   {
     idVariete: 1,
     nomVariete: "Sahel 108",
@@ -36,13 +37,7 @@ export const varietesInitialState = [
   },
 ];
 
-// export const allVarietesInitialState = allVarietes;
-
-// export const varietesInitialState = []
-
-export const allVarietesInitialState = allVarietes;
-
-export const varietesReducer = (state, action) => {
+export const institutionReducer = (state, action) => {
   switch (action.type) {
     case "ON_ADD_VARIETE":
       return [...state, action.payload];
@@ -54,7 +49,9 @@ export const varietesReducer = (state, action) => {
   }
 };
 
-export const allVarietesReducer = (state, action) => {
+export const allinstitutionInitialState = allinstitution;
+
+export const allinstitutionReducer = (state, action) => {
   switch (action.type) {
     case "ON_ADD_VARIETE":
       return [...state, action.payload];

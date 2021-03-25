@@ -21,6 +21,7 @@ export default function GlobalProvider({ children }) {
       allSpeculations,
       zones, 
       allZones,
+      // getAllVarietes,
     }}>
       {children}
     </GlobalContext.Provider>

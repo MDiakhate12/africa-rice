@@ -27,6 +27,7 @@ ipcMain.on(events.variete.delete, (event, arg) => {
 })
 
 ipcMain.on(events.variete.getAll, (event, arg) => {
+  console.log("FROM IPC MAIN")
   getAllVarietes()
     .then((data) => {
       console.log(data)

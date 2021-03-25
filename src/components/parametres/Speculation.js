@@ -18,6 +18,10 @@ import { GlobalContext } from "../../store/GlobalProvider";
 import SingleLineGridList from "../common/SingleLineGridList";
 import riz from "../images/riz.jpg";
 
+const { ipcRenderer } = window.require('electron')
+const { events, eventResponse } = require("../../store/utils/events");
+
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     marginBottom: theme.spacing(1),
@@ -157,6 +161,17 @@ export default function Parametres() {
     addVariete(newVariete);
   };
 
+   ipcRenderer.on(eventResponse.variete.gotAll, (e, data) => {
+    console.log("EVENT", e);
+    console.log("DATA", data);
+  });
+  
+  const handleIPC = () => {
+    console.log("BEFORE IPC")
+    ipcRenderer.send(events.variete.getAll)
+    console.log("AFTER IPC")
+  }
+
   return (
     <div>
       <Grid container spacing={2}>
@@ -185,7 +200,7 @@ export default function Parametres() {
                 color="primary"
                 variant="contained"
                 className={classes.addButton}
-                onClick={() => {}}
+                onClick={handleIPC}
               >
                 Ajouter
               </Button>
