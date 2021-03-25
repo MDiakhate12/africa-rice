@@ -1,24 +1,27 @@
-import { useReducer, createContext } from "react";
-import * as speculationActions from "./speculation/speculation_actions";
-import {
-  speculationReducer,
-  speculationInitialState,
-} from "./speculation/speculation_reducers";
+import { createContext } from "react";
+import SpeculationProvider from "./speculations/speculations_provider";
+
+import VarieteProvider from "./varietes/varietes_provider";
+import ZoneProvider from "./zones/zones_provider";
 
 export const GlobalContext = createContext();
 
 export default function GlobalProvider({ children }) {
-  const [speculationState, speculationDispatch] = useReducer(
-    speculationReducer,
-    speculationInitialState
-  );
 
-  const getAllSpeculation = (e) => {
-    speculationDispatch(speculationActions.getAllSpeculation);
-  };
-
+  const [varietes, allVarietes, addVariete] = VarieteProvider()
+  const [speculations, allSpeculations] = SpeculationProvider()
+  const [zones, allZones] = ZoneProvider()
+  
   return (
-    <GlobalContext.Provider value={{ speculationState, getAllSpeculation }}>
+    <GlobalContext.Provider value={{ 
+      varietes,
+      speculations,
+      addVariete,
+      allVarietes,
+      allSpeculations,
+      zones, 
+      allZones,
+    }}>
       {children}
     </GlobalContext.Provider>
   );
