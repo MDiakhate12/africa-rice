@@ -18,9 +18,8 @@ import { GlobalContext } from "../../store/GlobalProvider";
 import SingleLineGridList from "../common/SingleLineGridList";
 import riz from "../images/riz.jpg";
 
-const { ipcRenderer } = window.require('electron')
-const { events, eventResponse } = require("../../store/utils/events");
-
+// const { ipcRenderer } = window.require("electron");
+// const { events, eventResponse } = require("../../store/utils/events");
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -85,34 +84,44 @@ export default function Parametres() {
     allVarietes,
     addVariete,
     allZones,
+    addSpeculation,
   } = useContext(GlobalContext);
 
   const reducer = (state, action) => {
     let variete;
     switch (action.type) {
       case "ON_SPECULATION_CHANGE":
-        variete = allVarietes.find((v) => v.speculation.idSpeculation === action.payload.idSpeculation)
-        console.log("VARIETE ZONE", variete.zone)
-        console.log("STATE ZONE", state.zone)
-        console.log("CORRESPONDING V:",allVarietes.find((v) => v.speculation.idSpeculation === action.payload.idSpeculation))
+        variete = allVarietes.find(
+          (v) => v.speculation.idSpeculation === action.payload.idSpeculation
+        );
+        console.log("VARIETE ZONE", variete.zone);
+        console.log("STATE ZONE", state.zone);
+        console.log(
+          "CORRESPONDING V:",
+          allVarietes.find(
+            (v) => v.speculation.idSpeculation === action.payload.idSpeculation
+          )
+        );
         return {
           ...state,
           speculation: action.payload,
           variete,
           longueurCycle: variete.longueurCycle,
-          zone: variete.zone
+          zone: variete.zone,
         };
       case "ON_VARIETE_CHANGE":
-        variete = allVarietes.find((v) => v.idVariete === action.payload.idVariete)
-        console.log("VARIETE ZONE", variete.zone)
-        console.log("STATE ZONE", state.zone)
+        variete = allVarietes.find(
+          (v) => v.idVariete === action.payload.idVariete
+        );
+        console.log("VARIETE ZONE", variete.zone);
+        console.log("STATE ZONE", state.zone);
         return {
           ...state,
-          variete,  
-          longueurCycle:variete.longueurCycle,
-          zone: variete.zone
+          variete,
+          longueurCycle: variete.longueurCycle,
+          zone: variete.zone,
         };
-        case "ON_STOCK_CHANGE":
+      case "ON_STOCK_CHANGE":
         return {
           ...state,
           stockDeSecurite: action.payload,
@@ -122,7 +131,7 @@ export default function Parametres() {
     }
   };
 
-  const initialState = {
+  const initialStateVariete = {
     variete: {
       idVariete: 1,
       nomVariete: "Sahel 108",
@@ -139,38 +148,50 @@ export default function Parametres() {
     stockDeSecurite: 200,
   };
 
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  const handleChange = (e) => {
-    let { name, value } = e.target;
-    dispatch({ type: `ON_${name}_CHANGE`, payload: value });
+  const initialStateSpeculation = {
+    idSpeculation: 1,
+    nomSpeculation: "riz",
+    imageSpeculation: riz,
   };
 
-  const handleSubmit = () => {
-    for (let [, value] of Object.entries(state)) {
+  const [stateVariete, dispatchVariete] = useReducer(
+    reducer,
+    initialStateVariete
+  );
+  const [stateSpeculation, setStateSpeculation] = useState(
+    initialStateSpeculation
+  );
+
+  const handleChangeVariete = (e) => {
+    let { name, value } = e.target;
+    dispatchVariete({ type: `ON_${name}_CHANGE`, payload: value });
+  };
+
+  const handleChangeSpeculation = (e) => {
+    let { name, value } = e.target;
+    setStateSpeculation(value);
+    console.log("SPECULATION", { name, value });
+  };
+
+  const handleSubmitVariete = () => {
+    for (let [, value] of Object.entries(stateVariete)) {
       if (value === "") return;
     }
 
     let newVariete = {
-      ...state.variete,
-      ...state,
-      id: state.variete.idVariete + Math.round(Math.random() * 100),
+      ...stateVariete.variete,
+      ...stateVariete,
+      id: stateVariete.variete.idVariete + Math.round(Math.random() * 100),
     };
 
     console.log("NEW VARIETE:", newVariete);
     addVariete(newVariete);
   };
 
-   ipcRenderer.on(eventResponse.variete.gotAll, (e, data) => {
-    console.log("EVENT", e);
-    console.log("DATA", data);
-  });
-  
-  const handleIPC = () => {
-    console.log("BEFORE IPC")
-    ipcRenderer.send(events.variete.getAll)
-    console.log("AFTER IPC")
-  }
+  const handleSubmitSpeculation = (e) => {
+    console.log("NEW SPECULATION", stateSpeculation);
+    addSpeculation(stateSpeculation);
+  };
 
   return (
     <div>
@@ -195,12 +216,37 @@ export default function Parametres() {
                 )}
               />
             </Grid>
-            <Grid item sm={3} className={classes.gridContainer}>
+            <Grid
+              item
+              sm={3}
+              className={classes.gridContainer}
+              justifyContent=""
+            >
+              <FormControl variant="filled" className={classes.formControl}>
+                <InputLabel color="secondary">Spéculations</InputLabel>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={stateSpeculation || ""}
+                  name="ALL_SPECULATION"
+                  color="secondary"
+                  onChange={handleChangeSpeculation}
+                >
+                  {allSpeculations.map((speculation) => (
+                    <MenuItem
+                      key={speculation.idSpeculation}
+                      value={speculation}
+                    >
+                      {speculation.nomSpeculation}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <Button
-                color="primary"
+                color="secondary"
                 variant="contained"
                 className={classes.addButton}
-                onClick={handleIPC}
+                onClick={handleSubmitSpeculation}
               >
                 Ajouter
               </Button>
@@ -233,9 +279,9 @@ export default function Parametres() {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={state.speculation || ''}
+                  value={stateVariete.speculation || ""}
                   name="SPECULATION"
-                  onChange={handleChange}
+                  onChange={handleChangeVariete}
                 >
                   {speculations.map((speculation) => (
                     <MenuItem
@@ -256,15 +302,15 @@ export default function Parametres() {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={state.variete || ''}
+                  value={stateVariete.variete || ""}
                   name="VARIETE"
-                  onChange={handleChange}
+                  onChange={handleChangeVariete}
                 >
                   {allVarietes
                     .filter(
                       (variete) =>
                         variete.speculation.idSpeculation ===
-                        state.speculation.idSpeculation
+                        stateVariete.speculation.idSpeculation
                     )
                     .map((variete) => (
                       <MenuItem key={variete.idVariete} value={variete}>
@@ -279,7 +325,7 @@ export default function Parametres() {
                 label="Stock de sécurité"
                 id="state.filstockDeSecurite-star || ''t -adornment"
                 name="STOCK"
-                value={state.stockDeSecurite || ''}
+                value={stateVariete.stockDeSecurite || ""}
                 className={clsx(classes.margin, classes.textField)}
                 InputProps={{
                   endAdornment: (
@@ -287,7 +333,7 @@ export default function Parametres() {
                   ),
                 }}
                 variant="filled"
-                onChange={handleChange}
+                onChange={handleChangeVariete}
               />
             </Grid>
             <Grid item className={classes.gridContainer}>
@@ -295,7 +341,7 @@ export default function Parametres() {
                 label="Longueur cycle"
                 id="state.fillongueurCycle-star || ''t -adornment"
                 name="CYCLE"
-                value={state.longueurCycle || ''}
+                value={stateVariete.longueurCycle || ""}
                 className={clsx(classes.margin, classes.textField)}
                 disabled
                 InputProps={{
@@ -314,7 +360,7 @@ export default function Parametres() {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={state.zone || ''}
+                  value={stateVariete.zone || ""}
                   name="ZONE"
                   disabled
                 >
@@ -331,7 +377,7 @@ export default function Parametres() {
                 color="primary"
                 variant="contained"
                 className={classes.addButton}
-                onClick={handleSubmit}
+                onClick={handleSubmitVariete}
               >
                 Ajouter
               </Button>

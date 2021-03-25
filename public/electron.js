@@ -3,6 +3,8 @@ const path = require("path");
 const isDev = require("electron-is-dev");
 const models = require("../backend/models").default;
 
+require('electron-reload')(__dirname);
+
 const { createSpeculation } = require("../backend/services/speculation");
 const { createZone } = require("../backend/services/zoneAgroEcologique");
 const {
@@ -10,7 +12,7 @@ const {
   getAllVarietes,
 } = require("../backend/services/variete");
 
-const createWindow = async () => {
+const createWindow = async () => { 
   let win = new BrowserWindow({
     width: 1200,
     height: 800,
