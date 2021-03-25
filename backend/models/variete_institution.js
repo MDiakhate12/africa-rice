@@ -1,26 +1,15 @@
-const {
-  DataTypes
-} = require('sequelize');
+const { DataTypes } = require('sequelize')
 
-module.exports = sequelize => {
+module.exports = (sequelize) => {
   const attributes = {
-    idInstitution: {
+    idVarieteInstitution: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
+      primaryKey: true,
+      autoIncrement: true,
       comment: null,
-      field: "id_institution"
-    },
-    idVariete: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "id_variete"
+      field: 'id_variete_institution',
     },
     stockDeSecurite: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -29,25 +18,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "stock_de_securite"
-    },
-    idVarieteInstitution: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: true,
-      autoIncrement: true,
-      comment: null,
-      field: "id_variete_institution"
-    },
-    idSpeculationInstitution: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "id_speculation_institution"
+      field: 'stock_de_securite',
     },
     prix: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -56,19 +27,45 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "prix"
-    }
-  };
+      field: 'prix',
+    },
+  }
   const options = {
-    tableName: "variete_institution",
-    comment: "",
-    indexes: [{
-      name: "id_institution",
-      unique: true,
-      type: "BTREE",
-      fields: ["id_institution", "id_variete"]
-    }]
-  };
-  const VarieteInstitutionModel = sequelize.define("varieteInstitutionModel", attributes, options);
-  return VarieteInstitutionModel;
-};
+    tableName: 'variete_institution',
+    comment: '',
+    indexes: [],
+  }
+  const VarieteInstitutionModel = sequelize.define(
+    'VarieteInstitution',
+    attributes,
+    options,
+  )
+
+  VarieteInstitutionModel.associate = function (models) {
+    // associations can be defined here
+    VarieteInstitutionModel.belongsTo(models.SpeculationInstitution, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'speculationInstitutionId',
+        allowNull: false,
+      },
+    })
+    VarieteInstitutionModel.belongsTo(models.Institution, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'institutionId',
+        allowNull: false,
+      },
+    })
+
+    VarieteInstitutionModel.belongsTo(models.Variete, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'varieteId',
+        allowNull: false,
+      },
+    })
+  }
+
+  return VarieteInstitutionModel
+}

@@ -1,8 +1,6 @@
-const {
-  DataTypes
-} = require('sequelize');
+const { DataTypes } = require('sequelize')
 
-module.exports = sequelize => {
+module.exports = (sequelize) => {
   const attributes = {
     idClient: {
       type: DataTypes.INTEGER,
@@ -11,7 +9,7 @@ module.exports = sequelize => {
       primaryKey: true,
       autoIncrement: true,
       comment: null,
-      field: "id_client"
+      field: 'id_client',
     },
     nomCompletStructure: {
       type: DataTypes.STRING(50),
@@ -20,7 +18,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "nom_complet_structure"
+      field: 'nom_complet_structure',
     },
     acronyme: {
       type: DataTypes.STRING(50),
@@ -29,16 +27,16 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "acronyme"
+      field: 'acronyme',
     },
     estParticulier: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      defaultValue: "1",
+      defaultValue: 1,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "est_particulier"
+      field: 'est_particulier',
     },
     prenom: {
       type: DataTypes.STRING(45),
@@ -47,7 +45,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "prenom"
+      field: 'prenom',
     },
     nom: {
       type: DataTypes.STRING(45),
@@ -56,14 +54,14 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "nom"
-    }
-  };
+      field: 'nom',
+    },
+  }
   const options = {
-    tableName: "client",
-    comment: "",
-    indexes: []
-  };
-  const ClientModel = sequelize.define("clientModel", attributes, options);
-  return ClientModel;
-};
+    tableName: 'client',
+    comment: '',
+    indexes: [],
+  }
+  const ClientModel = sequelize.define('Client', attributes, options)
+  return ClientModel
+}

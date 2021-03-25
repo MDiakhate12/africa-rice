@@ -1,8 +1,6 @@
-const {
-  DataTypes
-} = require('sequelize');
+const { DataTypes } = require('sequelize')
 
-module.exports = sequelize => {
+module.exports = (sequelize) => {
   const attributes = {
     idNiveau: {
       type: DataTypes.INTEGER,
@@ -11,7 +9,7 @@ module.exports = sequelize => {
       primaryKey: true,
       autoIncrement: true,
       comment: null,
-      field: "id_niveau"
+      field: 'id_niveau',
     },
     nomNiveau: {
       type: DataTypes.ENUM('G0', 'G1', 'G2', 'Prébase', 'Base', 'R1', 'R2'),
@@ -20,15 +18,19 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "nom_niveau",
-      unique: "nom_niveau_UNIQUE"
-    }
-  };
+      field: 'nom_niveau',
+      unique: 'nom_niveau_UNIQUE',
+    },
+  }
   const options = {
-    tableName: "niveau_de_production",
-    comment: "",
-    indexes: []
-  };
-  const NiveauDeProductionModel = sequelize.define("niveauDeProductionModel", attributes, options);
-  return NiveauDeProductionModel;
-};
+    tableName: 'niveau_de_production',
+    comment: '',
+    indexes: [],
+  }
+  const NiveauDeProductionModel = sequelize.define(
+    'NiveauDeProduction',
+    attributes,
+    options,
+  )
+  return NiveauDeProductionModel
+}

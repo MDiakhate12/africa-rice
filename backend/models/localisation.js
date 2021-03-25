@@ -1,8 +1,6 @@
-const {
-  DataTypes
-} = require('sequelize');
+const { DataTypes } = require('sequelize')
 
-module.exports = sequelize => {
+module.exports = (sequelize) => {
   const attributes = {
     idLocalisation: {
       type: DataTypes.INTEGER,
@@ -11,20 +9,7 @@ module.exports = sequelize => {
       primaryKey: true,
       autoIncrement: true,
       comment: null,
-      field: "id_localisation"
-    },
-    idZone: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "id_zone",
-      references: {
-        key: "id_zone",
-        model: "zoneAgroEcologiqueModel"
-      }
+      field: 'id_localisation',
     },
     region: {
       type: DataTypes.STRING(11),
@@ -33,7 +18,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "region"
+      field: 'region',
     },
     departement: {
       type: DataTypes.STRING(17),
@@ -42,7 +27,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "departement"
+      field: 'departement',
     },
     commune: {
       type: DataTypes.STRING(20),
@@ -51,7 +36,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "commune"
+      field: 'commune',
     },
     village: {
       type: DataTypes.STRING(34),
@@ -60,7 +45,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "village"
+      field: 'village',
     },
     longitude: {
       type: DataTypes.INTEGER,
@@ -69,7 +54,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "longitude"
+      field: 'longitude',
     },
     latitude: {
       type: DataTypes.INTEGER,
@@ -78,19 +63,30 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "latitude"
-    }
-  };
+      field: 'latitude',
+    },
+  }
   const options = {
-    tableName: "localisation",
-    comment: "",
-    indexes: [{
-      name: "id_zone",
-      unique: false,
-      type: "BTREE",
-      fields: ["id_zone"]
-    }]
-  };
-  const LocalisationModel = sequelize.define("localisationModel", attributes, options);
-  return LocalisationModel;
-};
+    tableName: 'localisation',
+    comment: '',
+    indexes: [],
+  }
+  const LocalisationModel = sequelize.define(
+    'Localisation',
+    attributes,
+    options,
+  )
+
+  LocalisationModel.associate = function (models) {
+    // associations can be defined here
+    LocalisationModel.belongsTo(models.ZoneAgroEcologique, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'zoneId',
+        allowNull: false,
+      },
+    })
+  }
+
+  return LocalisationModel
+}

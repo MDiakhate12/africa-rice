@@ -1,8 +1,6 @@
-const {
-  DataTypes
-} = require('sequelize');
+const { DataTypes } = require('sequelize')
 
-module.exports = sequelize => {
+module.exports = (sequelize) => {
   const attributes = {
     idProduction: {
       type: DataTypes.INTEGER,
@@ -11,7 +9,7 @@ module.exports = sequelize => {
       primaryKey: true,
       autoIncrement: true,
       comment: null,
-      field: "id_production"
+      field: 'id_production',
     },
     dateDeProduction: {
       type: DataTypes.DATEONLY,
@@ -20,7 +18,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "date_de_production"
+      field: 'date_de_production',
     },
     quantiteProduite: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -29,7 +27,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "quantite_produite"
+      field: 'quantite_produite',
     },
     prixUnitaire: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -38,72 +36,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "prix_unitaire"
-    },
-    idLocalisation: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "id_localisation",
-      references: {
-        key: "id_localisation",
-        model: "localisationModel"
-      }
-    },
-    idMagasin: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "id_magasin",
-      references: {
-        key: "id_magasin",
-        model: "magasinModel"
-      }
-    },
-    idNiveauInstitution: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "id_niveau_institution",
-      references: {
-        key: "id_niveau_institution",
-        model: "niveauInstitutionModel"
-      }
-    },
-    idVarieteInstitution: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "id_variete_institution",
-      references: {
-        key: "id_variete_institution",
-        model: "varieteInstitutionModel"
-      }
-    },
-    idInstitution: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: "1",
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "id_institution",
-      references: {
-        key: "id_institution",
-        model: "institutionModel"
-      }
+      field: 'prix_unitaire',
     },
     quantiteDisponible: {
       type: DataTypes.INTEGER,
@@ -112,44 +45,54 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "quantite_disponible"
-    }
-  };
+      field: 'quantite_disponible',
+    },
+  }
   const options = {
-    tableName: "production",
-    comment: "",
-    indexes: [{
-      name: "id_magasin",
-      unique: false,
-      type: "BTREE",
-      fields: ["id_magasin"]
-    }, {
-      name: "id_localisation",
-      unique: false,
-      type: "BTREE",
-      fields: ["id_localisation"]
-    }, {
-      name: "production_ibfk_4_idx",
-      unique: false,
-      type: "BTREE",
-      fields: ["id_variete_institution"]
-    }, {
-      name: "id_variete_institution",
-      unique: false,
-      type: "BTREE",
-      fields: ["id_variete_institution"]
-    }, {
-      name: "production_ibfk_5_idx",
-      unique: false,
-      type: "BTREE",
-      fields: ["id_institution"]
-    }, {
-      name: "production_ibfk_3_idx",
-      unique: false,
-      type: "BTREE",
-      fields: ["id_niveau_institution"]
-    }]
-  };
-  const ProductionModel = sequelize.define("productionModel", attributes, options);
-  return ProductionModel;
-};
+    tableName: 'production',
+    comment: '',
+    indexes: [],
+  }
+  const ProductionModel = sequelize.define('Production', attributes, options)
+
+  ProductionModel.associate = function (models) {
+    // associations can be defined here
+    ProductionModel.belongsTo(models.Institution, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'institutionId',
+        allowNull: false,
+      },
+    })
+    ProductionModel.belongsTo(models.VarieteInstitution, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'varieteInstitutionId',
+        allowNull: false,
+      },
+    })
+    ProductionModel.belongsTo(models.NiveauInstitution, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'niveauInstitutionId',
+        allowNull: false,
+      },
+    })
+    ProductionModel.belongsTo(models.Magasin, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'magasinId',
+        allowNull: false,
+      },
+    })
+    ProductionModel.belongsTo(models.Localisation, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'localisationId',
+        allowNull: false,
+      },
+    })
+  }
+
+  return ProductionModel
+}
