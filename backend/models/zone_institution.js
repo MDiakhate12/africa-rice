@@ -1,8 +1,6 @@
-const {
-  DataTypes
-} = require('sequelize');
+const { DataTypes } = require('sequelize')
 
-module.exports = sequelize => {
+module.exports = (sequelize) => {
   const attributes = {
     idZoneInstitution: {
       type: DataTypes.INTEGER,
@@ -11,51 +9,37 @@ module.exports = sequelize => {
       primaryKey: true,
       autoIncrement: true,
       comment: null,
-      field: "id_zone_institution"
+      field: 'id_zone_institution',
     },
-    idInstitution: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "id_institution"
-    },
-    idLocalisation: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "id_localisation",
-      references: {
-        key: "id_localisation",
-        model: "localisationModel"
-      }
-    }
-  };
+  }
   const options = {
-    tableName: "zone_institution",
-    comment: "",
-    indexes: [{
-      name: "id_institution",
-      unique: true,
-      type: "BTREE",
-      fields: ["id_institution", "id_localisation"]
-    }, {
-      name: "id_institution_2",
-      unique: true,
-      type: "BTREE",
-      fields: ["id_institution", "id_localisation"]
-    }, {
-      name: "id_localisation",
-      unique: false,
-      type: "BTREE",
-      fields: ["id_localisation"]
-    }]
-  };
-  const ZoneInstitutionModel = sequelize.define("zoneInstitutionModel", attributes, options);
-  return ZoneInstitutionModel;
-};
+    tableName: 'zone_institution',
+    comment: '',
+    indexes: [],
+  }
+  const ZoneInstitutionModel = sequelize.define(
+    'ZoneInstitution',
+    attributes,
+    options,
+  )
+
+  ZoneInstitutionModel.associate = function (models) {
+    // associations can be defined here
+    ZoneInstitutionModel.belongsTo(models.Localisation, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'localisationId',
+        allowNull: false,
+      },
+    })
+    ZoneInstitutionModel.belongsTo(models.Institution, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'institutionId',
+        allowNull: false,
+      },
+    })
+  }
+
+  return ZoneInstitutionModel
+}

@@ -1,4 +1,1 @@
-
-const getAllSpeculation = () => {
-    
-};
+const getAllSpeculation = () => {}

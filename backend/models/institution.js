@@ -1,8 +1,6 @@
-const {
-  DataTypes
-} = require('sequelize');
+const { DataTypes } = require('sequelize')
 
-module.exports = sequelize => {
+module.exports = (sequelize) => {
   const attributes = {
     idInstitution: {
       type: DataTypes.INTEGER,
@@ -11,7 +9,7 @@ module.exports = sequelize => {
       primaryKey: true,
       autoIncrement: true,
       comment: null,
-      field: "id_institution"
+      field: 'id_institution',
     },
     nomComplet: {
       type: DataTypes.STRING(50),
@@ -20,7 +18,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "nom_complet"
+      field: 'nom_complet',
     },
     sigle: {
       type: DataTypes.STRING(50),
@@ -29,32 +27,26 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "sigle"
+      field: 'sigle',
     },
-    idLocalisation: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "id_localisation",
-      references: {
-        key: "id_localisation",
-        model: "localisationModel"
-      }
-    }
-  };
+  }
   const options = {
-    tableName: "institution",
-    comment: "",
-    indexes: [{
-      name: "id_localisation",
-      unique: false,
-      type: "BTREE",
-      fields: ["id_localisation"]
-    }]
-  };
-  const InstitutionModel = sequelize.define("institutionModel", attributes, options);
-  return InstitutionModel;
-};
+    tableName: 'institution',
+    comment: '',
+    indexes: [],
+  }
+  const InstitutionModel = sequelize.define('Institution', attributes, options)
+
+  InstitutionModel.associate = function (models) {
+    // associations can be defined here
+    InstitutionModel.belongsTo(models.Localisation, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'localisationId',
+        allowNull: false,
+      },
+    })
+  }
+
+  return InstitutionModel
+}
