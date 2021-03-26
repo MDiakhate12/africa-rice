@@ -53,7 +53,7 @@ const columns = [
     field: "speculation",
     headerName: "Spéculation",
     width: 130,
-    renderCell: (params) => params.getValue("speculation").nomSpeculation,
+    renderCell: (params) => params.getValue("Speculation").nomSpeculation,
   },
   { type: "number", field: "longueurCycle", headerName: "Cycle", width: 100 },
   {
@@ -67,7 +67,7 @@ const columns = [
     field: "zone",
     headerName: "Zone",
     width: 100,
-    renderCell: (params) => params.getValue("zone").nomZone,
+    renderCell: (params) => params.getValue("ZoneAgroEcologique").nomZone,
   },
 ];
 
@@ -80,23 +80,27 @@ export default function Parametres() {
     zones,
     varietesInstitution,
     speculationsInstitution,
-    addVariete,
-    addSpeculation,
   } = useContext(GlobalContext);
+
+  useEffect(() => {
+    console.log("SPECULATIONS", speculations);
+    console.log("ZONES", zones);
+    console.log("VARIETES", varietes);
+  }, []);
 
   const reducer = (state, action) => {
     let variete;
     switch (action.type) {
       case "ON_SPECULATION_CHANGE":
         variete = varietes.find(
-          (v) => v.speculation.idSpeculation === action.payload.idSpeculation
+          (v) => v.Speculation.idSpeculation === action.payload.idSpeculation
         );
-        console.log("VARIETE ZONE", variete.zone);
-        console.log("STATE ZONE", state.zone);
+        console.log("VARIETE ZONE", variete.ZoneAgroEcologique);
+        console.log("STATE ZONE", state.ZoneAgroEcologique);
         console.log(
           "CORRESPONDING V:",
           varietes.find(
-            (v) => v.speculation.idSpeculation === action.payload.idSpeculation
+            (v) => v.Speculation.idSpeculation === action.payload.idSpeculation
           )
         );
         return {
@@ -104,19 +108,19 @@ export default function Parametres() {
           speculation: action.payload,
           variete,
           longueurCycle: variete.longueurCycle,
-          zone: variete.zone,
+          ZoneAgroEcologique: variete.ZoneAgroEcologique,
         };
       case "ON_VARIETE_CHANGE":
         variete = varietes.find(
           (v) => v.idVariete === action.payload.idVariete
         );
-        console.log("VARIETE ZONE", variete.zone);
-        console.log("STATE ZONE", state.zone);
+        console.log("VARIETE ZONE", variete.ZoneAgroEcologique);
+        console.log("STATE ZONE", state.ZoneAgroEcologique);
         return {
           ...state,
           variete,
           longueurCycle: variete.longueurCycle,
-          zone: variete.zone,
+          ZoneAgroEcologique: variete.ZoneAgroEcologique,
         };
       case "ON_STOCK_CHANGE":
         return {
@@ -138,7 +142,7 @@ export default function Parametres() {
       nomSpeculation: "riz",
       imageSpeculation: riz,
     },
-    zone: {
+    ZoneAgroEcologique: {
       nomZone: "Vallée du Fleuve Sénégal",
       idZone: 1,
     },
@@ -181,12 +185,12 @@ export default function Parametres() {
       id: stateVariete.variete.idVariete + Math.round(Math.random() * 100),
     };
 
-    addVariete(newVariete)
+    // addVariete(newVariete);
   };
 
   const handleSubmitSpeculation = (e) => {
     console.log("NEW SPECULATION", stateSpeculation);
-    addSpeculation(stateSpeculation);
+    // addSpeculation(stateSpeculation);
   };
 
   return (
@@ -204,7 +208,7 @@ export default function Parametres() {
           <Grid container spacing={2}>
             <Grid item sm={9}>
               <SingleLineGridList
-                data={speculations.map(
+                data={speculationsInstitution.map(
                   ({ imageSpeculation, nomSpeculation }) => ({
                     img: imageSpeculation,
                     title: nomSpeculation,
@@ -305,7 +309,7 @@ export default function Parametres() {
                   {varietes
                     .filter(
                       (variete) =>
-                        variete.speculation.idSpeculation ===
+                        variete.Speculation.idSpeculation ===
                         stateVariete.speculation.idSpeculation
                     )
                     .map((variete) => (
@@ -356,7 +360,7 @@ export default function Parametres() {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={stateVariete.zone || ""}
+                  value={stateVariete.ZoneAgroEcologique || ""}
                   name="ZONE"
                   disabled
                 >

@@ -2,7 +2,7 @@ import { actions } from "../actions";
 
 export const initialState = [];
 
-export const reducer = (action, state) => {
+export const reducer = (state, action) => {
   switch (action.type) {
     case actions.ON_ADD:
       return [action.payload, ...state];

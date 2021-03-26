@@ -9,52 +9,55 @@ export default function Provider() {
 
   const add = (payload) => {
     dispatch({ type: actions.ON_ADD, payload });
-    ipcRenderer.send(events.speculation.create);
+    ipcRenderer.send(events.speculationInstitution.create);
 
-    ipcRenderer.on(eventResponse.speculation.created, (event, data) => {
-      console.log("EVENT:", event);
-      console.log("DATA:", data);
+    ipcRenderer.on(eventResponse.speculationInstitution.created, (event, data) => {
+      // console.log("EVENT:", event);
+      console.log("DATA SPECULATIONIspeculationInstitution:", data);
     });
   };
   const getOne = (payload) => {
     dispatch({ type: actions.ON_GET_ONE, payload });
-    ipcRenderer.send(events.speculation.getOne);
+    ipcRenderer.send(events.speculationInstitution.getOne);
 
-    ipcRenderer.on(eventResponse.speculation.gotOne, (event, data) => {
-      console.log("EVENT:", event);
-      console.log("DATA:", data);
+    ipcRenderer.on(eventResponse.speculationInstitution.gotOne, (event, data) => {
+      // console.log("EVENT:", event);
+      console.log("DATA SPECULATIONIspeculationInstitution:", data);
     });
   };
 
   const getAll = () => {
-    dispatch({ type: actions.ON_GET_ALL });
-    ipcRenderer.send(events.speculation.getAll);
-
-    ipcRenderer.on(eventResponse.speculation.gotAll, (event, data) => {
-      console.log("EVENT:", event);
-      console.log("DATA:", data);
+    ipcRenderer.send(events.speculationInstitution.getAll);
+    ipcRenderer.on(eventResponse.speculationInstitution.gotAll, (event, data) => {
+      // console.log("EVENT:", event);
+      console.log("DATA SPECULATIONIspeculationInstitution:", data);
+      dispatch({ type: actions.ON_GET_ALL, payload: data });
     });
   };
 
   const update = (payload) => {
     dispatch({ type: actions.ON_UPDATE, payload });
-    ipcRenderer.send(events.speculation.update);
+    ipcRenderer.send(events.speculationInstitution.update);
 
-    ipcRenderer.on(eventResponse.speculation.updated, (event, data) => {
-      console.log("EVENT:", event);
-      console.log("DATA:", data);
+    ipcRenderer.on(eventResponse.speculationInstitution.updated, (event, data) => {
+      // console.log("EVENT:", event);
+      console.log("DATA SPECULATIONIspeculationInstitution:", data);
     });
   };
 
   const deleteById = (payload) => {
     dispatch({ type: actions.ON_DELETE, payload });
-    ipcRenderer.send(events.speculation.delete);
+    ipcRenderer.send(events.speculationInstitution.delete);
 
-    ipcRenderer.on(eventResponse.speculation.deleted, (event, data) => {
-      console.log("EVENT:", event);
-      console.log("DATA:", data);
+    ipcRenderer.on(eventResponse.speculationInstitution.deleted, (event, data) => {
+      // console.log("EVENT:", event);
+      console.log("DATA SPECULATIONIspeculationInstitution:", data);
     });
   };
+
+  useEffect(() => {
+    getAll();
+  }, []);
 
   return [state, add, getOne, getAll, update, deleteById];
 }

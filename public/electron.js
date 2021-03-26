@@ -1,14 +1,23 @@
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
-const isDev = require('electron-is-dev')
-const models = require('../backend/models').default
-require('../backend/main-process/')
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
+const isDev = require("electron-is-dev");
+const models = require("../backend/models").default;
+require("../backend/main-process/");
 
-const { createSpeculation } = require('../backend/services/speculation')
-const { createZone } = require('../backend/services/zoneAgroEcologique')
-const { createVariete, getAllVarietes } = require('../backend/services/variete')
+// const {
+//   createSpeculation,
+//   getAllSpeculations,
+// } = require("../backend/services/speculation");
+// const {
+//   createZone,
+//   getAllZones,
+// } = require("../backend/services/zoneAgroEcologique");
+// const {
+//   createVariete,
+//   getAllVarietes,
+// } = require("../backend/services/variete");
 
-const createWindow = async () => { 
+const createWindow = async () => {
   let win = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -17,7 +26,7 @@ const createWindow = async () => {
       contextIsolation: false,
       devTools: true,
     },
-  })
+  });
 
   // win.removeMenu()
 
@@ -44,29 +53,33 @@ const createWindow = async () => {
       //   })
       //   .catch((err) => console.log(err));
 
+      // getAllSpeculations().then(() => {});
+      // getAllZones().then(() => {});
+      // getAllVarietes().then(() => {});
+
       win.loadURL(
         isDev
-          ? 'http://localhost:3000'
-          : `file://${path.join(__dirname, '../build/index.html')}`,
-      )
+          ? "http://localhost:3000"
+          : `file://${path.join(__dirname, "../build/index.html")}`
+      );
     })
-    .catch((err) => console.log(err))
+    .catch((err) => console.log(err));
 
-  win.on('closed', () => {
-    win = null
-  })
-}
+  win.on("closed", () => {
+    win = null;
+  });
+};
 
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
 
-  app.on('activate', () => {
+  app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+      createWindow();
     }
-  })
-})
+  });
+});
 
-app.on('window-all-closed', () => {
-  if (process.platform === 'darwin') app.quit()
-})
+app.on("window-all-closed", () => {
+  if (process.platform === "darwin") app.quit();
+});

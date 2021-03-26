@@ -1,8 +1,11 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { actions } from "../actions";
 import { initialState, reducer } from "./reducer";
 const { events, eventResponse } = require("../utils/events");
 const { ipcRenderer } = window.require("electron");
+
+
+
 
 export default function Provider() {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -27,12 +30,12 @@ export default function Provider() {
   };
 
   const getAll = () => {
-    dispatch({ type: actions.ON_GET_ALL });
     ipcRenderer.send(events.zoneAgro.getAll);
 
     ipcRenderer.on(eventResponse.zoneAgro.gotAll, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
+      dispatch({ type: actions.ON_GET_ALL, payload: data });
     });
   };
 
@@ -55,6 +58,10 @@ export default function Provider() {
       console.log("DATA:", data);
     });
   };
+
+  useEffect(() => {
+    getAll();
+  }, []);
 
   return [state, add, getOne, getAll, update, deleteById];
 }

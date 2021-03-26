@@ -7,7 +7,7 @@ const db = {}
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: '../../semences.sqlite',
+  storage: './semences.sqlite',
 })
 
 fs.readdirSync(__dirname)
