@@ -5,9 +5,8 @@ const {
   getVarieteById,
   updateVariete,
 } = require('../services/variete')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.variete.create, (event, arg) => {
     createVariete(arg)
       .then((data) => {

@@ -5,9 +5,8 @@ const {
   getProductionById,
   updateProduction,
 } = require('../services/production')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.production.create, (event, arg) => {
     createProduction(arg)
       .then((data) => {

@@ -5,9 +5,8 @@ const {
   getMagasinById,
   updateMagasin,
 } = require('../services/magasin')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.magasin.create, (event, arg) => {
     createMagasin(arg)
       .then((data) => {

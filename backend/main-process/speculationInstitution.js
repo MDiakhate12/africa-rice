@@ -5,9 +5,8 @@ const {
   getSpeculationInstitutionById,
   updateSpeculationInstitution,
 } = require('../services/speculations_institution')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.speculationInstitution.create, (event, arg) => {
     createSpeculationInstitution(arg)
       .then((data) => {

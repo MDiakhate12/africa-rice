@@ -6,9 +6,8 @@ const {
   getContactById,
   updateContact,
 } = require('../services/contact')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.contact.create, (event, arg) => {
     createContact(arg)
       .then((data) => {

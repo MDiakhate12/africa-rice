@@ -5,9 +5,8 @@ const {
   getVarieteInstitutionById,
   updateVarieteInstitution,
 } = require('../services/varieteInstitution')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.varieteInstitution.create, (event, arg) => {
     createVarieteInstitution(arg)
       .then((data) => {

@@ -5,9 +5,8 @@ const {
   getClientById,
   updateClient,
 } = require('../services/client')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.client.create, (event, arg) => {
     createClient(arg)
       .then((data) => {

@@ -48,6 +48,13 @@ const events = {
     delete: 'deleteZoneAgro',
     getOne: 'getOneZoneAgro',
   },
+  zoneInstitution: {
+    create: 'createZoneInstitution',
+    getAll: 'getAllZoneInstitutions',
+    update: 'updateZoneInstitution',
+    delete: 'deleteZoneInstitution',
+    getOne: 'getOneZoneInstitution',
+  },
   contact: {
     create: 'createContact',
     getAll: 'getAllContacts',
@@ -148,6 +155,13 @@ const eventResponse = {
     updated: 'updatedZoneAgro',
     deleted: 'deletedZoneAgro',
     gotOne: 'gotOneZoneAgro',
+  },
+  zoneInstitution: {
+    created: 'createdZoneInstitution',
+    gotAll: 'gotAllZoneInstitutions',
+    updated: 'updatedZoneInstitution',
+    deleted: 'deletedZoneInstitution',
+    gotOne: 'gotOneZoneInstitution',
   },
   contact: {
     created: 'createdContact',

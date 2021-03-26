@@ -5,9 +5,8 @@ const {
   getCommandeById,
   updateCommande,
 } = require('../services/commande')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.commande.create, (event, arg) => {
     createCommande(arg)
       .then((data) => {
