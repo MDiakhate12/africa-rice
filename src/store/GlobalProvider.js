@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import SpeculationProvider from "./speculation/provider";
-import SpeculationInstitutionProvider from "./speculation/provider";
+import SpeculationInstitutionProvider from "./speculationInstitution/provider";
 import VarieteProvider from "./variete/provider";
 import VarieteInstitutionProvider from "./varieteInstitution/provider";
 import ZoneProvider from "./zone/provider";

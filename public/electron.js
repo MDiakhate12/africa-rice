@@ -67,6 +67,7 @@ const createWindow = async () => {
 
   win.on("closed", () => {
     win = null;
+    app.quit()
   });
 };
 

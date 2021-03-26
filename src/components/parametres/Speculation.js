@@ -80,6 +80,7 @@ export default function Parametres() {
     zones,
     varietesInstitution,
     speculationsInstitution,
+    addSpeculationInstitution,
   } = useContext(GlobalContext);
 
   useEffect(() => {
@@ -149,19 +150,11 @@ export default function Parametres() {
     stockDeSecurite: 200,
   };
 
-  const initialStateSpeculation = {
-    idSpeculation: 1,
-    nomSpeculation: "riz",
-    imageSpeculation: riz,
-  };
-
   const [stateVariete, dispatchVariete] = useReducer(
     reducer,
     initialStateVariete
   );
-  const [stateSpeculation, setStateSpeculation] = useState(
-    initialStateSpeculation
-  );
+  const [stateSpeculation, setStateSpeculation] = useState("");
 
   const handleChangeVariete = (e) => {
     let { name, value } = e.target;
@@ -190,7 +183,10 @@ export default function Parametres() {
 
   const handleSubmitSpeculation = (e) => {
     console.log("NEW SPECULATION", stateSpeculation);
-    // addSpeculation(stateSpeculation);
+    addSpeculationInstitution({
+      speculationId: stateSpeculation.idSpeculation,
+      ...stateSpeculation,
+    });
   };
 
   return (
@@ -236,7 +232,7 @@ export default function Parametres() {
                     <MenuItem
                       key={speculation.idSpeculation}
                       value={speculation}
-                    >
+                    > 
                       {speculation.nomSpeculation}
                     </MenuItem>
                   ))}

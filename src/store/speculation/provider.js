@@ -9,26 +9,26 @@ export default function Provider() {
 
   const add = (payload) => {
     dispatch({ type: actions.ON_ADD, payload });
-    ipcRenderer.send(events.speculationInstitution.create);
+    ipcRenderer.send(events.speculation.create);
 
-    ipcRenderer.on(eventResponse.speculationInstitution.created, (event, data) => {
+    ipcRenderer.on(eventResponse.speculation.created, (event, data) => {
       // console.log("EVENT:", event);
       console.log("DATA SPECULATIONIspeculationInstitution:", data);
     });
   };
   const getOne = (payload) => {
     dispatch({ type: actions.ON_GET_ONE, payload });
-    ipcRenderer.send(events.speculationInstitution.getOne);
+    ipcRenderer.send(events.speculation.getOne);
 
-    ipcRenderer.on(eventResponse.speculationInstitution.gotOne, (event, data) => {
+    ipcRenderer.on(eventResponse.speculation.gotOne, (event, data) => {
       // console.log("EVENT:", event);
       console.log("DATA SPECULATIONIspeculationInstitution:", data);
     });
   };
 
   const getAll = () => {
-    ipcRenderer.send(events.speculationInstitution.getAll);
-    ipcRenderer.on(eventResponse.speculationInstitution.gotAll, (event, data) => {
+    ipcRenderer.send(events.speculation.getAll);
+    ipcRenderer.on(eventResponse.speculation.gotAll, (event, data) => {
       // console.log("EVENT:", event);
       console.log("DATA SPECULATIONIspeculationInstitution:", data);
       dispatch({ type: actions.ON_GET_ALL, payload: data });
@@ -37,9 +37,9 @@ export default function Provider() {
 
   const update = (payload) => {
     dispatch({ type: actions.ON_UPDATE, payload });
-    ipcRenderer.send(events.speculationInstitution.update);
+    ipcRenderer.send(events.speculation.update);
 
-    ipcRenderer.on(eventResponse.speculationInstitution.updated, (event, data) => {
+    ipcRenderer.on(eventResponse.speculation.updated, (event, data) => {
       // console.log("EVENT:", event);
       console.log("DATA SPECULATIONIspeculationInstitution:", data);
     });
@@ -47,9 +47,9 @@ export default function Provider() {
 
   const deleteById = (payload) => {
     dispatch({ type: actions.ON_DELETE, payload });
-    ipcRenderer.send(events.speculationInstitution.delete);
+    ipcRenderer.send(events.speculation.delete);
 
-    ipcRenderer.on(eventResponse.speculationInstitution.deleted, (event, data) => {
+    ipcRenderer.on(eventResponse.speculation.deleted, (event, data) => {
       // console.log("EVENT:", event);
       console.log("DATA SPECULATIONIspeculationInstitution:", data);
     });

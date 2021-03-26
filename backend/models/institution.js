@@ -29,6 +29,24 @@ module.exports = (sequelize) => {
       comment: null,
       field: 'sigle',
     },
+    logo: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: 'logo',
+    },
+    addresse: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: 'addresse',
+    },
   }
   const options = {
     tableName: 'institution',
@@ -37,16 +55,16 @@ module.exports = (sequelize) => {
   }
   const InstitutionModel = sequelize.define('Institution', attributes, options)
 
-  InstitutionModel.associate = function (models) {
-    // associations can be defined here
-    InstitutionModel.belongsTo(models.Localisation, {
-      onDelete: 'CASCADE',
-      foreignKey: {
-        name: 'localisationId',
-        allowNull: false,
-      },
-    })
-  }
+  // InstitutionModel.associate = function (models) {
+  //   // associations can be defined here
+  //   InstitutionModel.belongsTo(models.Localisation, {
+  //     onDelete: 'CASCADE',
+  //     foreignKey: {
+  //       name: 'localisationId',
+  //       allowNull: false,
+  //     },
+  //   })
+  // }
 
   return InstitutionModel
 }

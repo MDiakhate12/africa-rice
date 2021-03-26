@@ -1,7 +1,7 @@
 const {
   createSpeculationInstitution,
   deleteSpeculationInstitution,
-  getAllSpeculationInstitutions,
+  getAllSpeculationInstitution,
   getSpeculationInstitutionById,
   updateSpeculationInstitution,
 } = require('../services/speculations_institution')
@@ -26,7 +26,7 @@ module.exports = (ipcMain, events, eventResponse) => {
   })
 
   ipcMain.on(events.speculationInstitution.getAll, (event, arg) => {
-    getAllSpeculationInstitutions()
+    getAllSpeculationInstitution()
       .then((data) => {
         console.log(data)
         event.reply(eventResponse.speculationInstitution.gotAll, data)
