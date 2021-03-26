@@ -8,15 +8,15 @@ export const reducer = (action, state) => {
       return [action.payload, ...state];
 
     case actions.ON_GET_ONE:
-      return state.find((value) => value.speculationId === action.payload);
+      return state.find((value) => value.idSpeculationInstitution === action.payload);
 
     case actions.ON_GET_ALL:
       return state;
 
     case actions.ON_UPDATE:
       return state.map((value) => {
-        if (value.speculationId === action.payload.speculationId) {
-          value = { speculationId: value.speculationId, ...action.payload };
+        if (value.idSpeculationInstitution === action.payload.idSpeculationInstitution) {
+          value = { idSpeculationInstitution: value.idSpeculationInstitution, ...action.payload };
         }
         return value;
       });

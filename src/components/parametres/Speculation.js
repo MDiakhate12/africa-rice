@@ -18,9 +18,6 @@ import { GlobalContext } from "../../store/GlobalProvider";
 import SingleLineGridList from "../common/SingleLineGridList";
 import riz from "../images/riz.jpg";
 
-// const { ipcRenderer } = window.require("electron");
-// const { events, eventResponse } = require("../../store/utils/events");
-
 const useStyles = makeStyles((theme) => ({
   formControl: {
     marginBottom: theme.spacing(1),
@@ -80,10 +77,10 @@ export default function Parametres() {
   const {
     varietes,
     speculations,
-    allSpeculations,
-    allVarietes,
+    zones,
+    varietesInstitution,
+    speculationsInstitution,
     addVariete,
-    allZones,
     addSpeculation,
   } = useContext(GlobalContext);
 
@@ -91,14 +88,14 @@ export default function Parametres() {
     let variete;
     switch (action.type) {
       case "ON_SPECULATION_CHANGE":
-        variete = allVarietes.find(
+        variete = varietes.find(
           (v) => v.speculation.idSpeculation === action.payload.idSpeculation
         );
         console.log("VARIETE ZONE", variete.zone);
         console.log("STATE ZONE", state.zone);
         console.log(
           "CORRESPONDING V:",
-          allVarietes.find(
+          varietes.find(
             (v) => v.speculation.idSpeculation === action.payload.idSpeculation
           )
         );
@@ -110,7 +107,7 @@ export default function Parametres() {
           zone: variete.zone,
         };
       case "ON_VARIETE_CHANGE":
-        variete = allVarietes.find(
+        variete = varietes.find(
           (v) => v.idVariete === action.payload.idVariete
         );
         console.log("VARIETE ZONE", variete.zone);
@@ -184,8 +181,7 @@ export default function Parametres() {
       id: stateVariete.variete.idVariete + Math.round(Math.random() * 100),
     };
 
-    console.log("NEW VARIETE:", newVariete);
-    addVariete(newVariete);
+    addVariete(newVariete)
   };
 
   const handleSubmitSpeculation = (e) => {
@@ -232,7 +228,7 @@ export default function Parametres() {
                   color="secondary"
                   onChange={handleChangeSpeculation}
                 >
-                  {allSpeculations.map((speculation) => (
+                  {speculations.map((speculation) => (
                     <MenuItem
                       key={speculation.idSpeculation}
                       value={speculation}
@@ -306,7 +302,7 @@ export default function Parametres() {
                   name="VARIETE"
                   onChange={handleChangeVariete}
                 >
-                  {allVarietes
+                  {varietes
                     .filter(
                       (variete) =>
                         variete.speculation.idSpeculation ===
@@ -364,7 +360,7 @@ export default function Parametres() {
                   name="ZONE"
                   disabled
                 >
-                  {allZones.map((zone) => (
+                  {zones.map((zone) => (
                     <MenuItem key={zone.idZone} value={zone}>
                       {zone.nomZone}
                     </MenuItem>

@@ -9,18 +9,18 @@ export default function Provider() {
 
   const add = (payload) => {
     dispatch({ type: actions.ON_ADD, payload });
-    ipcRenderer.send(events.speculation.create);
+    ipcRenderer.send(events.zoneAgroInstitution.create);
 
-    ipcRenderer.on(eventResponse.speculation.created, (event, data) => {
+    ipcRenderer.on(eventResponse.zoneAgroInstitution.created, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
   };
   const getOne = (payload) => {
     dispatch({ type: actions.ON_GET_ONE, payload });
-    ipcRenderer.send(events.speculation.getOne);
+    ipcRenderer.send(events.zoneAgroInstitution.getOne);
 
-    ipcRenderer.on(eventResponse.speculation.gotOne, (event, data) => {
+    ipcRenderer.on(eventResponse.zoneAgroInstitution.gotOne, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -28,9 +28,9 @@ export default function Provider() {
 
   const getAll = () => {
     dispatch({ type: actions.ON_GET_ALL });
-    ipcRenderer.send(events.speculation.getAll);
+    ipcRenderer.send(events.zoneAgroInstitution.getAll);
 
-    ipcRenderer.on(eventResponse.speculation.gotAll, (event, data) => {
+    ipcRenderer.on(eventResponse.zoneAgroInstitution.gotAll, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -38,9 +38,9 @@ export default function Provider() {
 
   const update = (payload) => {
     dispatch({ type: actions.ON_UPDATE, payload });
-    ipcRenderer.send(events.speculation.update);
+    ipcRenderer.send(events.zoneAgroInstitution.update);
 
-    ipcRenderer.on(eventResponse.speculation.updated, (event, data) => {
+    ipcRenderer.on(eventResponse.zoneAgroInstitution.updated, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -48,9 +48,9 @@ export default function Provider() {
 
   const deleteById = (payload) => {
     dispatch({ type: actions.ON_DELETE, payload });
-    ipcRenderer.send(events.speculation.delete);
+    ipcRenderer.send(events.zoneAgroInstitution.delete);
 
-    ipcRenderer.on(eventResponse.speculation.deleted, (event, data) => {
+    ipcRenderer.on(eventResponse.zoneAgroInstitution.deleted, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
