@@ -4,7 +4,7 @@ const {
   getAllZones,
   getZoneById,
   updateZone,
-} = require('../services/zoneAgroEcologique')
+} = require('../services/zoneInstitution')
 
 module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.zoneAgro.create, (event, arg) => {

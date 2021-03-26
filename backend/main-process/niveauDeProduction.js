@@ -5,9 +5,8 @@ const {
   getNiveauDeProductionById,
   updateNiveauDeProduction,
 } = require('../services/niveauDeProduction')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.niveauDeProduction.create, (event, arg) => {
     createNiveauDeProduction(arg)
       .then((data) => {

@@ -5,9 +5,8 @@ const {
   getNiveauInstitutionById,
   updateNiveauInstitution,
 } = require('../services/niveauInstitution')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.niveauInstitution.create, (event, arg) => {
     createNiveauInstitution(arg)
       .then((data) => {

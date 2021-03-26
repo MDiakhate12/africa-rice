@@ -48,6 +48,13 @@ const events = {
     delete: 'deleteZoneAgro',
     getOne: 'getOneZoneAgro',
   },
+  zoneInstitution: {
+    create: 'createZoneInstitution',
+    getAll: 'getAllZoneInstitutions',
+    update: 'updateZoneInstitution',
+    delete: 'deleteZoneInstitution',
+    getOne: 'getOneZoneInstitution',
+  },
   contact: {
     create: 'createContact',
     getAll: 'getAllContacts',
@@ -108,11 +115,11 @@ const eventResponse = {
     gotOne: 'gdtOneSpeculation',
   },
   speculationInstitution: {
-    create: 'createdSpeculationInstitution',
-    getAll: 'gotAllSpeculationsInstitution',
-    update: 'updatedSpeculationInstitution',
-    delete: 'deletedSpeculationInstitution',
-    getOne: 'gotOneSpeculationInstitution',
+    created: 'createdSpeculationInstitution',
+    gotAll: 'gotAllSpeculationsInstitution',
+    updated: 'updatedSpeculationInstitution',
+    deleted: 'deletedSpeculationInstitution',
+    gotOne: 'gotOneSpeculationInstitution',
   },
   variete: {
     created: 'createdVariete',
@@ -148,6 +155,13 @@ const eventResponse = {
     updated: 'updatedZoneAgro',
     deleted: 'deletedZoneAgro',
     gotOne: 'gotOneZoneAgro',
+  },
+  zoneInstitution: {
+    created: 'createdZoneInstitution',
+    gotAll: 'gotAllZoneInstitutions',
+    updated: 'updatedZoneInstitution',
+    deleted: 'deletedZoneInstitution',
+    gotOne: 'gotOneZoneInstitution',
   },
   contact: {
     created: 'createdContact',

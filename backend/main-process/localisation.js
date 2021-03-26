@@ -5,9 +5,8 @@ const {
   getLocalisationById,
   updateLocalisation,
 } = require('../services/localisation')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.localisation.create, (event, arg) => {
     createLocalisation(arg)
       .then((data) => {

@@ -5,9 +5,8 @@ const {
   getInstitutionById,
   updateInstitution,
 } = require('../services/institution')
-const { events, eventResponse } = require('../utils/events')
 
-module.exports = (ipcMain) => {
+module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.institution.create, (event, arg) => {
     createInstitution(arg)
       .then((data) => {
