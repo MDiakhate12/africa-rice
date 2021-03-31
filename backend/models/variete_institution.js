@@ -11,24 +11,6 @@ module.exports = (sequelize) => {
       comment: null,
       field: 'id_variete_institution',
     },
-    stockDeSecurite: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: 'stock_de_securite',
-    },
-    prix: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: 'prix',
-    },
   }
   const options = {
     tableName: 'variete_institution',

@@ -1,9 +1,10 @@
 import { createContext } from "react";
 import SpeculationProvider from "./speculation/provider";
-import SpeculationInstitutionProvider from "./speculationInstitution/provider";
 import VarieteProvider from "./variete/provider";
-import VarieteInstitutionProvider from "./varieteInstitution/provider";
 import ZoneProvider from "./zone/provider";
+import InstitutionProvider from "./institution/provider";
+import ConfirmDialogProvider from "./confirmDialog/provider";
+import LocalisationProvider from "./localisation/provider";
 
 export const GlobalContext = createContext();
 
@@ -18,15 +19,6 @@ export default function GlobalProvider({ children }) {
   ] = SpeculationProvider();
 
   const [
-    speculationsInstitution,
-    addSpeculationInstitution,
-    getOneSpeculationInstitution,
-    getAllSpeculationInstitution,
-    updateSpeculationInstitution,
-    deleteByIdSpeculationInstitution,
-  ] = SpeculationInstitutionProvider();
-
-  const [
     varietes,
     addVariete,
     getOneVariete,
@@ -34,15 +26,6 @@ export default function GlobalProvider({ children }) {
     updateVariete,
     deleteByIdVariete,
   ] = VarieteProvider();
-
-  const [
-    varietesInstitution,
-    addVarieteInstitution,
-    getOneVarieteInstitution,
-    getAllVarieteInstitution,
-    updateVarieteInstitution,
-    deleteByIdVarieteInstitution,
-  ] = VarieteInstitutionProvider();
 
   const [
     zones,
@@ -53,6 +36,27 @@ export default function GlobalProvider({ children }) {
     deleteByIdZone,
   ] = ZoneProvider();
 
+  const [
+    institutions,
+    institution,
+    addInstitution,
+    getOneInstitution,
+    getAllInstitution,
+    updateInstitution,
+    deleteByIdInstitution,
+  ] = InstitutionProvider();
+
+  const [
+    localisations,
+    addLocalisation,
+    getOneLocalisation,
+    getAllLocalisation,
+    updateLocalisation,
+    deleteByIdLocalisation,
+  ] = LocalisationProvider();
+
+  const [confirmDialog, openDialog, closeDialog] = ConfirmDialogProvider();
+
   return (
     <GlobalContext.Provider
       value={{
@@ -62,30 +66,39 @@ export default function GlobalProvider({ children }) {
         getAllSpeculation,
         updateSpeculation,
         deleteByIdSpeculation,
-        speculationsInstitution,
-        addSpeculationInstitution,
-        getOneSpeculationInstitution,
-        getAllSpeculationInstitution,
-        updateSpeculationInstitution,
-        deleteByIdSpeculationInstitution,
+       
         varietes,
         addVariete,
         getOneVariete,
         getAllVariete,
         updateVariete,
         deleteByIdVariete,
-        varietesInstitution,
-        addVarieteInstitution,
-        getOneVarieteInstitution,
-        getAllVarieteInstitution,
-        updateVarieteInstitution,
-        deleteByIdVarieteInstitution,
+
         zones,
         addZone,
         getOneZone,
         getAllZone,
         updateZone,
         deleteByIdZone,
+
+        institutions,
+        institution,
+        addInstitution,
+        getOneInstitution,
+        getAllInstitution,
+        updateInstitution,
+        deleteByIdInstitution,
+
+        confirmDialog,
+        openDialog,
+        closeDialog,
+
+        localisations,
+        addLocalisation,
+        getOneLocalisation,
+        getAllLocalisation,
+        updateLocalisation,
+        deleteByIdLocalisation,
       }}
     >
       {children}

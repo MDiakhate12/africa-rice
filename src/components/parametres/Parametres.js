@@ -8,7 +8,8 @@ import Magasin from "./Magasin";
 import Institution from "./Institution";
 import { Box, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
-
+import SpeculationVariete from "./SpeculationVariete";
+import MagasinProvider from "../../store/magasin/provider";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CenteredTabs() {
+export default function Parametres() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -67,12 +68,17 @@ export default function CenteredTabs() {
           <Tab label="Institution" />
         </Tabs>
       </Paper>
+      
       <TabPanel value={value} index={0}>
-        <Speculation />
+        <SpeculationVariete />
       </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Magasin />
-      </TabPanel>
+
+      <MagasinProvider>
+        <TabPanel value={value} index={1}>
+          <Magasin />
+        </TabPanel>
+      </MagasinProvider>
+
       <TabPanel value={value} index={2}>
         <Institution />
       </TabPanel>

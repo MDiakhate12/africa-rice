@@ -1,6 +1,9 @@
 import { actions } from "../actions";
 
-export const initialState = [];
+export const initialState = {
+  institutions: [],
+  institution: null,
+};
 
 export const reducer = (state, action) => {
   switch (action.type) {
@@ -8,15 +11,21 @@ export const reducer = (state, action) => {
       return [action.payload, ...state];
 
     case actions.ON_GET_ONE:
-      return state.find((value) => value.speculationId === action.payload);
+      return {
+        institution: action.payload,
+        ...state, 
+      };
 
     case actions.ON_GET_ALL:
-      return state;
+      return {
+        ...state, 
+        institutions: action.payload
+      };
 
     case actions.ON_UPDATE:
       return state.map((value) => {
-        if (value.speculationId === action.payload.speculationId) {
-          value = { speculationId: value.speculationId, ...action.payload };
+        if (value.idInstitution === action.payload.idInstitution) {
+          value = { idInstitution: value.idInstitution, ...action.payload };
         }
         return value;
       });

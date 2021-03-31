@@ -5,56 +5,61 @@ const { events, eventResponse } = require("../utils/events");
 const { ipcRenderer } = window.require("electron");
 
 export default function Provider() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [{ institutions, institution }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
 
   const add = (payload) => {
-    dispatch({ type: actions.ON_ADD, payload });
-    ipcRenderer.send(events.speculation.create);
+    ipcRenderer.send(events.institution.create, payload);
 
-    ipcRenderer.on(eventResponse.speculation.created, (event, data) => {
+    ipcRenderer.on(eventResponse.institution.created, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
+      dispatch({ type: actions.ON_ADD, payload: data });
     });
   };
   const getOne = (payload) => {
-    dispatch({ type: actions.ON_GET_ONE, payload });
-    ipcRenderer.send(events.speculation.getOne);
+    console.log("GET ONE:", payload);
+    ipcRenderer.send(events.institution.getOne, payload);
 
-    ipcRenderer.on(eventResponse.speculation.gotOne, (event, data) => {
-      console.log("EVENT:", event);
-      console.log("DATA:", data);
+    ipcRenderer.on(eventResponse.institution.gotOne, (event, data) => {
+      console.log("EVENT INSTITUTION:", event);
+      console.log("DATA INSTITUTION:", data);
+      dispatch({ type: actions.ON_GET_ONE, payload: data });
     });
   };
 
   const getAll = () => {
-    dispatch({ type: actions.ON_GET_ALL });
-    ipcRenderer.send(events.speculation.getAll);
+    ipcRenderer.send(events.institution.getAll);
 
-    ipcRenderer.on(eventResponse.speculation.gotAll, (event, data) => {
+    ipcRenderer.on(eventResponse.institution.gotAll, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
+      dispatch({ type: actions.ON_GET_ALL, payload: data });
     });
   };
 
   const update = (payload) => {
-    dispatch({ type: actions.ON_UPDATE, payload });
-    ipcRenderer.send(events.speculation.update);
+    ipcRenderer.send(events.institution.update, payload);
 
-    ipcRenderer.on(eventResponse.speculation.updated, (event, data) => {
+    ipcRenderer.on(eventResponse.institution.updated, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
+      dispatch({ type: actions.ON_UPDATE, payload: data });
     });
   };
 
   const deleteById = (payload) => {
-    dispatch({ type: actions.ON_DELETE, payload });
-    ipcRenderer.send(events.speculation.delete);
+    ipcRenderer.send(events.institution.delete, payload);
 
-    ipcRenderer.on(eventResponse.speculation.deleted, (event, data) => {
+    ipcRenderer.on(eventResponse.institution.deleted, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
+      dispatch({ type: actions.ON_DELETE, payload: data });
     });
   };
 
-  return [state, add, getOne, getAll, update, deleteById];
+  useEffect(() => getOne(4), []);
+  return [institutions, institution, add, getOne, getAll, update, deleteById];
 }

@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import clsx from "clsx";
 import { Box, Button, Grid, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import UploadImageButton from "../common/UploadImageButton";
 import CustomButton from "../common/CustomButton";
 import photoImage from "../images/photo.svg";
+import { eventResponse, events } from "../../store/utils/events";
+import { GlobalContext } from "../../store/GlobalProvider";
+const { ipcRenderer } = window.require("electron");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     width: "25ch",
   },
   addButton: {
-    width: "90%"
+    width: "90%",
   },
   gridContainer: {
     display: "flex",
@@ -29,6 +32,13 @@ const useStyles = makeStyles((theme) => ({
 export default function Institution() {
   const classes = useStyles();
 
+  const {
+    institution,
+    getOneInstitution,
+    addInstitution,
+    updateInstitution,
+  } = useContext(GlobalContext);
+
   const [formState, setFormState] = useState({
     nomComplet: "",
     sigle: "",
@@ -38,15 +48,27 @@ export default function Institution() {
 
   const handleChange = (e) => {
     console.log(e.target.value);
+    let { name, value } = e.target;
     setFormState((state) => {
-      let newState = state;
-      newState[e.target.name] = e.target.value;
-      return newState;
+      return {
+        ...state,
+        [name]: value,
+      };
     });
   };
 
   const handleSubmit = (e) => {
     console.log(formState);
+    console.log(institution);
+    // updateInstitution({ id: institution.id, data: formState });
+  };
+
+  const showDialog = (e) => {
+    ipcRenderer.send(events.imageDialog.openImageDialog);
+
+    ipcRenderer.on(eventResponse.imageDialog.openImageDialog, (event, path) => {
+      console.log(path);
+    });
   };
 
   return (
@@ -58,7 +80,7 @@ export default function Institution() {
               <TextField
                 label="Nom complet"
                 name="nomComplet"
-                value={formState.nomComplet || ""}
+                value={institution?.nomComplet || formState.nomComplet || ""}
                 className={clsx(classes.margin, classes.textField)}
                 variant="filled"
                 onChange={handleChange}
@@ -68,7 +90,7 @@ export default function Institution() {
               <TextField
                 label="Sigle"
                 name="sigle"
-                value={formState.sigle || ""}
+                value={institution?.sigle || formState.sigle || ""}
                 className={clsx(classes.margin, classes.textField)}
                 variant="filled"
                 onChange={handleChange}
@@ -78,7 +100,7 @@ export default function Institution() {
               <TextField
                 label="Addresse"
                 name="addresse"
-                value={formState.addresse || ""}
+                value={institution?.addresse || formState.addresse || ""}
                 className={clsx(classes.margin, classes.textField)}
                 variant="filled"
                 onChange={handleChange}
@@ -87,7 +109,7 @@ export default function Institution() {
                 <Button
                   color="primary"
                   variant="contained"
-                    className={classes.addButton}
+                  className={classes.addButton}
                   size="large"
                   onClick={handleSubmit}
                 >
@@ -104,6 +126,7 @@ export default function Institution() {
                 url: photoImage,
                 title: "Ajouter un logo",
                 width: "65%",
+                onClick: () => showDialog(),
               },
             ]}
           />

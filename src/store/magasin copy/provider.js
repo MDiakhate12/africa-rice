@@ -8,9 +8,10 @@ export default function Provider() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const add = (payload) => {
-    ipcRenderer.send(events.localisation.create, payload);
+    console.log(payload)
+    ipcRenderer.send(events.magasin.create, payload);
 
-    ipcRenderer.on(eventResponse.localisation.created, (event, data) => {
+    ipcRenderer.on(eventResponse.magasin.created, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       getAll();
@@ -20,18 +21,18 @@ export default function Provider() {
   };
   const getOne = (payload) => {
     dispatch({ type: actions.ON_GET_ONE, payload });
-    ipcRenderer.send(events.localisation.getOne);
+    ipcRenderer.send(events.magasin.getOne);
 
-    ipcRenderer.on(eventResponse.localisation.gotOne, (event, data) => {
+    ipcRenderer.on(eventResponse.magasin.gotOne, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
   };
 
   const getAll = () => {
-    ipcRenderer.send(events.localisation.getAll);
+    ipcRenderer.send(events.magasin.getAll);
 
-    ipcRenderer.on(eventResponse.localisation.gotAll, (event, data) => {
+    ipcRenderer.on(eventResponse.magasin.gotAll, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       dispatch({ type: actions.ON_GET_ALL, payload: data });
@@ -40,9 +41,9 @@ export default function Provider() {
 
   const update = (payload) => {
     dispatch({ type: actions.ON_UPDATE, payload });
-    ipcRenderer.send(events.localisation.update);
+    ipcRenderer.send(events.magasin.update);
 
-    ipcRenderer.on(eventResponse.localisation.updated, (event, data) => {
+    ipcRenderer.on(eventResponse.magasin.updated, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -50,9 +51,9 @@ export default function Provider() {
 
   const deleteById = (payload) => {
     console.log("DELETE:", payload)
-    ipcRenderer.send(events.localisation.delete, payload);
+    ipcRenderer.send(events.magasin.delete, payload);
 
-    ipcRenderer.on(eventResponse.localisation.deleted, (event, data) => {
+    ipcRenderer.on(eventResponse.magasin.deleted, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       dispatch({ type: actions.ON_DELETE, payload: data });

@@ -13,7 +13,7 @@ export default function Provider() {
 
     ipcRenderer.on(eventResponse.speculation.created, (event, data) => {
       // console.log("EVENT:", event);
-      console.log("DATA SPECULATIONIspeculationInstitution:", data);
+      console.log("DATA SPECULATION:", data);
     });
   };
   const getOne = (payload) => {
@@ -22,15 +22,16 @@ export default function Provider() {
 
     ipcRenderer.on(eventResponse.speculation.gotOne, (event, data) => {
       // console.log("EVENT:", event);
-      console.log("DATA SPECULATIONIspeculationInstitution:", data);
+      console.log("DATA SPECULATION:", data);
     });
   };
 
   const getAll = () => {
     ipcRenderer.send(events.speculation.getAll);
+    
     ipcRenderer.on(eventResponse.speculation.gotAll, (event, data) => {
       // console.log("EVENT:", event);
-      console.log("DATA SPECULATIONIspeculationInstitution:", data);
+      console.log("DATA SPECULATION:", data);
       dispatch({ type: actions.ON_GET_ALL, payload: data });
     });
   };
@@ -41,7 +42,7 @@ export default function Provider() {
 
     ipcRenderer.on(eventResponse.speculation.updated, (event, data) => {
       // console.log("EVENT:", event);
-      console.log("DATA SPECULATIONIspeculationInstitution:", data);
+      console.log("DATA SPECULATION:", data);
     });
   };
 
@@ -51,7 +52,7 @@ export default function Provider() {
 
     ipcRenderer.on(eventResponse.speculation.deleted, (event, data) => {
       // console.log("EVENT:", event);
-      console.log("DATA SPECULATIONIspeculationInstitution:", data);
+      console.log("DATA SPECULATION:", data);
     });
   };
 

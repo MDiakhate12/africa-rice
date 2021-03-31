@@ -11,7 +11,7 @@ export const reducer = (state, action) => {
       return state.find((value) => value.idSpeculationInstitution === action.payload);
 
     case actions.ON_GET_ALL:
-      return state;
+      return action.payload;
 
     case actions.ON_UPDATE:
       return state.map((value) => {

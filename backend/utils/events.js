@@ -104,6 +104,9 @@ const events = {
     delete: 'deleteProduction',
     getOne: 'getOneProduction',
   },
+  imageDialog: {
+    openImageDialog: "openImageDialog",
+  }
 }
 
 const eventResponse = {
@@ -212,6 +215,9 @@ const eventResponse = {
     deleted: 'deletedProduction',
     gotOne: 'gotOneProduction',
   },
+  imageDialog: {
+    closedImageDialog: "closedImageDialog",
+  }
 }
 
 module.exports = {

@@ -38,6 +38,15 @@ module.exports = (sequelize) => {
       comment: null,
       field: 'prix_unitaire',
     },
+    stockDeSecurite: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: 'stock_de_securite',
+    },
     quantiteDisponible: {
       type: DataTypes.INTEGER,
       allowNull: true,

@@ -34,20 +34,20 @@ module.exports = (ipcMain, events, eventResponse) => {
       .catch((err) => console.log(err))
   })
 
-  ipcMain.on(events.institution.update, (event, arg) => {
+  ipcMain.on(events.institution.getOne, (event, arg) => {
     getInstitutionById(arg)
       .then((data) => {
         console.log(data)
-        event.reply(eventResponse.institution.updated, data)
+        event.reply(eventResponse.institution.gotOne, data)
       })
       .catch((err) => console.log(err))
   })
 
-  ipcMain.on(events.institution.getOne, (event, arg) => {
+  ipcMain.on(events.institution.update, (event, arg) => {
     updateInstitution(arg.id, arg.data)
       .then((data) => {
         console.log(data)
-        event.reply(eventResponse.Institution.gotOne, data)
+        event.reply(eventResponse.Institution.updated, data)
       })
       .catch((err) => console.log(err))
   })

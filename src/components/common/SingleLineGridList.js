@@ -4,7 +4,7 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import IconButton from "@material-ui/core/IconButton";
-import InfoIcon from "@material-ui/icons/Info";
+import DeleteIcon from "@material-ui/icons/Delete";
 import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -63,8 +63,9 @@ export default function SingleLineGridList({ data }) {
                 <IconButton
                   aria-label={`info about ${tile.title}`}
                   className={classes.icon}
+                  onClick={tile.onClick}
                 >
-                  <InfoIcon color="secondary" />
+                  <DeleteIcon color="secondary" />
                 </IconButton>
               }
             />

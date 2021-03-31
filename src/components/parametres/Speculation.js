@@ -1,39 +1,25 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
-import clsx from "clsx";
+import React, {
+  createRef,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import {
-  Box,
-  Button,
-  Grid,
-  InputAdornment,
-  TextField,
-  Typography,
-} from "@material-ui/core";
-import DataTable from "../common/DataTable";
+import { Button, Grid } from "@material-ui/core";
 import { GlobalContext } from "../../store/GlobalProvider";
 import SingleLineGridList from "../common/SingleLineGridList";
-import riz from "../images/riz.jpg";
+import ConfirmDialog from "../common/ConfirmDialog";
+import { SpeculationInstitutionContext } from "../../store/speculationInstitution/provider";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     marginBottom: theme.spacing(1),
     width: "25ch",
-  },
-  margin: {
-    marginBottom: theme.spacing(1),
-  },
-  withoutLabel: {
-    marginTop: theme.spacing(3),
-  },
-  textField: {
-    width: "25ch",
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
   },
   addButton: {
     width: "29ch",
@@ -41,346 +27,134 @@ const useStyles = makeStyles((theme) => ({
   gridContainer: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignContent: "flex-start",
+    alignItems: "end",
   },
+  secondaryScroll: {
+    "*::-webkit-scrollbar-thumb": {
+      background: theme.palette.primary.secondary
+    },
+    "*::-webkit-scrollbar-thumb:hover": {
+      background: theme.palette.primary.main
+    },
+  }
 }));
 
-const columns = [
-  { type: "string", field: "id", headerName: "idVariete", hide: true },
-  { type: "string", field: "nomVariete", headerName: "Variété", width: 170 },
-  {
-    type: "string",
-    field: "speculation",
-    headerName: "Spéculation",
-    width: 130,
-    renderCell: (params) => params.getValue("Speculation").nomSpeculation,
-  },
-  { type: "number", field: "longueurCycle", headerName: "Cycle", width: 100 },
-  {
-    type: "number",
-    field: "stockDeSecurite",
-    headerName: "Stock De Sécurite",
-    width: 170,
-  },
-  {
-    type: "string",
-    field: "zone",
-    headerName: "Zone",
-    width: 100,
-    renderCell: (params) => params.getValue("ZoneAgroEcologique").nomZone,
-  },
-];
-
-export default function Parametres() {
+export default function Speculation() {
   const classes = useStyles();
 
   const {
-    varietes,
-    speculations,
-    zones,
-    varietesInstitution,
     speculationsInstitution,
     addSpeculationInstitution,
+    deleteByIdSpeculationInstitution,
+  } = useContext(SpeculationInstitutionContext);
+
+  const {
+    speculations,
   } = useContext(GlobalContext);
 
   useEffect(() => {
-    console.log("SPECULATIONS", speculations);
-    console.log("ZONES", zones);
-    console.log("VARIETES", varietes);
+    console.log("SPECULATIONS INSTITUTION", speculationsInstitution);
   }, []);
 
-  const reducer = (state, action) => {
-    let variete;
-    switch (action.type) {
-      case "ON_SPECULATION_CHANGE":
-        variete = varietes.find(
-          (v) => v.Speculation.idSpeculation === action.payload.idSpeculation
-        );
-        console.log("VARIETE ZONE", variete.ZoneAgroEcologique);
-        console.log("STATE ZONE", state.ZoneAgroEcologique);
-        console.log(
-          "CORRESPONDING V:",
-          varietes.find(
-            (v) => v.Speculation.idSpeculation === action.payload.idSpeculation
-          )
-        );
-        return {
-          ...state,
-          speculation: action.payload,
-          variete,
-          longueurCycle: variete.longueurCycle,
-          ZoneAgroEcologique: variete.ZoneAgroEcologique,
-        };
-      case "ON_VARIETE_CHANGE":
-        variete = varietes.find(
-          (v) => v.idVariete === action.payload.idVariete
-        );
-        console.log("VARIETE ZONE", variete.ZoneAgroEcologique);
-        console.log("STATE ZONE", state.ZoneAgroEcologique);
-        return {
-          ...state,
-          variete,
-          longueurCycle: variete.longueurCycle,
-          ZoneAgroEcologique: variete.ZoneAgroEcologique,
-        };
-      case "ON_STOCK_CHANGE":
-        return {
-          ...state,
-          stockDeSecurite: action.payload,
-        };
-      default:
-        break;
-    }
-  };
+  const [state, setState] = useState("");
 
-  const initialStateVariete = {
-    variete: {
-      idVariete: 1,
-      nomVariete: "Sahel 108",
-    },
-    speculation: {
-      idSpeculation: 1,
-      nomSpeculation: "riz",
-      imageSpeculation: riz,
-    },
-    ZoneAgroEcologique: {
-      nomZone: "Vallée du Fleuve Sénégal",
-      idZone: 1,
-    },
-    stockDeSecurite: 200,
-  };
-
-  const [stateVariete, dispatchVariete] = useReducer(
-    reducer,
-    initialStateVariete
-  );
-  const [stateSpeculation, setStateSpeculation] = useState("");
-
-  const handleChangeVariete = (e) => {
+  const handleChange = (e) => {
     let { name, value } = e.target;
-    dispatchVariete({ type: `ON_${name}_CHANGE`, payload: value });
-  };
-
-  const handleChangeSpeculation = (e) => {
-    let { name, value } = e.target;
-    setStateSpeculation(value);
+    setState(value);
     console.log("SPECULATION", { name, value });
   };
 
-  const handleSubmitVariete = () => {
-    for (let [, value] of Object.entries(stateVariete)) {
-      if (value === "") return;
-    }
-
-    let newVariete = {
-      ...stateVariete.variete,
-      ...stateVariete,
-      id: stateVariete.variete.idVariete + Math.round(Math.random() * 100),
-    };
-
-    // addVariete(newVariete);
-  };
-
-  const handleSubmitSpeculation = (e) => {
-    console.log("NEW SPECULATION", stateSpeculation);
+  const handleSubmit = (e) => {
+    console.log("NEW SPECULATION", state);
     addSpeculationInstitution({
-      speculationId: stateSpeculation.idSpeculation,
-      ...stateSpeculation,
+      speculationId: state.idSpeculation,
+      institutionId: 4,
+      ...state,
     });
   };
 
+  const { openDialog } = useContext(GlobalContext);
+  const handleDialogClose = (res, data) => {
+    if (res === "yes") {
+      try {
+        return deleteByIdSpeculationInstitution(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return 
+  };
+  
   return (
-    <div>
+    <>
+      <ConfirmDialog handleClose={handleDialogClose} />
       <Grid container spacing={2}>
-        <Grid item sm={12}>
-          <Grid container spacing={6} justify="space-between">
-            <Grid item sm={3}>
-              <Typography variant="button">Nos Spéculations</Typography>
-            </Grid>
-            <Grid item sm={3}>
-              <Typography variant="button">Ajouter Une Spéculation</Typography>
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item sm={9}>
-              <SingleLineGridList
-                data={speculationsInstitution.map(
-                  ({ imageSpeculation, nomSpeculation }) => ({
-                    img: imageSpeculation,
-                    title: nomSpeculation,
-                  })
-                )}
-              />
-            </Grid>
-            <Grid
-              item
-              sm={3}
-              className={classes.gridContainer}
-              justifyContent=""
-            >
-              <FormControl variant="filled" className={classes.formControl}>
-                <InputLabel color="secondary">Spéculations</InputLabel>
-                <Select
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                  value={stateSpeculation || ""}
-                  name="ALL_SPECULATION"
-                  color="secondary"
-                  onChange={handleChangeSpeculation}
-                >
-                  {speculations.map((speculation) => (
-                    <MenuItem
-                      key={speculation.idSpeculation}
-                      value={speculation}
-                    > 
-                      {speculation.nomSpeculation}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <Button
-                color="secondary"
-                variant="contained"
-                className={classes.addButton}
-                onClick={handleSubmitSpeculation}
-              >
-                Ajouter
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Box height={150}></Box>
-        <Grid item sm={9}>
-          <Typography variant="button">Nos Variétés</Typography>
-          <DataTable
-            columns={columns}
-            rows={varietes.map((v) => ({ id: v.idVariete, ...v }))}
+        <Grid item sm={9} className={classes.secondaryScroll}>
+          <SingleLineGridList
+            data={speculationsInstitution.map(
+              ({
+                Speculation: {
+                  imageSpeculation,
+                  nomSpeculation,
+                  idSpeculation,
+                },
+              }) => ({
+                img: imageSpeculation,
+                title: nomSpeculation,
+                onClick: () => {
+                  openDialog({
+                    title: "Suppression",
+                    content: `Souhaitez vous réellement supprimer la spéculation ${nomSpeculation} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`,
+                    data: idSpeculation,
+                  });
+                  console.log(idSpeculation);
+                },
+              })
+            )}
           />
         </Grid>
-        <Grid item sm={3}>
-          <Box
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
+        <Grid
+          item
+          container
+          sm={3}
+          className={classes.gridContainer}
+          justify="flex-wrap"
+        >
+          <FormControl variant="filled" className={classes.formControl}>
+            <InputLabel color="secondary">Spéculations</InputLabel>
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              value={state || ""}
+              name="ALL_SPECULATION"
+              color="secondary"
+              onChange={handleChange}
+            >
+              {speculations
+                .filter(
+                  (s) =>
+                    !speculationsInstitution
+                      .map((si) => si.speculationId)
+                      .includes(s.idSpeculation)
+                )
+                .map((speculation) => (
+                  <MenuItem key={speculation.idSpeculation} value={speculation}>
+                    {speculation.nomSpeculation}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+          <Button
+            color="secondary"
+            variant="contained"
+            className={classes.addButton}
+            onClick={handleSubmit}
           >
-            <Typography variant="button">Ajouter Une Variété</Typography>
-          </Box>
-          <Grid>
-            <Grid item className={classes.gridContainer}>
-              <FormControl variant="filled" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-filled-label">
-                  Spéculation
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                  value={stateVariete.speculation || ""}
-                  name="SPECULATION"
-                  onChange={handleChangeVariete}
-                >
-                  {speculations.map((speculation) => (
-                    <MenuItem
-                      key={speculation.idSpeculation}
-                      value={speculation}
-                    >
-                      {speculation.nomSpeculation}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item className={classes.gridContainer}>
-              <FormControl variant="filled" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-filled-label">
-                  Variétés
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                  value={stateVariete.variete || ""}
-                  name="VARIETE"
-                  onChange={handleChangeVariete}
-                >
-                  {varietes
-                    .filter(
-                      (variete) =>
-                        variete.Speculation.idSpeculation ===
-                        stateVariete.speculation.idSpeculation
-                    )
-                    .map((variete) => (
-                      <MenuItem key={variete.idVariete} value={variete}>
-                        {variete.nomVariete}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item className={classes.gridContainer}>
-              <TextField
-                label="Stock de sécurité"
-                id="state.filstockDeSecurite-star || ''t -adornment"
-                name="STOCK"
-                value={stateVariete.stockDeSecurite || ""}
-                className={clsx(classes.margin, classes.textField)}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">Kg</InputAdornment>
-                  ),
-                }}
-                variant="filled"
-                onChange={handleChangeVariete}
-              />
-            </Grid>
-            <Grid item className={classes.gridContainer}>
-              <TextField
-                label="Longueur cycle"
-                id="state.fillongueurCycle-star || ''t -adornment"
-                name="CYCLE"
-                value={stateVariete.longueurCycle || ""}
-                className={clsx(classes.margin, classes.textField)}
-                disabled
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">Jours</InputAdornment>
-                  ),
-                }}
-                variant="filled"
-              />
-            </Grid>
-            <Grid item className={classes.gridContainer}>
-              <FormControl variant="filled" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-filled-label">
-                  Zone
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                  value={stateVariete.ZoneAgroEcologique || ""}
-                  name="ZONE"
-                  disabled
-                >
-                  {zones.map((zone) => (
-                    <MenuItem key={zone.idZone} value={zone}>
-                      {zone.nomZone}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item className={classes.gridContainer}>
-              <Button
-                color="primary"
-                variant="contained"
-                className={classes.addButton}
-                onClick={handleSubmitVariete}
-              >
-                Ajouter
-              </Button>
-            </Grid>
-          </Grid>
+            Ajouter
+          </Button>
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 }
