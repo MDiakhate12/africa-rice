@@ -8,7 +8,7 @@ const createLocalisation = async (data) => {
   return localisation.toJSON()
 }
 
-const getAllLocalisations = async () => {
+const getAllLocalisations = async (arg = {}) => {
   const localisations = await service.findAll(Localisation)
   const localisationsData = localisations.map((localisation) =>
     localisation.toJSON(),

@@ -26,7 +26,7 @@ module.exports = (ipcMain, events, eventResponse) => {
   })
 
   ipcMain.on(events.client.getAll, (event, arg) => {
-    getAllClients()
+    getAllClients(arg)
       .then((data) => {
         console.log(data)
         event.reply(eventResponse.client.gotAll, data)

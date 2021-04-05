@@ -26,7 +26,7 @@ module.exports = (ipcMain, events, eventResponse) => {
   })
 
   ipcMain.on(events.localisation.getAll, (event, arg) => {
-    getAllLocalisations()
+    getAllLocalisations(arg)
       .then((data) => {
         console.log(data)
         event.reply(eventResponse.localisation.gotAll, data)

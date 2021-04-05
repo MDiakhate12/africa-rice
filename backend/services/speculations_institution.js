@@ -1,15 +1,21 @@
 const Models = require('../models').default
 const service = require('./index')
-const { SpeculationInstitution } = Models
+const { SpeculationInstitution, Speculation } = Models
 
 const createSpeculationInstitution = async (data) => {
-  const speculationInstitution = await service.create(SpeculationInstitution, data)
+  const speculationInstitution = await service.create(
+    SpeculationInstitution,
+    data,
+  )
   console.log(speculationInstitution.toJSON())
   return speculationInstitution.toJSON()
 }
 
-const getAllSpeculationInstitution = async () => {
-  const speculations = await service.findAll(SpeculationInstitution)
+const getAllSpeculationInstitution = async (arg = {}) => {
+  const option = { include: Speculation }
+  if (Object.keys(arg)) option.where = arg
+  console.log(option)
+  const speculations = await service.findAll(SpeculationInstitution, option)
   const speculationsData = speculations.map((speculationInstitution) =>
     speculationInstitution.toJSON(),
   )
@@ -18,7 +24,10 @@ const getAllSpeculationInstitution = async () => {
 }
 
 const getSpeculationInstitutionById = async (id) => {
-  const speculationInstitution = await service.findByPk(SpeculationInstitution, id)
+  const speculationInstitution = await service.findByPk(
+    SpeculationInstitution,
+    id,
+  )
   console.log(speculationInstitution.toJSON())
   return speculationInstitution.toJSON()
 }

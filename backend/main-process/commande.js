@@ -26,7 +26,7 @@ module.exports = (ipcMain, events, eventResponse) => {
   })
 
   ipcMain.on(events.commande.getAll, (event, arg) => {
-    getAllCommandes()
+    getAllCommandes(arg)
       .then((data) => {
         console.log(data)
         event.reply(eventResponse.commande.gotAll, data)

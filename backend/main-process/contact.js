@@ -27,7 +27,7 @@ module.exports = (ipcMain, events, eventResponse) => {
   })
 
   ipcMain.on(events.contact.getAll, (event, arg) => {
-    getAllContacts()
+    getAllContacts(arg)
       .then((data) => {
         console.log(data)
         event.reply(eventResponse.contact.gotAll, data)

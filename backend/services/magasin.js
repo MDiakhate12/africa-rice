@@ -8,7 +8,7 @@ const createMagasin = async (data) => {
   return magasin.toJSON()
 }
 
-const getAllMagasins = async () => {
+const getAllMagasins = async (arg = {}) => {
   const magasins = await service.findAll(Magasin)
   const magasinsData = magasins.map((magasin) => magasin.toJSON())
   console.log(magasinsData)

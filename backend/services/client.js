@@ -8,7 +8,7 @@ const createClient = async (data) => {
   return client.toJSON()
 }
 
-const getAllClients = async () => {
+const getAllClients = async (arg = {}) => {
   const clients = await service.findAll(Client)
   console.log(clients.toJSON())
   return clients.toJSON()

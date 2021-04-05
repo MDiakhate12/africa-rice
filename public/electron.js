@@ -1,8 +1,8 @@
-const { app, BrowserWindow } = require("electron");
-const path = require("path");
-const isDev = require("electron-is-dev");
-const models = require("../backend/models").default;
-require("../backend/main-process/");
+const { app, BrowserWindow } = require('electron')
+const path = require('path')
+const isDev = require('electron-is-dev')
+const models = require('../backend/models').default
+require('../backend/main-process/')
 
 // const {
 //   createSpeculation,
@@ -17,6 +17,8 @@ require("../backend/main-process/");
 //   getAllVarietes,
 // } = require("../backend/services/variete");
 
+const { deleteInstitution } = require('../backend/services/institution')
+
 const createWindow = async () => {
   let win = new BrowserWindow({
     width: 1200,
@@ -26,13 +28,14 @@ const createWindow = async () => {
       contextIsolation: false,
       devTools: true,
     },
-  });
+  })
 
   // win.removeMenu()
 
   models.sequelize
     .sync()
     .then(() => {
+      deleteInstitution({ idInstitution: 2 }).then((data) => console.log(data))
       // createSpeculation({
       //   nomSpeculation: "Diaf",
       //   imageSpeculation: "DiafR",
@@ -59,28 +62,28 @@ const createWindow = async () => {
 
       win.loadURL(
         isDev
-          ? "http://localhost:3000"
-          : `file://${path.join(__dirname, "../build/index.html")}`
-      );
+          ? 'http://localhost:3000'
+          : `file://${path.join(__dirname, '../build/index.html')}`,
+      )
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err))
 
-  win.on("closed", () => {
-    win = null;
+  win.on('closed', () => {
+    win = null
     app.quit()
-  });
-};
+  })
+}
 
 app.whenReady().then(() => {
-  createWindow();
+  createWindow()
 
-  app.on("activate", () => {
+  app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
+      createWindow()
     }
-  });
-});
+  })
+})
 
-app.on("window-all-closed", () => {
-  if (process.platform === "darwin") app.quit();
-});
+app.on('window-all-closed', () => {
+  if (process.platform === 'darwin') app.quit()
+})

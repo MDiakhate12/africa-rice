@@ -13,10 +13,10 @@ const createVarieteInstitution = async (data) => {
   return variete.toJSON()
 }
 
-const getAllVarieteInstitutions = async () => {
-  const varietes = await service.findAll(VarieteInstitution, {
-    include: [ZoneAgroEcologique, Speculation],
-  })
+const getAllVarieteInstitutions = async (arg = {}) => {
+  const option = { include: Variete }
+  if (Object.keys(arg)) option.where = arg
+  const varietes = await service.findAll(VarieteInstitution, option)
   const variestesData = varietes.map((variete) => variete.toJSON())
   console.log(variestesData)
 
@@ -24,7 +24,9 @@ const getAllVarieteInstitutions = async () => {
 }
 
 const getVarieteInstitutionById = async (id) => {
-  const variete = await service.findByPk(VarieteInstitution, id)
+  const variete = await service.findByPk(VarieteInstitution, id, {
+    include: [Variete],
+  })
   console.log(variete.toJSON())
   return variete.toJSON()
 }

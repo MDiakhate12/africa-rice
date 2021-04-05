@@ -1,85 +1,85 @@
-import riz from "../../components/images/riz.jpg";
-import sorgho from "../../components/images/sorgho.jpg";
-import mil from "../../components/images/mil.jpg";
-import mais from "../../components/images/mais.jpg";
-import arachide from "../../components/images/arachide.jpg";
-import niebe from "../../components/images/niebe.jpg";
-import oignon from "../../components/images/oignon.jpg";
-import tomate from "../../components/images/tomate.jpg";
-import piment from "../../components/images/piment.jpg";
-import jaxatu from "../../components/images/jaxatu.jpg";
-import terre from "../../components/images/pomme_de_terre.jpg";
-import douce from "../../components/images/patate_douce.jpg";
-import gombo from "../../components/images/gombo.jpg";
-import aubergine from "../../components/images/aubergine.jpg";
+import riz from '../../components/images/riz.jpg'
+import sorgho from '../../components/images/sorgho.jpg'
+import mil from '../../components/images/mil.jpg'
+import mais from '../../components/images/mais.jpg'
+import arachide from '../../components/images/arachide.jpg'
+import niebe from '../../components/images/niebe.jpg'
+import oignon from '../../components/images/oignon.jpg'
+import tomate from '../../components/images/tomate.jpg'
+import piment from '../../components/images/piment.jpg'
+import jaxatu from '../../components/images/jaxatu.jpg'
+import terre from '../../components/images/pomme_de_terre.jpg'
+import douce from '../../components/images/patate_douce.jpg'
+import gombo from '../../components/images/gombo.jpg'
+import aubergine from '../../components/images/aubergine.jpg'
 
-import { events, eventResponse } from "../utils/events";
+import { events, eventResponse } from '../utils/events'
 
-const { ipcRenderer } = window.require("electron");
+const { ipcRenderer } = window.require('electron')
 
 export const allSpeculations = [
   {
-    nomSpeculation: "riz",
+    nomSpeculation: 'riz',
     imageSpeculation: riz,
   },
   {
-    nomSpeculation: "sorgho",
+    nomSpeculation: 'sorgho',
     imageSpeculation: sorgho,
   },
   {
-    nomSpeculation: "mil",
+    nomSpeculation: 'mil',
     imageSpeculation: mil,
   },
   {
-    nomSpeculation: "mais",
+    nomSpeculation: 'mais',
     imageSpeculation: mais,
   },
   {
-    nomSpeculation: "arachide",
+    nomSpeculation: 'arachide',
     imageSpeculation: arachide,
   },
   {
-    nomSpeculation: "niebe",
+    nomSpeculation: 'niebe',
     imageSpeculation: niebe,
   },
   {
-    nomSpeculation: "oignon",
+    nomSpeculation: 'oignon',
     imageSpeculation: oignon,
   },
   {
-    nomSpeculation: "tomate",
+    nomSpeculation: 'tomate',
     imageSpeculation: tomate,
   },
   {
-    nomSpeculation: "piment",
+    nomSpeculation: 'piment',
     imageSpeculation: piment,
   },
   {
-    nomSpeculation: "jaxatu",
+    nomSpeculation: 'jaxatu',
     imageSpeculation: jaxatu,
   },
   {
-    nomSpeculation: "pomme de terre",
+    nomSpeculation: 'pomme de terre',
     imageSpeculation: terre,
   },
   {
-    nomSpeculation: "patate douce",
+    nomSpeculation: 'patate douce',
     imageSpeculation: douce,
   },
   {
-    nomSpeculation: "gombo",
+    nomSpeculation: 'gombo',
     imageSpeculation: gombo,
   },
   {
-    nomSpeculation: "aubergine",
+    nomSpeculation: 'aubergine',
     imageSpeculation: aubergine,
   },
-];
+]
 
 allSpeculations.map((s) => {
-  ipcRenderer.send(events.speculation.create, s);
+  ipcRenderer.send(events.speculation.create, s)
 
-  ipcRenderer.on(eventResponse.speculation.created, (e, d) => {
-    console.log(d);
-  });
-});
+  // ipcRenderer.on(eventResponse.speculation.created, (e, d) => {
+  //   console.log(d);
+  // });
+})

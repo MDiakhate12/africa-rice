@@ -119,19 +119,19 @@ module.exports = (sequelize) => {
       comment: null,
       field: 'date_expression_besoin_client',
     },
-    magasinEnlevement: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: 'magasin_enlevement',
-      references: {
-        key: 'id_magasin',
-        model: 'magasinModel',
-      },
-    },
+    // magasinEnlevement: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    //   defaultValue: null,
+    //   primaryKey: false,
+    //   autoIncrement: false,
+    //   comment: null,
+    //   field: 'magasin_enlevement',
+    //   references: {
+    //     key: 'id_magasin',
+    //     model: 'magasinModel',
+    //   },
+    // },
   }
   const options = {
     tableName: 'commande',

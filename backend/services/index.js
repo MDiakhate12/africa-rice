@@ -40,11 +40,11 @@ const update = (model, id, payload) =>
 */
 
 const deleteByPk = (model, id) =>
-  model.destroy({
-    where: {
-      id,
-    },
-  })
+  model
+    .destroy({
+      where: id,
+    })
+    .catch((err) => console.log(err))
 
 /*
   Count the occurrences of element for a given model 

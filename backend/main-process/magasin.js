@@ -26,7 +26,7 @@ module.exports = (ipcMain, events, eventResponse) => {
   })
 
   ipcMain.on(events.magasin.getAll, (event, arg) => {
-    getAllMagasins()
+    getAllMagasins(arg)
       .then((data) => {
         console.log(data)
         event.reply(eventResponse.magasin.gotAll, data)

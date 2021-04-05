@@ -1,6 +1,17 @@
 const Models = require('../models').default
 const service = require('./index')
-const { Production } = Models
+const {
+  Production,
+  SpeculationInstitution,
+  Magasin,
+  Localisation,
+  NiveauInstitution,
+  NiveauDeProduction,
+  VarieteInstitution,
+  Variete,
+  sequelize,
+  Speculation,
+} = Models
 
 const createProduction = async (data) => {
   const production = await service.create(Production, data)
@@ -8,8 +19,53 @@ const createProduction = async (data) => {
   return production.toJSON()
 }
 
-const getAllProductions = async () => {
-  const productions = await service.findAll(Production)
+const getAllProductions = async (arg = {}) => {
+  let option = {
+    include: [
+      Magasin,
+      Localisation,
+      { model: NiveauInstitution, include: NiveauDeProduction },
+      { model: VarieteInstitution, include: Variete },
+    ],
+  }
+  if (Object.keys(arg)) option = { ...option, ...arg }
+  console.log(option)
+  const productions = await service.findAll(Production, option)
+  const productionsData = productions.map((production) => production.toJSON())
+  console.log(productionsData)
+  return productionsData
+}
+
+const getProductionsSumByVarietes = async (arg = {}) => {
+  let option = {
+    include: [
+      // Magasin,
+      // Localisation,
+      // { model: NiveauInstitution, include: NiveauDeProduction },
+      {
+        model: VarieteInstitution,
+        include: [
+          Variete,
+          { model: SpeculationInstitution, include: Speculation },
+        ],
+      },
+    ],
+    group: ['varieteInstitutionId'],
+    attributes: [
+      'varieteInstitutionId',
+      [
+        sequelize.fn('sum', sequelize.col('quantite_produite')),
+        'totalQuantiteProduite',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('quantite_disponible')),
+        'totalQuantiteDisponible',
+      ],
+      [sequelize.fn('sum', sequelize.col('prix_unitaire')), 'totalPrix'],
+    ],
+  }
+
+  const productions = await service.findAll(Production, option)
   const productionsData = productions.map((production) => production.toJSON())
   console.log(productionsData)
   return productionsData
@@ -29,13 +85,14 @@ const updateProduction = async (id, data) => {
 
 const deleteProduction = async (id) => {
   const deleted = service.deleteByPk(Production, id)
-  console.log(deleted.toJSON())
-  return deleted.toJSON()
+  console.log(deleted)
+  return deleted
 }
 
 module.exports = {
   createProduction,
   getAllProductions,
+  getProductionsSumByVarietes,
   getProductionById,
   deleteProduction,
   updateProduction,

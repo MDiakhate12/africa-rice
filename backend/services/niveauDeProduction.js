@@ -8,7 +8,7 @@ const createNiveauDeProduction = async (data) => {
   return niveauDeProduction.toJSON()
 }
 
-const getAllNiveauDeProductions = async () => {
+const getAllNiveauDeProductions = async (arg = {}) => {
   const niveauDeProductions = await service.findAll(NiveauDeProduction)
   const niveauDeProductionsData = niveauDeProductions.map(
     (niveauDeProduction) => niveauDeProduction.toJSON(),

@@ -1,11 +1,15 @@
-import { createContext } from "react";
-import SpeculationProvider from "./speculation/provider";
-import SpeculationInstitutionProvider from "./speculationInstitution/provider";
-import VarieteProvider from "./variete/provider";
-import VarieteInstitutionProvider from "./varieteInstitution/provider";
-import ZoneProvider from "./zone/provider";
+import { createContext } from 'react'
+import SpeculationProvider from './speculation/provider'
+import SpeculationInstitutionProvider from './speculationInstitution/provider'
+import VarieteProvider from './variete/provider'
+import VarieteInstitutionProvider from './varieteInstitution/provider'
+import ZoneProvider from './zone/provider'
+import ProductionProvider from './production/provider'
+import MagasinProvider from './magasin/provider'
+import NiveuInstitutionProvider from './niveauInstitution/provider'
+import LocalisationProvider from './localisation/provider'
 
-export const GlobalContext = createContext();
+export const GlobalContext = createContext()
 
 export default function GlobalProvider({ children }) {
   const [
@@ -15,7 +19,7 @@ export default function GlobalProvider({ children }) {
     getAllSpeculation,
     updateSpeculation,
     deleteByIdSpeculation,
-  ] = SpeculationProvider();
+  ] = SpeculationProvider()
 
   const [
     speculationsInstitution,
@@ -24,7 +28,7 @@ export default function GlobalProvider({ children }) {
     getAllSpeculationInstitution,
     updateSpeculationInstitution,
     deleteByIdSpeculationInstitution,
-  ] = SpeculationInstitutionProvider();
+  ] = SpeculationInstitutionProvider()
 
   const [
     varietes,
@@ -33,7 +37,7 @@ export default function GlobalProvider({ children }) {
     getAllVariete,
     updateVariete,
     deleteByIdVariete,
-  ] = VarieteProvider();
+  ] = VarieteProvider()
 
   const [
     varietesInstitution,
@@ -42,7 +46,7 @@ export default function GlobalProvider({ children }) {
     getAllVarieteInstitution,
     updateVarieteInstitution,
     deleteByIdVarieteInstitution,
-  ] = VarieteInstitutionProvider();
+  ] = VarieteInstitutionProvider()
 
   const [
     zones,
@@ -51,7 +55,25 @@ export default function GlobalProvider({ children }) {
     getAllZone,
     updateZone,
     deleteByIdZone,
-  ] = ZoneProvider();
+  ] = ZoneProvider()
+
+  const [
+    productions,
+    addProduction,
+    getOneProduction,
+    getAllProduction,
+    updateProduction,
+    deleteByIdProduction,
+  ] = ProductionProvider()
+
+  const [
+    magasins,
+    addMagasin,
+    getOneMagasin,
+    getAllMagasin,
+    updateMagasin,
+    deleteByIdMagasin,
+  ] = MagasinProvider()
 
   return (
     <GlobalContext.Provider
@@ -62,33 +84,51 @@ export default function GlobalProvider({ children }) {
         getAllSpeculation,
         updateSpeculation,
         deleteByIdSpeculation,
+
         speculationsInstitution,
         addSpeculationInstitution,
         getOneSpeculationInstitution,
         getAllSpeculationInstitution,
         updateSpeculationInstitution,
         deleteByIdSpeculationInstitution,
+
         varietes,
         addVariete,
         getOneVariete,
         getAllVariete,
         updateVariete,
         deleteByIdVariete,
+
         varietesInstitution,
         addVarieteInstitution,
         getOneVarieteInstitution,
         getAllVarieteInstitution,
         updateVarieteInstitution,
         deleteByIdVarieteInstitution,
+
         zones,
         addZone,
         getOneZone,
         getAllZone,
         updateZone,
         deleteByIdZone,
+
+        productions,
+        addProduction,
+        getOneProduction,
+        getAllProduction,
+        updateProduction,
+        deleteByIdProduction,
+
+        magasins,
+        addMagasin,
+        getOneMagasin,
+        getAllMagasin,
+        updateMagasin,
+        deleteByIdMagasin,
       }}
     >
       {children}
     </GlobalContext.Provider>
-  );
+  )
 }

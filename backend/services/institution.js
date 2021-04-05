@@ -8,7 +8,7 @@ const createInstitution = async (data) => {
   return institution.toJSON()
 }
 
-const getAllInstitutions = async () => {
+const getAllInstitutions = async (arg = {}) => {
   const institutions = await service.findAll(Institution)
   const institutionsData = institutions.map((institution) =>
     institution.toJSON(),
@@ -31,8 +31,8 @@ const updateInstitution = async (id, data) => {
 
 const deleteInstitution = async (id) => {
   const deleted = service.deleteByPk(Institution, id)
-  console.log(deleted.toJSON())
-  return deleted.toJSON()
+  console.log(deleted)
+  return deleted
 }
 
 module.exports = {

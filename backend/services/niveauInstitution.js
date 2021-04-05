@@ -1,6 +1,6 @@
 const Models = require('../models').default
 const service = require('./index')
-const { NiveauInstitution } = Models
+const { NiveauInstitution, NiveauDeProduction } = Models
 
 const createNiveauInstitution = async (data) => {
   const niveauInstitution = await service.create(NiveauInstitution, data)
@@ -8,8 +8,10 @@ const createNiveauInstitution = async (data) => {
   return niveauInstitution.toJSON()
 }
 
-const getAllNiveauInstitutions = async () => {
-  const niveauInstitutions = await service.findAll(NiveauInstitution)
+const getAllNiveauInstitutions = async (arg = {}) => {
+  const option = { include: NiveauDeProduction }
+  if (Object.keys(arg)) option.where = arg
+  const niveauInstitutions = await service.findAll(NiveauInstitution, option)
   const niveauInstitutionsData = niveauInstitutions.map((niveauInstitution) =>
     niveauInstitution.toJSON(),
   )
@@ -18,7 +20,9 @@ const getAllNiveauInstitutions = async () => {
 }
 
 const getNiveauInstitutionById = async (id) => {
-  const niveauInstitution = await service.findByKey(NiveauInstitution, id)
+  const niveauInstitution = await service.findByKey(NiveauInstitution, id, {
+    include: [NiveauDeProduction],
+  })
   console.log(niveauInstitution.toJSON())
   return niveauInstitution.toJSON()
 }
