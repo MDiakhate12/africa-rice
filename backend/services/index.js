@@ -6,34 +6,42 @@ const findOrCreate = (model, payload) =>
     defaults: {
       ...payload,
     },
-  })
+  });
 
 /*
   Create a new for a given mode
 */
-const create = (model, payload) => model.create(payload)
+const create = (model, payload) => model.create(payload);
 
-const findByPk = (model, id, condition = {}) => model.findByPk(id, condition)
+const findByPk = (model, id, condition = {}) => model.findByPk(id, condition);
 
 /*
   Get all record of a models
 */
-const findAll = (model, condition = {}) => model.findAll(condition)
+const findAll = (model, condition = {}) => model.findAll(condition);
 
 /*
   Update an model entity
 */
-const update = (model, id, payload) =>
-  model.update(
+const update = async (model, id, payload) => {
+  let idName = "";
+  for (let p in payload) {
+    if (p.startsWith("id")) {
+      idName = p;
+      break;
+    }
+  }
+  return await model.update(
     {
       ...payload,
     },
     {
       where: {
-        id,
+        [idName]: id,
       },
-    },
-  )
+    }
+  );
+};
 
 /*
   Delete an record by id 
@@ -44,12 +52,12 @@ const deleteByPk = (model, id) =>
     where: {
       id,
     },
-  })
+  });
 
 /*
   Count the occurrences of element for a given model 
 */
-const count = (model, condition = {}) => model.count(condition)
+const count = (model, condition = {}) => model.count(condition);
 
 /*
 find activation by key
@@ -59,7 +67,7 @@ const findByKey = (model, key) =>
     where: {
       key: key,
     },
-  })
+  });
 
 module.exports = {
   findByPk,
@@ -70,4 +78,4 @@ module.exports = {
   findOrCreate,
   create,
   findAll,
-}
+};

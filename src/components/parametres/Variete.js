@@ -40,6 +40,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Variete() {
+  const { varietes, institution, openDialog } = useContext(GlobalContext);
+
   const columns = [
     { type: "string", field: "id", headerName: "idVariete", hide: true },
     {
@@ -106,18 +108,6 @@ export default function Variete() {
 
   const { speculationsInstitution } = useContext(SpeculationInstitutionContext);
 
-  const { varietes, zones } = useContext(GlobalContext);
-
-  useEffect(() => {
-    console.log("VARIETES INSTITUTION", varietesInstitution);
-  }, []);
-
-  let initialState = {
-    speculationInstitution: {},
-    variete: {},
-    idInstitution: 4,
-  };
-
   const reducer = (state, action) => {
     let { name, value } = action.payload;
     let variete;
@@ -143,7 +133,6 @@ export default function Variete() {
         break;
     }
   };
-  const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -171,7 +160,6 @@ export default function Variete() {
     addVarieteInstitution(newVarieteInstitution);
   };
 
-  const { openDialog } = useContext(GlobalContext);
   const handleDialogClose = (res, data) => {
     if (res === "yes") {
       try {
@@ -182,6 +170,15 @@ export default function Variete() {
     }
     return;
   };
+
+  let initialState = {
+    speculationInstitution: {},
+    variete: {},
+    idInstitution: institution?.idInstitution,
+  };
+
+
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <>

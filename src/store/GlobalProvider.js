@@ -1,14 +1,28 @@
+import InstitutionProvider from "./institution/provider";
 import { createContext } from "react";
 import SpeculationProvider from "./speculation/provider";
 import VarieteProvider from "./variete/provider";
 import ZoneProvider from "./zone/provider";
-import InstitutionProvider from "./institution/provider";
 import ConfirmDialogProvider from "./confirmDialog/provider";
+import ContactFormDialogProvider from "./contactFormDialog/provider";
+import ClientFormDialogProvider from "./clientFormDialog/provider";
 import LocalisationProvider from "./localisation/provider";
+import NiveauProvider from "./niveau/provider";
+import NiveauInstitutionProvider from "./niveauInstitution/provider";
 
 export const GlobalContext = createContext();
 
 export default function GlobalProvider({ children }) {
+  const [
+    institutions,
+    institution,
+    addInstitution,
+    getOneInstitution,
+    getAllInstitution,
+    updateInstitution,
+    deleteByIdInstitution,
+  ] = InstitutionProvider();
+
   const [
     speculations,
     addSpeculation,
@@ -37,16 +51,6 @@ export default function GlobalProvider({ children }) {
   ] = ZoneProvider();
 
   const [
-    institutions,
-    institution,
-    addInstitution,
-    getOneInstitution,
-    getAllInstitution,
-    updateInstitution,
-    deleteByIdInstitution,
-  ] = InstitutionProvider();
-
-  const [
     localisations,
     addLocalisation,
     getOneLocalisation,
@@ -55,32 +59,40 @@ export default function GlobalProvider({ children }) {
     deleteByIdLocalisation,
   ] = LocalisationProvider();
 
+  const [
+    niveaux,
+    addNiveau,
+    getOneNiveau,
+    getAllNiveau,
+    updateNiveau,
+    deleteByIdNiveau,
+  ] = NiveauProvider();
+
+  const [
+    niveauxInstitution,
+    addNiveauInstitution,
+    getOneNiveauInstitution,
+    getAllNiveauInstitution,
+    updateNiveauInstitution,
+    deleteByIdNiveauInstitution,
+  ] = NiveauInstitutionProvider();
+
   const [confirmDialog, openDialog, closeDialog] = ConfirmDialogProvider();
+  const [
+    contactFormDialog,
+    openContactFormDialog,
+    closeContactFormDialog,
+  ] = ContactFormDialogProvider();
+
+  const [
+    clientFormDialog,
+    openClientFormDialog,
+    closeClientFormDialog,
+  ] = ClientFormDialogProvider();
 
   return (
     <GlobalContext.Provider
       value={{
-        speculations,
-        addSpeculation,
-        getOneSpeculation,
-        getAllSpeculation,
-        updateSpeculation,
-        deleteByIdSpeculation,
-       
-        varietes,
-        addVariete,
-        getOneVariete,
-        getAllVariete,
-        updateVariete,
-        deleteByIdVariete,
-
-        zones,
-        addZone,
-        getOneZone,
-        getAllZone,
-        updateZone,
-        deleteByIdZone,
-
         institutions,
         institution,
         addInstitution,
@@ -88,6 +100,20 @@ export default function GlobalProvider({ children }) {
         getAllInstitution,
         updateInstitution,
         deleteByIdInstitution,
+
+        speculations,
+        addSpeculation,
+        getOneSpeculation,
+        getAllSpeculation,
+        updateSpeculation,
+        deleteByIdSpeculation,
+
+        zones,
+        addZone,
+        getOneZone,
+        getAllZone,
+        updateZone,
+        deleteByIdZone,
 
         confirmDialog,
         openDialog,
@@ -99,6 +125,35 @@ export default function GlobalProvider({ children }) {
         getAllLocalisation,
         updateLocalisation,
         deleteByIdLocalisation,
+
+        niveaux,
+        addNiveau,
+        getOneNiveau,
+        getAllNiveau,
+        updateNiveau,
+        deleteByIdNiveau,
+
+        niveauxInstitution,
+        addNiveauInstitution,
+        getOneNiveauInstitution,
+        getAllNiveauInstitution,
+        updateNiveauInstitution,
+        deleteByIdNiveauInstitution,
+
+        varietes,
+        addVariete,
+        getOneVariete,
+        getAllVariete,
+        updateVariete,
+        deleteByIdVariete,
+
+        contactFormDialog,
+        openContactFormDialog,
+        closeContactFormDialog,
+
+        clientFormDialog,
+        openClientFormDialog,
+        closeClientFormDialog,
       }}
     >
       {children}

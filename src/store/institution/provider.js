@@ -13,7 +13,7 @@ export default function Provider() {
   const add = (payload) => {
     ipcRenderer.send(events.institution.create, payload);
 
-    ipcRenderer.on(eventResponse.institution.created, (event, data) => {
+    ipcRenderer.once(eventResponse.institution.created, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       dispatch({ type: actions.ON_ADD, payload: data });
@@ -23,7 +23,7 @@ export default function Provider() {
     console.log("GET ONE:", payload);
     ipcRenderer.send(events.institution.getOne, payload);
 
-    ipcRenderer.on(eventResponse.institution.gotOne, (event, data) => {
+    ipcRenderer.once(eventResponse.institution.gotOne, (event, data) => {
       console.log("EVENT INSTITUTION:", event);
       console.log("DATA INSTITUTION:", data);
       dispatch({ type: actions.ON_GET_ONE, payload: data });
@@ -33,7 +33,7 @@ export default function Provider() {
   const getAll = () => {
     ipcRenderer.send(events.institution.getAll);
 
-    ipcRenderer.on(eventResponse.institution.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.institution.gotAll, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       dispatch({ type: actions.ON_GET_ALL, payload: data });
@@ -43,23 +43,28 @@ export default function Provider() {
   const update = (payload) => {
     ipcRenderer.send(events.institution.update, payload);
 
-    ipcRenderer.on(eventResponse.institution.updated, (event, data) => {
+    ipcRenderer.once(eventResponse.institution.updated, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
-      dispatch({ type: actions.ON_UPDATE, payload: data });
+      // dispatch({ type: actions.ON_UPDATE, payload: data });
+
+      getOne(institution.idInstitution);
     });
   };
 
   const deleteById = (payload) => {
     ipcRenderer.send(events.institution.delete, payload);
 
-    ipcRenderer.on(eventResponse.institution.deleted, (event, data) => {
+    ipcRenderer.once(eventResponse.institution.deleted, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       dispatch({ type: actions.ON_DELETE, payload: data });
     });
   };
 
-  useEffect(() => getOne(4), []);
+  useEffect(() => {
+    getOne(4);
+  }, []);
+
   return [institutions, institution, add, getOne, getAll, update, deleteById];
 }

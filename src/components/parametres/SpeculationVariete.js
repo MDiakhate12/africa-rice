@@ -3,8 +3,6 @@ import React from "react";
 import { Box, Grid, Typography } from "@material-ui/core";
 import Variete from "./Variete";
 import Speculation from "./Speculation";
-import SpeculationInstitutionProvider from "../../store/speculationInstitution/provider";
-import VarieteInstitutionProvider from "../../store/varieteInstitution/provider";
 
 export default function SpeculationVariete() {
   return (
@@ -20,19 +18,12 @@ export default function SpeculationVariete() {
             </Grid>
           </Grid>
         </Grid>
-        
-        <SpeculationInstitutionProvider>
-          <Speculation />
-        </SpeculationInstitutionProvider>
+
+        <Speculation />
 
         <Box height={150}></Box>
-        
-        <VarieteInstitutionProvider>
-          <SpeculationInstitutionProvider>
-            <Variete />
-          </SpeculationInstitutionProvider>
-        </VarieteInstitutionProvider>
 
+        <Variete />
       </Grid>
     </div>
   );

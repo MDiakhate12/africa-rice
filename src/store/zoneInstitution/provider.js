@@ -11,7 +11,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_ADD, payload });
     ipcRenderer.send(events.zoneAgroInstitution.create);
 
-    ipcRenderer.on(eventResponse.zoneAgroInstitution.created, (event, data) => {
+    ipcRenderer.once(eventResponse.zoneAgroInstitution.created, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -20,7 +20,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_GET_ONE, payload });
     ipcRenderer.send(events.zoneAgroInstitution.getOne);
 
-    ipcRenderer.on(eventResponse.zoneAgroInstitution.gotOne, (event, data) => {
+    ipcRenderer.once(eventResponse.zoneAgroInstitution.gotOne, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -30,7 +30,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_GET_ALL });
     ipcRenderer.send(events.zoneAgroInstitution.getAll);
 
-    ipcRenderer.on(eventResponse.zoneAgroInstitution.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.zoneAgroInstitution.gotAll, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -40,7 +40,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_UPDATE, payload });
     ipcRenderer.send(events.zoneAgroInstitution.update);
 
-    ipcRenderer.on(eventResponse.zoneAgroInstitution.updated, (event, data) => {
+    ipcRenderer.once(eventResponse.zoneAgroInstitution.updated, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -50,7 +50,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_DELETE, payload });
     ipcRenderer.send(events.zoneAgroInstitution.delete);
 
-    ipcRenderer.on(eventResponse.zoneAgroInstitution.deleted, (event, data) => {
+    ipcRenderer.once(eventResponse.zoneAgroInstitution.deleted, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });

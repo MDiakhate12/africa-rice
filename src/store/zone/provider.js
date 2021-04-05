@@ -14,7 +14,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_ADD, payload });
     ipcRenderer.send(events.zoneAgro.create);
 
-    ipcRenderer.on(eventResponse.zoneAgro.created, (event, data) => {
+    ipcRenderer.once(eventResponse.zoneAgro.created, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -23,7 +23,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_GET_ONE, payload });
     ipcRenderer.send(events.zoneAgro.getOne);
 
-    ipcRenderer.on(eventResponse.zoneAgro.gotOne, (event, data) => {
+    ipcRenderer.once(eventResponse.zoneAgro.gotOne, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -32,7 +32,7 @@ export default function Provider() {
   const getAll = () => {
     ipcRenderer.send(events.zoneAgro.getAll);
 
-    ipcRenderer.on(eventResponse.zoneAgro.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.zoneAgro.gotAll, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       dispatch({ type: actions.ON_GET_ALL, payload: data });
@@ -43,7 +43,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_UPDATE, payload });
     ipcRenderer.send(events.zoneAgro.update);
 
-    ipcRenderer.on(eventResponse.zoneAgro.updated, (event, data) => {
+    ipcRenderer.once(eventResponse.zoneAgro.updated, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -53,7 +53,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_DELETE, payload });
     ipcRenderer.send(events.zoneAgro.delete);
 
-    ipcRenderer.on(eventResponse.zoneAgro.deleted, (event, data) => {
+    ipcRenderer.once(eventResponse.zoneAgro.deleted, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });

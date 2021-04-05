@@ -47,7 +47,7 @@ module.exports = (ipcMain, events, eventResponse) => {
     updateInstitution(arg.id, arg.data)
       .then((data) => {
         console.log(data)
-        event.reply(eventResponse.Institution.updated, data)
+        event.reply(eventResponse.institution.updated, data)
       })
       .catch((err) => console.log(err))
   })

@@ -10,6 +10,8 @@ import { Box, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
 import SpeculationVariete from "./SpeculationVariete";
 import MagasinProvider from "../../store/magasin/provider";
+import VarieteInstitutionProvider from "../../store/varieteInstitution/provider";
+import SpeculationInstitutionProvider from "../../store/speculationInstitution/provider";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -68,10 +70,14 @@ export default function Parametres() {
           <Tab label="Institution" />
         </Tabs>
       </Paper>
-      
-      <TabPanel value={value} index={0}>
-        <SpeculationVariete />
-      </TabPanel>
+
+      <VarieteInstitutionProvider>
+        <SpeculationInstitutionProvider>
+          <TabPanel value={value} index={0}>
+            <SpeculationVariete />
+          </TabPanel>
+        </SpeculationInstitutionProvider>
+      </VarieteInstitutionProvider>
 
       <MagasinProvider>
         <TabPanel value={value} index={1}>

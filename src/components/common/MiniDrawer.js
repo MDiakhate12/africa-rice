@@ -156,7 +156,7 @@ export default function MiniDrawer() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Mini variant drawer
+            Gestion des semences
           </Typography>
         </Toolbar>
       </AppBar>

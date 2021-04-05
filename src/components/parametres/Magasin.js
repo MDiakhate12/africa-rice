@@ -110,22 +110,19 @@ export default function Magasin() {
   } = useContext(MagasinContext);
 
   const {
-    zones,
     localisations,
     openDialog,
+    institution
   } = useContext(GlobalContext);
 
-  useEffect(() => {
-    console.log("MAGASINS", magasins);
-  }, []);
-
+  
   let initialState = {
     nomMagasin: "",
     region: "",
     departement: "",
     commune: "",
     village: "",
-    idInstitution: 4,
+    idInstitution: institution.idInstitution,
   };
 
   const reducer = (state, action) => {

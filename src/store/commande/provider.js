@@ -11,7 +11,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_ADD, payload });
     ipcRenderer.send(events.speculation.create);
 
-    ipcRenderer.on(eventResponse.speculation.created, (event, data) => {
+    ipcRenderer.once(eventResponse.speculation.created, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -20,7 +20,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_GET_ONE, payload });
     ipcRenderer.send(events.speculation.getOne);
 
-    ipcRenderer.on(eventResponse.speculation.gotOne, (event, data) => {
+    ipcRenderer.once(eventResponse.speculation.gotOne, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -30,7 +30,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_GET_ALL });
     ipcRenderer.send(events.speculation.getAll);
 
-    ipcRenderer.on(eventResponse.speculation.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.speculation.gotAll, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -40,7 +40,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_UPDATE, payload });
     ipcRenderer.send(events.speculation.update);
 
-    ipcRenderer.on(eventResponse.speculation.updated, (event, data) => {
+    ipcRenderer.once(eventResponse.speculation.updated, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -50,7 +50,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_DELETE, payload });
     ipcRenderer.send(events.speculation.delete);
 
-    ipcRenderer.on(eventResponse.speculation.deleted, (event, data) => {
+    ipcRenderer.once(eventResponse.speculation.deleted, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });

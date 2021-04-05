@@ -11,7 +11,7 @@ export default function Provider() {
     console.log(payload)
     ipcRenderer.send(events.magasin.create, payload);
 
-    ipcRenderer.on(eventResponse.magasin.created, (event, data) => {
+    ipcRenderer.once(eventResponse.magasin.created, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       getAll();
@@ -23,7 +23,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_GET_ONE, payload });
     ipcRenderer.send(events.magasin.getOne);
 
-    ipcRenderer.on(eventResponse.magasin.gotOne, (event, data) => {
+    ipcRenderer.once(eventResponse.magasin.gotOne, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -32,7 +32,7 @@ export default function Provider() {
   const getAll = () => {
     ipcRenderer.send(events.magasin.getAll);
 
-    ipcRenderer.on(eventResponse.magasin.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.magasin.gotAll, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       dispatch({ type: actions.ON_GET_ALL, payload: data });
@@ -43,7 +43,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_UPDATE, payload });
     ipcRenderer.send(events.magasin.update);
 
-    ipcRenderer.on(eventResponse.magasin.updated, (event, data) => {
+    ipcRenderer.once(eventResponse.magasin.updated, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -53,7 +53,7 @@ export default function Provider() {
     console.log("DELETE:", payload)
     ipcRenderer.send(events.magasin.delete, payload);
 
-    ipcRenderer.on(eventResponse.magasin.deleted, (event, data) => {
+    ipcRenderer.once(eventResponse.magasin.deleted, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       dispatch({ type: actions.ON_DELETE, payload: data });

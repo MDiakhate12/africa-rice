@@ -18,19 +18,19 @@ const getAllInstitutions = async () => {
 }
 
 const getInstitutionById = async (id) => {
-  const institution = await service.findByKey(Institution, id)
+  const institution = await service.findByPk(Institution, id)
   console.log(institution.toJSON())
   return institution.toJSON()
-}
+  }
 
 const updateInstitution = async (id, data) => {
-  const updated = service.update(Institution, id, data)
-  console.log(updated.toJSON())
-  return updated.toJSON()
+  const updatedId = await service.update(Institution, id, data)
+  console.log(updatedId)
+  return updatedId;
 }
 
 const deleteInstitution = async (id) => {
-  const deleted = service.deleteByPk(Institution, id)
+  const deleted = await service.deleteByPk(Institution, id)
   console.log(deleted.toJSON())
   return deleted.toJSON()
 }

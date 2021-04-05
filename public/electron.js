@@ -3,6 +3,7 @@ const path = require("path");
 const isDev = require("electron-is-dev");
 const models = require("../backend/models").default;
 require("../backend/main-process/");
+const {getInstitutionById} = require("../backend/services/institution")
 
 // const {
 //   createSpeculation,
@@ -57,6 +58,7 @@ const createWindow = async () => {
       // getAllZones().then(() => {});
       // getAllVarietes().then(() => {});
 
+      getInstitutionById(4).then(data => console.log("INSTITUTION:", data))
       win.loadURL(
         isDev
           ? "http://localhost:3000"

@@ -12,14 +12,14 @@ export const reducer = (state, action) => {
 
     case actions.ON_GET_ONE:
       return {
+        ...state,
         institution: action.payload,
-        ...state, 
       };
 
     case actions.ON_GET_ALL:
       return {
-        ...state, 
-        institutions: action.payload
+        ...state,
+        institutions: action.payload,
       };
 
     case actions.ON_UPDATE:

@@ -2,7 +2,6 @@ import React, {
   createRef,
   useContext,
   useEffect,
-  useReducer,
   useState,
 } from "react";
 import { makeStyles } from "@material-ui/core/styles";
@@ -51,11 +50,9 @@ export default function Speculation() {
 
   const {
     speculations,
+    openDialog,
+    institution
   } = useContext(GlobalContext);
-
-  useEffect(() => {
-    console.log("SPECULATIONS INSTITUTION", speculationsInstitution);
-  }, []);
 
   const [state, setState] = useState("");
 
@@ -69,12 +66,12 @@ export default function Speculation() {
     console.log("NEW SPECULATION", state);
     addSpeculationInstitution({
       speculationId: state.idSpeculation,
-      institutionId: 4,
+      institutionId: institution.idInstitution,
       ...state,
     });
   };
 
-  const { openDialog } = useContext(GlobalContext);
+
   const handleDialogClose = (res, data) => {
     if (res === "yes") {
       try {

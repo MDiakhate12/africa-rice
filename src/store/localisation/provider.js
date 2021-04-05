@@ -10,7 +10,7 @@ export default function Provider() {
   const add = (payload) => {
     ipcRenderer.send(events.localisation.create, payload);
 
-    ipcRenderer.on(eventResponse.localisation.created, (event, data) => {
+    ipcRenderer.once(eventResponse.localisation.created, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       getAll();
@@ -22,7 +22,7 @@ export default function Provider() {
     dispatch({ type: actions.ON_GET_ONE, payload });
     ipcRenderer.send(events.localisation.getOne);
 
-    ipcRenderer.on(eventResponse.localisation.gotOne, (event, data) => {
+    ipcRenderer.once(eventResponse.localisation.gotOne, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -31,7 +31,7 @@ export default function Provider() {
   const getAll = () => {
     ipcRenderer.send(events.localisation.getAll);
 
-    ipcRenderer.on(eventResponse.localisation.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.localisation.gotAll, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       dispatch({ type: actions.ON_GET_ALL, payload: data });
@@ -42,25 +42,31 @@ export default function Provider() {
     dispatch({ type: actions.ON_UPDATE, payload });
     ipcRenderer.send(events.localisation.update);
 
-    ipcRenderer.on(eventResponse.localisation.updated, (event, data) => {
+    ipcRenderer.once(eventResponse.localisation.updated, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
   };
 
   const deleteById = (payload) => {
-    console.log("DELETE:", payload)
+    console.log("DELETE:", payload);
     ipcRenderer.send(events.localisation.delete, payload);
 
-    ipcRenderer.on(eventResponse.localisation.deleted, (event, data) => {
+    ipcRenderer.once(eventResponse.localisation.deleted, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
       dispatch({ type: actions.ON_DELETE, payload: data });
     });
   };
-
   useEffect(() => {
     getAll();
+
+    return () => {
+      ipcRenderer.removeAllListeners([
+        eventResponse.localisation.gotAll,
+        events.localisation.getAll,
+      ]);
+    };
   }, []);
 
   return [state, add, getOne, getAll, update, deleteById];
