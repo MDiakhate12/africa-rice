@@ -26,7 +26,7 @@ module.exports = (ipcMain, events, eventResponse) => {
   })
 
   ipcMain.on(events.niveauInstitution.getAll, (event, arg) => {
-    getAllNiveauInstitutions()
+    getAllNiveauInstitutions(arg)
       .then((data) => {
         console.log(data)
         event.reply(eventResponse.niveauInstitution.gotAll, data)

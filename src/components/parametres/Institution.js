@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     position: "sticky",
   },
   formDialog: {
-    maxWidth: "30 %"
+    maxWidth: "30%"
   }
 }));
 

@@ -8,7 +8,7 @@ const createSpeculation = async (data) => {
   return speculation.toJSON()
 }
 
-const getAllSpeculations = async () => {
+const getAllSpeculations = async (arg = {}) => {
   const speculations = await service.findAll(Speculation)
   const speculationsData = speculations.map((speculation) =>
     speculation.toJSON(),

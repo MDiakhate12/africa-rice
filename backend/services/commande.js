@@ -8,7 +8,7 @@ const createCommande = async (data) => {
   return commande.toJSON()
 }
 
-const getAllCommandes = async () => {
+const getAllCommandes = async (arg = {}) => {
   const commandes = await service.findAll(Commande)
   console.log(commandes.toJSON())
   return commandes.toJSON()

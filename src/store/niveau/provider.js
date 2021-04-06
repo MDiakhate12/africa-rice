@@ -6,7 +6,7 @@ const { events, eventResponse } = require("../utils/events");
 const { ipcRenderer } = window.require("electron");
 
 export default function Provider() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   const add = (payload) => {
     dispatch({ type: actions.ON_ADD, payload });
@@ -76,5 +76,5 @@ export default function Provider() {
     };
   }, []);
 
-  return [state, add, getOne, getAll, update, deleteById];
+  return [state, add, getOne, getAll, update, deleteById]
 }

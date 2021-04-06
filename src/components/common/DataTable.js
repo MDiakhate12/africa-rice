@@ -1,19 +1,19 @@
-import * as React from "react";
-import { DataGrid } from "@material-ui/data-grid";
-import { makeStyles } from "@material-ui/core";
+import * as React from 'react'
+import { DataGrid } from '@material-ui/data-grid'
+import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    "& .MuiDataGrid-window": {
-      overflowY: "hidden",
-    }
+    '& .MuiDataGrid-window': {
+      overflowY: 'hidden',
+    },
   },
-}));
+}))
 
 export default function DataTable({ columns, rows }) {
-  const classes = useStyles();
+  const classes = useStyles()
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         className={classes.root}
         rows={rows}
@@ -22,5 +22,5 @@ export default function DataTable({ columns, rows }) {
         checkboxSelection
       />
     </div>
-  );
+  )
 }

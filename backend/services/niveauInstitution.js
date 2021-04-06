@@ -20,10 +20,12 @@ const getAllNiveauInstitutions = async () => {
 };
 
 const getNiveauInstitutionById = async (id) => {
-  const niveauInstitution = await service.findByKey(NiveauInstitution, id);
-  console.log(niveauInstitution.toJSON());
-  return niveauInstitution.toJSON();
-};
+  const niveauInstitution = await service.findByKey(NiveauInstitution, id, {
+    include: [NiveauDeProduction],
+  })
+  console.log(niveauInstitution.toJSON())
+  return niveauInstitution.toJSON()
+}
 
 const updateNiveauInstitution = async (id, data) => {
   const updated = service.update(NiveauInstitution, id, data);

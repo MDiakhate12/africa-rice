@@ -8,7 +8,7 @@ const createContact = async (data) => {
   return contact.toJSON()
 }
 
-const getAllContacts = async () => {
+const getAllContacts = async (arg = {}) => {
   const contacts = await service.findAll(Contact)
   console.log(contacts.toJSON())
   return contacts.toJSON()

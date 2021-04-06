@@ -8,7 +8,7 @@ const createZone = async (data) => {
   return zone.toJSON()
 }
 
-const getAllZones = async () => {
+const getAllZones = async (arg = {}) => {
   const zones = await service.findAll(ZoneInstitution)
   const zonesData = zones.map((zone) => zone.toJSON())
   console.log(zonesData)

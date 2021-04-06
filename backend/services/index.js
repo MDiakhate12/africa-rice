@@ -49,9 +49,7 @@ const update = async (model, id, payload) => {
 
 const deleteByPk = (model, id) =>
   model.destroy({
-    where: {
-      id,
-    },
+    where: id,
   });
 
 /*

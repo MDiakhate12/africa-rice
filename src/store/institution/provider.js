@@ -1,8 +1,8 @@
-import React, { useEffect, useReducer } from "react";
-import { actions } from "../actions";
-import { initialState, reducer } from "./reducer";
-const { events, eventResponse } = require("../utils/events");
-const { ipcRenderer } = window.require("electron");
+import React, { useEffect, useReducer } from 'react'
+import { actions } from '../actions'
+import { initialState, reducer } from './reducer'
+const { events, eventResponse } = require('../utils/events')
+const { ipcRenderer } = window.require('electron')
 
 export default function Provider() {
   const [{ institutions, institution }, dispatch] = useReducer(

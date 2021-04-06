@@ -7,7 +7,7 @@ const { ipcRenderer } = window.require("electron");
 export const Context = createContext();
 
 export default function Provider() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   const add = (payload) => {
     console.log(payload);

@@ -8,7 +8,7 @@ const createVariete = async (data) => {
   return variete.toJSON();
 };
 
-const getAllVarietes = async () => {
+const getAllVarietes = async (arg = {}) => {
   const varietes = await service.findAll(Variete, {
     include: [ZoneAgroEcologique, Speculation],
   });

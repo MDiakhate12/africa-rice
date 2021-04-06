@@ -13,10 +13,11 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
-
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import {
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Paper,
@@ -30,10 +31,11 @@ import CommandeFormCard from "./CommandeFormCard";
 import { GlobalContext } from "../../store/GlobalProvider";
 import ClientFormDialog from "../common/ClientFormDialog";
 import Accordions from "../common/Accordions";
+import CommandeAccordionItem from "./CommandeAccordionItem";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
+    maxWidth: "40%",
   },
   media: {
     height: 0,
@@ -54,85 +56,94 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     marginBottom: theme.spacing(1),
-    width: "25ch",
+    // width: "25ch",
   },
 }));
 
 export default function Commandes() {
-  //   const columns = [
-  //     {
-  //       type: "string",
-  //       field: "id",
-  //       headerName: "idCommade",
-  //       hide: true,
-  //       width: 130,
-  //     },
-  //     { type: "string", field: "quantite", headerName: "quantite", width: 130 },
-  //     { type: "string", field: "montant", headerName: "montant", width: 130 },
-  //     {
-  //       type: "string",
-  //       field: "estEnlevee",
-  //       headerName: "estEnlevee",
-  //       width: 130,
-  //     },
-  //     { type: "string", field: "estValide", headerName: "estValide", width: 130 },
-  //     {
-  //       type: "string",
-  //       field: "estRejetee",
-  //       headerName: "estRejetee",
-  //       width: 130,
-  //     },
-  //     { type: "string", field: "estTraite", headerName: "estTraite", width: 130 },
-  //     {
-  //       type: "string",
-  //       field: "estAnnulee",
-  //       headerName: "estAnnulee",
-  //       width: 130,
-  //     },
-  //     {
-  //       type: "string",
-  //       field: "dateEnlevementSouhaitee",
-  //       headerName: "dateEnlevementSouhaitee",
-  //       width: 130,
-  //     },
-  //     {
-  //       type: "string",
-  //       field: "dateEnlevementReelle",
-  //       headerName: "dateEnlevementReelle",
-  //       width: 130,
-  //     },
-  //     {
-  //       type: "string",
-  //       field: "dateCreation",
-  //       headerName: "dateCreation",
-  //       width: 130,
-  //     },
-  //     {
-  //       type: "string",
-  //       field: "dateDerniereModification",
-  //       headerName: "dateDerniereModification",
-  //       width: 130,
-  //     },
-  //     {
-  //       type: "string",
-  //       field: "dateExpressionBesoinClient",
-  //       headerName: "dateExpressionBesoinClient",
-  //       width: 130,
-  //     },
-  //     {
-  //       type: "string",
-  //       field: "magasinId",
-  //       headerName: "magasinId    ",
-  //       width: 130,
-  //     },
-  //     { type: "string", field: "clientId", headerName: "clientId", width: 130 },
-  //     {
-  //       type: "string",
-  //       field: "productionId",
-  //       headerName: "productionId",
-  //       width: 130,
-  //     },
-  //   ];
+  const columns = [
+    {
+      type: "string",
+      field: "id",
+      headerName: "idCommade",
+      hide: true,
+      width: 130,
+    },
+    { type: "string", field: "quantite", headerName: "quantite", width: 130 },
+    { type: "string", field: "montant", headerName: "montant", width: 130 },
+    {
+      type: "string",
+      field: "etat",
+      // headerName: "Etat",
+      // renderCell: (params) => {
+      //   if(params.getValue("estTraite"))
+      // }
+      width: 130,
+    },
+    {
+      type: "string",
+      field: "estEnlevee",
+      headerName: "estEnlevee",
+      width: 130,
+    },
+    { type: "string", field: "estValide", headerName: "estValide", width: 130 },
+    {
+      type: "string",
+      field: "estRejetee",
+      headerName: "estRejetee",
+      width: 130,
+    },
+    { type: "string", field: "estTraite", headerName: "estTraite", width: 130 },
+    {
+      type: "string",
+      field: "estAnnulee",
+      headerName: "estAnnulee",
+      width: 130,
+    },
+    {
+      type: "string",
+      field: "dateEnlevementSouhaitee",
+      headerName: "dateEnlevementSouhaitee",
+      width: 130,
+    },
+    {
+      type: "string",
+      field: "dateEnlevementReelle",
+      headerName: "dateEnlevementReelle",
+      width: 130,
+    },
+    {
+      type: "string",
+      field: "dateCreation",
+      headerName: "dateCreation",
+      width: 130,
+    },
+    {
+      type: "string",
+      field: "dateDerniereModification",
+      headerName: "dateDerniereModification",
+      width: 130,
+    },
+    {
+      type: "string",
+      field: "dateExpressionBesoinClient",
+      headerName: "dateExpressionBesoinClient",
+      width: 130,
+    },
+    {
+      type: "string",
+      field: "magasinId",
+      headerName: "magasinId    ",
+      width: 130,
+    },
+    { type: "string", field: "clientId", headerName: "clientId", width: 130 },
+    {
+      type: "string",
+      field: "productionId",
+      headerName: "productionId",
+      width: 130,
+    },
+  ];
 
   const { openClientFormDialog } = useContext(GlobalContext);
 
@@ -215,25 +226,21 @@ export default function Commandes() {
   const [commandeItems, setCommandeItems] = useState(() => {
     let cls = [];
     for (let i = 0; i < max - 7; i++) {
-      cls.push({
-        title: `diaf ${i}`,
-        id: `diaf-${i}`,
-        content: `Diaf Niggah ${i}`,
-      });
+      cls.push(<CommandeAccordionItem />);
     }
     return cls;
   });
 
-  const addCommandeArtcile = (article) => {
-    setCommandeItems([...commandeItems, article]);
+  const addCommandeArtcile = () => {
+    setCommandeItems([...commandeItems, <CommandeAccordionItem />]);
   };
 
   return (
     <div>
-      {/* <DataTable
+      <DataTable
         columns={columns}
         rows={commandes?.map((m) => ({ id: m.idCommande, ...m }))}
-      /> */}
+      />
 
       <ClientFormDialog
         className={classes.formDialog}
@@ -255,52 +262,64 @@ export default function Commandes() {
           title="Nouvelle Commande"
         />
         <CardContent>
-          <FormControl variant="filled" className={classes.formControl}>
-            <InputLabel id="client-label" color="secondary">
-              Clients
-            </InputLabel>
-            <Select
-              labelId="client-label"
-              id="client-select"
-              value={state || ""}
-              name="client"
-              color="secondary"
-              onChange={handleChange}
-            >
-              {clients.map((client) => (
-                <MenuItem key={client.idCommande} value={client.idClient}>
-                  {client.nomCompletStructure}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Tooltip title="Ajouter un nouveau client">
-            <IconButton
-              onClick={() => openClientFormDialog()}
-              color="secondary"
-              variant="outlined"
-            >
-              <GroupAddIcon />
-            </IconButton>
-          </Tooltip>
-          <Accordions>
-              {}
-          </Accordions>
-          <Tooltip title="Ajouter un nouvel article">
-            <IconButton
-              onClick={() =>
-                addCommandeArtcile({
-                  title: `diaf`,
-                  id: `diaf`,
-                  content: `Diaf Niggah`,
-                })
-              }
-              color="secondary"
-              variant="outlined"
-            >
-              <GroupAddIcon />
-            </IconButton>
-          </Tooltip>
+          <Grid container justify="space-between" alignItems="center">
+            <Grid item sm={10}>
+              <FormControl
+                fullWidth
+                variant="filled"
+                className={classes.formControl}
+              >
+                <InputLabel id="client-label" color="secondary">
+                  Clients
+                </InputLabel>
+                <Select
+                  labelId="client-label"
+                  id="client-select"
+                  value={state || ""}
+                  name="client"
+                  color="secondary"
+                  fullWidth
+                  onChange={handleChange}
+                >
+                  {clients.map((client) => (
+                    <MenuItem key={client.idCommande} value={client.idClient}>
+                      {client.nomCompletStructure}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item sm={2}>
+              {" "}
+              <Tooltip title="Ajouter un nouveau client">
+                <IconButton
+                  onClick={() => openClientFormDialog()}
+                  color="secondary"
+                >
+                  <GroupAddIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          </Grid>
+
+          <Grid container justify="space-between" alignItems="center">
+            <Grid item sm={10}>
+              <Accordions>
+                {commandeItems.map((accordion) => accordion)}
+              </Accordions>
+            </Grid>
+            <Grid item sm={2}>
+              <Tooltip title="Ajouter un nouvel article">
+                <IconButton
+                  onClick={() => addCommandeArtcile()}
+                  color="secondary"
+                  variant="outlined"
+                >
+                  <AddShoppingCartIcon fontSize="large"/>
+                </IconButton>
+              </Tooltip>{" "}
+            </Grid>
+          </Grid>
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">

@@ -30,10 +30,12 @@ const getAllVarieteInstitutions = async () => {
 };
 
 const getVarieteInstitutionById = async (id) => {
-  const variete = await service.findByPk(VarieteInstitution, id);
-  console.log(variete.toJSON());
-  return variete.toJSON();
-};
+  const variete = await service.findByPk(VarieteInstitution, id, {
+    include: [Variete],
+  })
+  console.log(variete.toJSON())
+  return variete.toJSON()
+}
 
 const updateVarieteInstitution = async (id, data) => {
   const updated = service.update(VarieteInstitution, id, data);
