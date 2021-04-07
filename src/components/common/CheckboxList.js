@@ -3,15 +3,20 @@ import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import CommentIcon from "@material-ui/icons/Comment";
 import CheckboxListItem from "./CheckboxListItem";
-import { Button } from "@material-ui/core";
+import { Button, Grid, Tooltip, Typography } from "@material-ui/core";
 import { GlobalContext } from "../../store/GlobalProvider";
 import ConfirmDialog from "./ConfirmDialog";
+import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
+  },
+  addButton: {
+    width: "100%",
   },
 }));
 
@@ -69,30 +74,57 @@ export default function CheckboxList() {
     return;
   };
 
+
   return (
     <>
       {" "}
       <ConfirmDialog handleClose={handleDialogClose} />
-      <List className={classes.root}>
-        {niveaux.map((niveau) => {
-          wasChecked = niveauxInstitution
-            .map((ni) => ni.NiveauDeProduction.nomNiveau)
-            .includes(niveau.nomNiveau);
-          return (
-            <CheckboxListItem
-              value={niveau}
-              text={niveau.nomNiveau}
-              onChecked={onChecked}
-              wasChecked={wasChecked}
-              disabled={wasChecked}
-              icon={<CommentIcon />}
-            />
-          );
-        })}
-      </List>
-      <Button color="primary" variant="contained" size="large" onClick={onSave}>
-        Enregistrer Niveaux
-      </Button>
+      <Grid container justify="center" alignItem="center">
+        <Grid item sm={11}>
+          <Typography align="center" variant="button">Nos niveaux de production</Typography>
+        </Grid>
+        <Grid item sm={12}>
+          {" "}
+          <List className={classes.root}>
+            {niveaux.map((niveau) => {
+              wasChecked = niveauxInstitution
+                .map((ni) => ni.NiveauDeProduction.nomNiveau)
+                .includes(niveau.nomNiveau);
+              return (
+                <CheckboxListItem
+                  value={niveau}
+                  text={niveau.nomNiveau}
+                  onChecked={onChecked}
+                  wasChecked={wasChecked}
+                  disabled={wasChecked}
+                  icon={
+                    wasChecked ? (
+                      <Tooltip title="Niveau pris en charge">
+                        <DoneAllIcon color="primary" />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title="Niveau non pris en charge">
+                        <RemoveCircleOutlineIcon />
+                      </Tooltip>
+                    )
+                  }
+                />
+              );
+            })}
+          </List>
+        </Grid>
+        <Grid item sm={11}>
+          <Button
+            color="primary"
+            variant="contained"
+            size="large"
+            className={classes.addButton}
+            onClick={onSave}
+          >
+            Enregistrer
+          </Button>
+        </Grid>
+      </Grid>
     </>
   );
 }

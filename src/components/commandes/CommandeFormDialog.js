@@ -21,6 +21,7 @@ import {
 import ClientFormDialog from "../common/ClientFormDialog";
 import Accordions from "../common/Accordions";
 import CommandeAccordionItem from "./CommandeAccordionItem";
+import ConfirmDialog from "../common/ConfirmDialog";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -84,10 +85,19 @@ export default function CommandeFormDialog({ handleClose }) {
 
   const handleArticleChange = (e, idx) => {
     let { name, value } = e.target;
+    console.log(name, value);
     setState({
       ...formState,
-      articles: formState.articles.splice(idx, 1, {[name]: value})
-      })
+      articles: [
+        ...formState.articles,
+        formState.articles.map((article, index) => {
+          if (index === idx) {
+            article[name] = value;
+          }
+          return article;
+        }),
+      ],
+    });
     console.log(formState);
   };
 
@@ -122,9 +132,23 @@ export default function CommandeFormDialog({ handleClose }) {
   };
   const classes = useStyles();
 
+  const handleDeleteDialogClose = (res, data) => {
+    if (res === "yes") {
+      try {
+        // console.log(data)
+        return handleDeleteArticle(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return;
+  };
+
   return (
     <div>
       <ClientFormDialog handleClose={handleClientFormDialogClose} />
+      <ConfirmDialog handleClose={handleDeleteDialogClose} />
+
       <Dialog
         open={open}
         onClose={close}
@@ -181,8 +205,7 @@ export default function CommandeFormDialog({ handleClose }) {
                   <CommandeAccordionItem
                     key={index}
                     index={index}
-                    data={data}
-                    handleChange={handleArticleChange}
+                    handleDataChange={handleArticleChange}
                     handleDeleteArticle={handleDeleteArticle}
                   />
                 ))}
