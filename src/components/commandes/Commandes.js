@@ -123,6 +123,9 @@ export default function Commandes() {
       productionId: 1,
     });
   }
+
+ // FORMDATA FOR MOR KAIRE 
+
   const handleCommandeFormDialogClose = (res, data) => {
     if (res === "yes") {
       console.log(data);
@@ -130,6 +133,8 @@ export default function Commandes() {
     }
     return;
   };
+
+ // FORMDATA FOR MOR KAIRE
 
   const { openCommandeFormDialog } = useContext(GlobalContext);
 
