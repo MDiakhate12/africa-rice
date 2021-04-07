@@ -21,7 +21,7 @@ export default function CheckboxList() {
     niveaux,
     niveauxInstitution,
     addNiveauInstitution,
-    openDialog,
+    openConfirmDialog,
   } = useContext(GlobalContext);
 
   const classes = useStyles();
@@ -44,7 +44,7 @@ export default function CheckboxList() {
     console.log("selectedValues:", niveauxInstitution);
     console.log("selected:", selected);
 
-    openDialog({
+    openConfirmDialog({
       title: "Ajout niveau de production",
       content: `Une fois ajouté, les niveaux de production ne peuvent plus être supprimés. Voulez-vous confirmer ?`,
     });

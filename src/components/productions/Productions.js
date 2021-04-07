@@ -8,6 +8,7 @@ import StockState from './StockState'
 import { Box, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import '../../store/varieteInstitution/varietes'
+import Stock from './Stock'
 
 // import '../../store/speculation/speculation'
 // import '../../store/zone/zones'
@@ -76,6 +77,7 @@ export default function CenteredTabs() {
         >
           <Tab label="Production" />
           <Tab label="Etat Stock " />
+          <Tab label="Etat Stock (updated)" />
         </Tabs>
       </Paper>
       <TabPanel value={value} index={0}>
@@ -83,6 +85,9 @@ export default function CenteredTabs() {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <StockState />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <Stock />
       </TabPanel>
     </div>
   )

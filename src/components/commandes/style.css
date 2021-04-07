@@ -1,0 +1,19 @@
+.MuiAccordionSummary-content {
+  display: "flex";
+  justify-content: "space-between";
+  align-items: "center";
+  margin: 0px 0;
+}
+
+.MuiAccordionSummary-content.Mui-expanded {
+  margin: 0px 0!important;
+}
+
+.MuiAccordionDetails-root {
+  display: flex;
+  padding: 0px 16px 16px!important;
+}
+
+.MuiAccordionSummary-root.Mui-expanded {
+  min-height: 16px!important;
+}

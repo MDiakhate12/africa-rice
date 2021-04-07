@@ -6,9 +6,11 @@ import ZoneProvider from "./zone/provider";
 import ConfirmDialogProvider from "./confirmDialog/provider";
 import ContactFormDialogProvider from "./contactFormDialog/provider";
 import ClientFormDialogProvider from "./clientFormDialog/provider";
+import CommandeFormDialogProvider from "./commandeFormDialog/provider";
 import LocalisationProvider from "./localisation/provider";
 import NiveauProvider from "./niveau/provider";
 import NiveauInstitutionProvider from "./niveauInstitution/provider";
+import CommonDialogProvider from "./commonDialog/provider";
 
 export const GlobalContext = createContext();
 
@@ -77,7 +79,12 @@ export default function GlobalProvider({ children }) {
     deleteByIdNiveauInstitution,
   ] = NiveauInstitutionProvider();
 
-  const [confirmDialog, openDialog, closeDialog] = ConfirmDialogProvider();
+  const [
+    confirmDialog,
+    openConfirmDialog,
+    closeConfirmDialog,
+  ] = ConfirmDialogProvider();
+
   const [
     contactFormDialog,
     openContactFormDialog,
@@ -89,6 +96,14 @@ export default function GlobalProvider({ children }) {
     openClientFormDialog,
     closeClientFormDialog,
   ] = ClientFormDialogProvider();
+
+  const [
+    commandeFormDialog,
+    openCommandeFormDialog,
+    closeCommandeFormDialog,
+  ] = CommandeFormDialogProvider();
+
+  const [dialog, openDialog, closeDialog] = CommonDialogProvider();
 
   return (
     <GlobalContext.Provider
@@ -116,8 +131,8 @@ export default function GlobalProvider({ children }) {
         deleteByIdZone,
 
         confirmDialog,
-        openDialog,
-        closeDialog,
+        openConfirmDialog,
+        closeConfirmDialog,
 
         localisations,
         addLocalisation,
@@ -154,6 +169,14 @@ export default function GlobalProvider({ children }) {
         clientFormDialog,
         openClientFormDialog,
         closeClientFormDialog,
+
+        commandeFormDialog,
+        openCommandeFormDialog,
+        closeCommandeFormDialog,
+
+        dialog,
+        openDialog,
+        closeDialog,
       }}
     >
       {children}

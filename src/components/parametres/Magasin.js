@@ -86,7 +86,7 @@ export default function Magasin() {
       renderCell: (params) => (
         <IconButton
           onClick={() => {
-            openDialog({
+            openConfirmDialog({
               title: "Suppression",
               content: `Souhaitez vous réellement supprimer le magasin ${
                 params.getValue("Magasin").nomMagasin
@@ -111,7 +111,7 @@ export default function Magasin() {
 
   const {
     localisations,
-    openDialog,
+    openConfirmDialog,
     institution
   } = useContext(GlobalContext);
 

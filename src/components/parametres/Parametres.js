@@ -66,7 +66,7 @@ export default function Parametres() {
           variant="fullWidth"
         >
           <Tab label="Spéculations et Variétés" />
-          <Tab label="Magasins et Zones" />
+          <Tab label="Magasins" />
           <Tab label="Institution" />
         </Tabs>
       </Paper>
