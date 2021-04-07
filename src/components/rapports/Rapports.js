@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useEffect } from "react";
+import Chart from "chart.js/auto";
 
 export default function Rapports() {
-    return (
-        <div>
-            {"Rapports"}
-        </div>
-    )
+  useEffect(() => {});
+
+  return (
+    <div>
+      <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+  );
 }

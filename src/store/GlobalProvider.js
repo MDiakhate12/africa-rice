@@ -6,6 +6,7 @@ import ZoneProvider from "./zone/provider";
 import ConfirmDialogProvider from "./confirmDialog/provider";
 import ContactFormDialogProvider from "./contactFormDialog/provider";
 import ClientFormDialogProvider from "./clientFormDialog/provider";
+import CommandeFormDialogProvider from "./commandeFormDialog/provider";
 import LocalisationProvider from "./localisation/provider";
 import NiveauProvider from "./niveau/provider";
 import NiveauInstitutionProvider from "./niveauInstitution/provider";
@@ -90,6 +91,12 @@ export default function GlobalProvider({ children }) {
     closeClientFormDialog,
   ] = ClientFormDialogProvider();
 
+  const [
+    commandeFormDialog,
+    openCommandeFormDialog,
+    closeCommandeFormDialog,
+  ] = CommandeFormDialogProvider();
+
   return (
     <GlobalContext.Provider
       value={{
@@ -154,6 +161,10 @@ export default function GlobalProvider({ children }) {
         clientFormDialog,
         openClientFormDialog,
         closeClientFormDialog,
+
+        commandeFormDialog,
+        openCommandeFormDialog,
+        closeCommandeFormDialog,
       }}
     >
       {children}
