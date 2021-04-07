@@ -50,7 +50,7 @@ export default function Speculation() {
 
   const {
     speculations,
-    openDialog,
+    openConfirmDialog,
     institution
   } = useContext(GlobalContext);
 
@@ -100,7 +100,7 @@ export default function Speculation() {
                 img: imageSpeculation,
                 title: nomSpeculation,
                 onClick: () => {
-                  openDialog({
+                  openConfirmDialog({
                     title: "Suppression",
                     content: `Souhaitez vous réellement supprimer la spéculation ${nomSpeculation} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`,
                     data: idSpeculation,

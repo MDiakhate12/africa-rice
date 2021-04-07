@@ -10,6 +10,7 @@ import CommandeFormDialogProvider from "./commandeFormDialog/provider";
 import LocalisationProvider from "./localisation/provider";
 import NiveauProvider from "./niveau/provider";
 import NiveauInstitutionProvider from "./niveauInstitution/provider";
+import CommonDialogProvider from "./commonDialog/provider";
 
 export const GlobalContext = createContext();
 
@@ -78,7 +79,12 @@ export default function GlobalProvider({ children }) {
     deleteByIdNiveauInstitution,
   ] = NiveauInstitutionProvider();
 
-  const [confirmDialog, openDialog, closeDialog] = ConfirmDialogProvider();
+  const [
+    confirmDialog,
+    openConfirmDialog,
+    closeConfirmDialog,
+  ] = ConfirmDialogProvider();
+
   const [
     contactFormDialog,
     openContactFormDialog,
@@ -96,6 +102,8 @@ export default function GlobalProvider({ children }) {
     openCommandeFormDialog,
     closeCommandeFormDialog,
   ] = CommandeFormDialogProvider();
+
+  const [dialog, openDialog, closeDialog] = CommonDialogProvider();
 
   return (
     <GlobalContext.Provider
@@ -123,8 +131,8 @@ export default function GlobalProvider({ children }) {
         deleteByIdZone,
 
         confirmDialog,
-        openDialog,
-        closeDialog,
+        openConfirmDialog,
+        closeConfirmDialog,
 
         localisations,
         addLocalisation,
@@ -165,6 +173,10 @@ export default function GlobalProvider({ children }) {
         commandeFormDialog,
         openCommandeFormDialog,
         closeCommandeFormDialog,
+
+        dialog,
+        openDialog,
+        closeDialog,
       }}
     >
       {children}

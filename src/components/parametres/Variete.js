@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Variete() {
-  const { varietes, institution, openDialog } = useContext(GlobalContext);
+  const { varietes, institution, openConfirmDialog } = useContext(GlobalContext);
 
   const columns = [
     { type: "string", field: "id", headerName: "idVariete", hide: true },
@@ -82,7 +82,7 @@ export default function Variete() {
       renderCell: (params) => (
         <IconButton
           onClick={() => {
-            openDialog({
+            openConfirmDialog({
               title: "Suppression",
               content: `Souhaitez vous réellement supprimer la variété ${
                 params.getValue("Variete").nomVariete
