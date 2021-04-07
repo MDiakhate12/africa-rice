@@ -47,6 +47,24 @@ module.exports = (sequelize) => {
       comment: null,
       field: 'addresse',
     },
+    telephone: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: 'telephone',
+    },
+    email: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: 'email',
+    },
   }
   const options = {
     tableName: 'institution',
