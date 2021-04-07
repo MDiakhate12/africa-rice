@@ -5,6 +5,14 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
+import { makeStyles, useTheme } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  listItem: {
+    padding: "3 2",
+    height: "4ch"
+  }
+}))
 
 export default function CheckboxListItem({
   value,
@@ -22,11 +30,15 @@ export default function CheckboxListItem({
     }
   };
 
+  const classes = useStyles();
+  const theme = useTheme()
+
   return (
     <ListItem
       key={value}
       role={undefined}
       dense
+      className={classes.listItem}
       button
       onClick={() => {
         if (wasChecked === false) {

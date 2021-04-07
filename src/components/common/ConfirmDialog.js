@@ -11,11 +11,11 @@ import { GlobalContext } from "../../store/GlobalProvider";
 export default function ConfirmDialog({ handleClose }) {
   const {
     confirmDialog: { open, title, content, data },
-    closeDialog,
+    closeConfirmDialog,
   } = useContext(GlobalContext);
 
   const close = (response, dataFromOpen=null) => {
-    closeDialog();
+    closeConfirmDialog();
     handleClose(response, dataFromOpen);
   };
 

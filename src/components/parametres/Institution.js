@@ -1,26 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import clsx from "clsx";
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  TextField,
-  Tooltip,
-} from "@material-ui/core";
+import { Button, Grid, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import UploadImageButton from "../common/UploadImageButton";
 import CustomButton from "../common/CustomButton";
 import photoImage from "../images/photo.svg";
 import { eventResponse, events } from "../../store/utils/events";
 import { GlobalContext } from "../../store/GlobalProvider";
 import CheckboxList from "../common/CheckboxList";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import FloatingActionButton from "../common/FloatingActionButton";
-import ContactsIcon from "@material-ui/icons/Contacts";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
-import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
-import ContactFormDialog from "../common/ContactFormDialog";
+// import ContactFormDialog from "../common/ContactFormDialog";
 
 const { ipcRenderer } = window.require("electron");
 
@@ -31,11 +18,8 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     marginBottom: theme.spacing(1),
   },
-  textField: {
-    width: "25ch",
-  },
   addButton: {
-    width: "88%",
+    width: "100%",
   },
   gridContainer: {
     display: "flex",
@@ -46,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
     position: "sticky",
   },
   formDialog: {
-    maxWidth: "30%"
-  }
+    maxWidth: "30%",
+  },
 }));
 
 export default function Institution() {
@@ -98,23 +82,29 @@ export default function Institution() {
 
   const onSubmitChecklist = (e) => {};
 
-  const handleContactFormDialogClose = (res, data) => {
-    if (res === "yes") {
-      console.log(data);
-      return;
-    }
-    return;
-  };
+  // const handleContactFormDialogClose = (res, data) => {
+  //   if (res === "yes") {
+  //     console.log(data);
+  //     return;
+  //   }
+  //   return;
+  // };
 
   return (
     <div>
-      <ContactFormDialog className={classes.formDialog} handleClose={handleContactFormDialogClose} />
-      <Grid container>
-        <Grid item container justify="center" className={classes.root} sm={6}>
+      {/* <ContactFormDialog
+        className={classes.formDialog}
+        handleClose={handleContactFormDialogClose}
+      /> */}
+      <Grid container spacing={0}>
+        <Grid item container justify="center" className={classes.root} sm={6}  spacing={2}>
           <Grid item sm={6}>
             <Grid>
               <Grid item sm={12}>
+                <Typography variant="button">Nos informations</Typography>
+
                 <TextField
+                  fullWidth
                   label="Nom complet"
                   name="nomComplet"
                   value={formState?.nomComplet || ""}
@@ -125,6 +115,7 @@ export default function Institution() {
               </Grid>
               <Grid item sm={12}>
                 <TextField
+                  fullWidth
                   label="Sigle"
                   name="sigle"
                   value={formState?.sigle || ""}
@@ -135,6 +126,7 @@ export default function Institution() {
               </Grid>
               <Grid item sm={12}>
                 <TextField
+                  fullWidth
                   label="Addresse"
                   name="addresse"
                   value={formState?.addresse || ""}
@@ -142,21 +134,47 @@ export default function Institution() {
                   variant="filled"
                   onChange={handleChange}
                 />
-                <Grid item sm={12} className={classes.gridContainer}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    className={classes.addButton}
-                    size="large"
-                    onClick={handleSubmit}
-                  >
-                    Enregistrer
-                  </Button>
-                </Grid>
+              </Grid>
+
+              <Grid item sm={12}>
+                <TextField
+                  fullWidth
+                  label="Téléphone"
+                  name="telephone"
+                  value={formState?.telephone || ""}
+                  className={clsx(classes.margin, classes.textField)}
+                  variant="filled"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item sm={12}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="email"
+                  value={formState?.email || ""}
+                  className={clsx(classes.margin, classes.textField)}
+                  variant="filled"
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item sm={12} className={classes.gridContainer}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  className={classes.addButton}
+                  size="large"
+                  onClick={handleSubmit}
+                >
+                  Enregistrer
+                </Button>
               </Grid>
             </Grid>
           </Grid>
           <Grid item sm={6}>
+            <Typography variant="button">Ajouter un logo</Typography>
             <CustomButton
               images={[
                 {
@@ -181,7 +199,7 @@ export default function Institution() {
           </Tooltip>
         </Grid> */}
       </Grid>
-      <FloatingActionButton
+      {/* <FloatingActionButton
         className={classes.fab}
         actions={[
           {
@@ -193,7 +211,7 @@ export default function Institution() {
           { icon: <GroupAddIcon />, name: "Ajouter Client" },
           { icon: <PeopleAltIcon />, name: "Voir Clients" },
         ]}
-      />
+      /> */}
     </div>
   );
 }

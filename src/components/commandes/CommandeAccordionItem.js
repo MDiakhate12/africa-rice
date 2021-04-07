@@ -6,18 +6,22 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DeleteIcon from "@material-ui/icons/Delete";
+
 import "./style.css";
 
 import {
+  FilledInput,
   FormControl,
+  FormHelperText,
   Grid,
   IconButton,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
-  TextField,
   Tooltip,
 } from "@material-ui/core";
+import { GlobalContext } from "../../store/GlobalProvider";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -42,13 +46,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  formControl: {
+    marginBottom: theme.spacing(1),
+  },
 }));
 
 export default function SimpleAccordion({
   index,
-  data,
-  handleChange: handleDataChange,
-  handleDeleteArticle,
+  handleDataChange,
 }) {
   const classes = useStyles();
 
@@ -58,6 +63,8 @@ export default function SimpleAccordion({
   const [varietes, setVarietes] = useState([]);
   const [speculations, setSpeculations] = useState([]);
   const [niveauxInstitution, setNiveauxInstitution] = useState([]);
+
+  const { openConfirmDialog } = useContext(GlobalContext);
 
   // const groupByKey = (key, array) => [
   //   ...new Map(array.map((item) => [item[key], item])).values(),
@@ -109,7 +116,10 @@ export default function SimpleAccordion({
     setFormData({ ...formData, [name]: value });
     handleDataChange(e, index);
   };
+
+  
   return (
+    <>
     <Accordion
       expanded={expanded === `panel-${index}`}
       onChange={handleToggle(`panel-${index}`)}
@@ -138,7 +148,13 @@ export default function SimpleAccordion({
           <IconButton
             onClick={(event) => {
               event.stopPropagation();
-              handleDeleteArticle(index);
+
+              openConfirmDialog({
+                title: "Suppression",
+                content:
+                  "Souhaitez vous réellement supprimer l'article ? Cette action est irréversible.",
+                data: index,
+              });
             }}
           >
             <DeleteIcon color="secondary" />
@@ -150,15 +166,13 @@ export default function SimpleAccordion({
           <Grid item sm={12}>
             <FormControl
               fullWidth
-              variant="standard"
+              variant="filled"
               className={classes.formControl}
             >
-              <InputLabel id="demo-simple-select-filled-label">
-                Niveau
-              </InputLabel>
+              <InputLabel id="Niveau-label">Niveau</InputLabel>
               <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
+                labelId="Niveau-label"
+                id="Niveau-select"
                 value={formData?.niveau || ""}
                 name="niveau"
                 onChange={handleChange}
@@ -170,20 +184,19 @@ export default function SimpleAccordion({
                   </MenuItem>
                 ))}
               </Select>
+              <FormHelperText>Niveau de production</FormHelperText>
             </FormControl>
           </Grid>
           <Grid item sm={12}>
             <FormControl
               fullWidth
-              variant="standard"
+              variant="filled"
               className={classes.formControl}
             >
-              <InputLabel id="demo-simple-select-filled-label">
-                Spéculation
-              </InputLabel>
+              <InputLabel id="Spéculation-label">Spéculation</InputLabel>
               <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
+                labelId="Spéculation-label"
+                id="Spéculation-select"
                 value={formData?.speculation || ""}
                 name="speculation"
                 onChange={handleChange}
@@ -194,20 +207,19 @@ export default function SimpleAccordion({
                   </MenuItem>
                 ))}
               </Select>
+              <FormHelperText>Spéculation désirée</FormHelperText>
             </FormControl>
           </Grid>
           <Grid item sm={12}>
             <FormControl
               fullWidth
-              variant="standard"
+              variant="filled"
               className={classes.formControl}
             >
-              <InputLabel id="demo-simple-select-filled-label">
-                Production
-              </InputLabel>
+              <InputLabel id="Production-label">Production</InputLabel>
               <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
+                labelId="Production-label"
+                id="Production-select"
                 value={formData.production || ""}
                 name="production"
                 onChange={handleChange}
@@ -230,24 +242,41 @@ export default function SimpleAccordion({
                   }
                 })}
               </Select>
+              <FormHelperText>
+                Production commandée{" "}
+                {formData?.production?.VarieteInstitution?.Variete?.nomVariete
+                  ? ` - ${formData?.production?.prixUnitaire} FCFA`
+                  : ""}
+              </FormHelperText>
             </FormControl>
           </Grid>
           <Grid item sm={12}>
-            <TextField
-              value={formData.quantite || ""}
-              onChange={handleChange}
-              autoFocus
-              margin="dense"
-              id="quantite"
-              name="quantite"
-              label="Quantité"
-              type="number"
-              fullWidth
-              // endAdornment=
-            />{" "}
+            <FormControl variant="filled" fullWidth>
+              <InputLabel id="Quantité-label" color="secondary">
+                Quantité
+              </InputLabel>
+
+              <FilledInput
+                value={formData.quantite || ""}
+                onChange={handleChange}
+                autoFocus
+                margin="dense"
+                id="quantite"
+                name="quantite"
+                type="number"
+                color="secondary"
+                endAdornment={
+                  <InputAdornment position="end">Kg</InputAdornment>
+                }
+              />
+              <FormHelperText>
+                Quantité désirée pour cette production
+              </FormHelperText>
+            </FormControl>{" "}
           </Grid>
         </Grid>
       </AccordionDetails>
     </Accordion>
+    </>
   );
 }
