@@ -77,7 +77,7 @@ export default function CenteredTabs() {
         >
           <Tab label="Production" />
           <Tab label="Etat Stock " />
-          <Tab label="Etat Stock Spéculation" />
+          <Tab label="Etat Stock (updated)" />
         </Tabs>
       </Paper>
       <TabPanel value={value} index={0}>
