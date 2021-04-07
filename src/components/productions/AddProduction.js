@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 function AddProduction({ handleClose }) {
   const classes = useStyles()
   const [formData, setFormData] = useState({})
+  const [speculations, setSpeculation] = useState([])
   const [varietes, setVarietes] = useState([])
   const [magasins, setMagasin] = useState([])
   const [localisations, setLocalisation] = useState([])
@@ -57,6 +58,7 @@ function AddProduction({ handleClose }) {
 
   const handleChange = (evt) => {
     const value = evt.target.value
+    console.log(value)
     setFormData({
       ...formData,
       [evt.target.name]: value,
@@ -67,7 +69,18 @@ function AddProduction({ handleClose }) {
     ipcRenderer.send(events.varieteInstitution.getAll, { institutionId: 4 })
     ipcRenderer.on(eventResponse.varieteInstitution.gotAll, (event, data) => {
       setVarietes(data)
+      console.log(data)
     })
+  }
+  const getSpeculationsInstitution = () => {
+    ipcRenderer.send(events.speculationInstitution.getAll, { institutionId: 4 })
+    ipcRenderer.on(
+      eventResponse.speculationInstitution.gotAll,
+      (event, data) => {
+        setSpeculation(data)
+        console.log(data)
+      },
+    )
   }
   const getMagasins = () => {
     ipcRenderer.send(events.magasin.getAll)
@@ -96,6 +109,7 @@ function AddProduction({ handleClose }) {
   }
 
   useEffect(() => {
+    getSpeculationsInstitution()
     getVarietesInstitution()
     getMagasins()
     getLocalisations()
@@ -116,6 +130,30 @@ function AddProduction({ handleClose }) {
         <Grid item className={classes.gridContainer}>
           <FormControl variant="filled" className={classes.formControl}>
             <InputLabel id="demo-simple-select-filled-label">
+              Speculation
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              value={formData.speculationInstitutionId}
+              name="speculationInstitutionId"
+              onChange={handleChange}
+            >
+              {speculations.map((speculation) => (
+                <MenuItem
+                  key={speculation.idSpeculationInstitution}
+                  value={speculation.idSpeculationInstitution}
+                >
+                  {speculation.Speculation.nomSpeculation}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item className={classes.gridContainer}>
+          <FormControl variant="filled" className={classes.formControl}>
+            <InputLabel id="demo-simple-select-filled-label">
               Variétés
             </InputLabel>
             <Select
@@ -125,14 +163,20 @@ function AddProduction({ handleClose }) {
               name="varieteInstitutionId"
               onChange={handleChange}
             >
-              {varietes.map((variete) => (
-                <MenuItem
-                  key={variete.idVarieteInstitution}
-                  value={variete.idVarieteInstitution}
-                >
-                  {variete.Variete.nomVariete}
-                </MenuItem>
-              ))}
+              {varietes
+                .filter(
+                  (variete) =>
+                    variete.speculationInstitutionId ===
+                    formData.speculationInstitutionId,
+                )
+                .map((variete) => (
+                  <MenuItem
+                    key={variete.idVarieteInstitution}
+                    value={variete.idVarieteInstitution}
+                  >
+                    {variete.Variete?.nomVariete}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
         </Grid>
@@ -176,20 +220,133 @@ function AddProduction({ handleClose }) {
           />
         </Grid>
 
-        
-          <Grid item className={classes.gridContainer}>
+        <Grid item className={classes.gridContainer}>
           <TextField
-          label="Stock de Securite"
+            label="Stock de Securite"
             id="state.fillongueurCycle-star || ''t -adornment"
             name="stockDeSecurite"
-            value={''}
+            value={formData.stockDeSecurite}
             className={clsx(classes.margin, classes.textField)}
             variant="filled"
             onChange={handleChange}
-            />
-          </Grid>
-         
+          />
+        </Grid>
 
+        <Grid item className={classes.gridContainer}>
+          <Grid item sm={5} className={classes.gridContainer}>
+            <FormControl variant="filled" className={classes.formControl}>
+              <InputLabel color="secondary">Région</InputLabel>
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={formData.region || ''}
+                name="region"
+                color="secondary"
+                onChange={handleChange}
+              >
+                {localisations
+                  .map((l) => l.region?.toLowerCase())
+                  .map((r, i, s) => {
+                    if (s.indexOf(r) === i)
+                      return (
+                        <MenuItem key={r} value={r}>
+                          {r}
+                        </MenuItem>
+                      )
+                  })}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item sm={5} className={classes.gridContainer}>
+            <FormControl variant="filled" className={classes.formControl}>
+              <InputLabel color="secondary">Département</InputLabel>
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={formData.departement || ''}
+                name="departement"
+                color="secondary"
+                onChange={handleChange}
+              >
+                {localisations
+                  .map((l) => {
+                    if (
+                      l.region.toLowerCase() === formData.region?.toLowerCase()
+                    )
+                      return l.departement
+                  })
+                  .map((d, i, s) => {
+                    if (s.indexOf(d) === i)
+                      return (
+                        <MenuItem key={d} value={d}>
+                          {d}
+                        </MenuItem>
+                      )
+                  })}
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid item container className={classes.gridContainer}>
+          <Grid item sm={5} className={classes.gridContainer}>
+            <FormControl variant="filled" className={classes.formControl}>
+              <InputLabel color="secondary">Commune</InputLabel>
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={formData.commune || ''}
+                name="commune"
+                color="secondary"
+                onChange={handleChange}
+              >
+                {localisations
+                  .map((l) => {
+                    if (
+                      l?.departement?.toLowerCase() ===
+                      formData?.departement?.toLowerCase()
+                    )
+                      return l.commune
+                  })
+                  .map((c, i, s) => {
+                    if (s.indexOf(c) === i)
+                      return (
+                        <MenuItem key={c} value={c}>
+                          {c}
+                        </MenuItem>
+                      )
+                  })}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item sm={5} className={classes.gridContainer}>
+            <FormControl variant="filled" className={classes.formControl}>
+              <InputLabel color="secondary">Localité</InputLabel>
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={formData.localisationId || ''}
+                name="localisationId"
+                color="secondary"
+                onChange={handleChange}
+              >
+                {localisations.map((l) => {
+                  if (
+                    l?.commune?.toLowerCase() ===
+                    formData?.commune?.toLowerCase()
+                  ) {
+                    return (
+                      <MenuItem key={l.village} value={l.idLocalisation}>
+                        {l.village}
+                      </MenuItem>
+                    )
+                  }
+                })}
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+
+        {/*
         <Grid item className={classes.gridContainer}>
           <FormControl variant="filled" className={classes.formControl}>
             <InputLabel id="demo-simple-select-filled-label">
@@ -213,7 +370,7 @@ function AddProduction({ handleClose }) {
             </Select>
           </FormControl>
         </Grid>
-
+              */}
         <Grid item className={classes.gridContainer}>
           <FormControl variant="filled" className={classes.formControl}>
             <InputLabel id="demo-simple-select-filled-label">

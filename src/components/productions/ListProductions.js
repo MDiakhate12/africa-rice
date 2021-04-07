@@ -9,34 +9,10 @@ const { events, eventResponse } = require('../../store/utils/events')
 const columns = [
   { type: 'string', field: 'id', headerName: 'idProduction', hide: true },
   {
-    type: 'number',
-    field: 'quantiteProduite',
-    headerName: 'Quantite Produite',
-    width: 170,
-  },
-  {
-    type: 'number',
-    field: 'prixUnitaire',
-    headerName: 'Prix Unitaire',
-    width: 100,
-  },
-  {
-    type: 'number',
-    field: 'quantiteDisponible',
-    headerName: 'Quantite Disponible',
-    width: 100,
-  },
-  {
-    type: 'date',
-    field: 'dateDeProduction',
-    headerName: 'Date De Production',
-    width: 170,
-  },
-  {
     type: 'string',
     field: 'variete',
     headerName: 'Variete',
-    width: 130,
+    width: 120,
     renderCell: (params) =>
       params.getValue('VarieteInstitution').Variete.nomVariete,
   },
@@ -44,7 +20,7 @@ const columns = [
     type: 'string',
     field: 'niveau',
     headerName: 'Niveau de Semences',
-    width: 130,
+    width: 120,
     renderCell: (params) =>
       params.getValue('NiveauInstitution').NiveauDeProduction.nomNiveau,
   },
@@ -60,7 +36,37 @@ const columns = [
     field: 'localisation',
     headerName: 'Localisation',
     width: 100,
-    renderCell: (params) => params.getValue('Localisation').commune,
+    renderCell: (params) => params.getValue('Localisation').village,
+  },
+  {
+    type: 'number',
+    field: 'quantiteProduite',
+    headerName: 'Quantite Produite',
+    width: 130,
+  },
+  {
+    type: 'number',
+    field: 'prixUnitaire',
+    headerName: 'Prix Unitaire',
+    width: 100,
+  },
+  {
+    type: 'number',
+    field: 'quantiteDisponible',
+    headerName: 'Quantite Disponible',
+    width: 100,
+  },
+  {
+    type: 'number',
+    field: 'stockDeSecurite',
+    headerName: 'Stock De Securite',
+    width: 100,
+  },
+  {
+    type: 'date',
+    field: 'dateDeProduction',
+    headerName: 'Date De Production',
+    width: 130,
   },
 ]
 
