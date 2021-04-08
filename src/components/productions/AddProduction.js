@@ -73,7 +73,7 @@ function AddProduction({ handleClose }) {
     })
   }
   const getSpeculationsInstitution = () => {
-    ipcRenderer.send(events.speculationInstitution.getAll, { institutionId: 4 })
+    ipcRenderer.send(events.speculationInstitution.getAll, { institutionId: 1 })
     ipcRenderer.on(
       eventResponse.speculationInstitution.gotAll,
       (event, data) => {
@@ -95,14 +95,14 @@ function AddProduction({ handleClose }) {
     })
   }
   const getNiveau = () => {
-    ipcRenderer.send(events.niveauInstitution.getAll, { institutionId: 4 })
+    ipcRenderer.send(events.niveauInstitution.getAll, { institutionId: 1 })
     ipcRenderer.on(eventResponse.niveauInstitution.gotAll, (event, data) => {
       setNiveau(data)
     })
   }
 
   const handleSubmitProduction = (evt) => {
-    const data = { ...formData, institutionId: 4 }
+    const data = { ...formData, institutionId: 1 }
     console.log(data)
     ipcRenderer.send(events.production.create, data)
     handleClose()

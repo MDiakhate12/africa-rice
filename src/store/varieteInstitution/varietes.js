@@ -356,27 +356,27 @@ const allVarietes = [
   {
     stockDeSecurite: 200,
     prix: 2,
-    speculationInstitutionId: 4,
+    speculationInstitutionId: 3,
     institutionId: 1,
     varieteId: 4,
   },
   {
     stockDeSecurite: 200,
     prix: 2,
-    speculationInstitutionId: 4,
+    speculationInstitutionId: 2,
     institutionId: 1,
     varieteId: 2,
   },
   {
     stockDeSecurite: 200,
-    prix: 2,
-    speculationInstitutionId: 4,
+    prix: 23,
+    speculationInstitutionId: 1,
     institutionId: 1,
     varieteId: 2,
   },
   {
     stockDeSecurite: 200,
-    prix: 2,
+    prix: 20,
     speculationInstitutionId: 4,
     institutionId: 1,
     varieteId: 3,
@@ -384,30 +384,30 @@ const allVarietes = [
   {
     stockDeSecurite: 200,
     prix: 2,
-    speculationInstitutionId: 4,
+    speculationInstitutionId: 1,
     institutionId: 1,
     varieteId: 3,
   },
   {
     stockDeSecurite: 200,
     prix: 2,
-    speculationInstitutionId: 4,
+    speculationInstitutionId: 2,
     institutionId: 1,
     varieteId: 4,
   },
   {
     stockDeSecurite: 200,
     prix: 2,
-    speculationInstitutionId: 4,
+    speculationInstitutionId: 2,
     institutionId: 1,
     varieteId: 5,
   },
 ]
 
-// allVarietes.map((value) => {
-//   ipcRenderer.send(events.varieteInstitution.create, value)
+allVarietes.map((value) => {
+  ipcRenderer.send(events.varieteInstitution.create, value)
 
-//   ipcRenderer.on(eventResponse.varieteInstitution.created, (e, d) =>
-//     console.log(d),
-//   )
-// })
+  ipcRenderer.on(eventResponse.varieteInstitution.created, (e, d) =>
+    console.log(d),
+  )
+})

@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
   const attributes = {
@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
       primaryKey: true,
       autoIncrement: true,
       comment: null,
-      field: "idCommande",
+      field: 'idCommande',
     },
     quantite: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -18,7 +18,7 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "quantite",
+      field: 'quantite',
     },
     montant: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -27,52 +27,7 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "montant",
-    },
-    estEnlevee: {
-      type: DataTypes.INTEGER(1),
-      allowNull: true,
-      defaultValue: "0",
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "est_enlevee",
-    },
-    estValide: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: "0",
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "est_valide",
-    },
-    estRejetee: {
-      type: DataTypes.INTEGER(1),
-      allowNull: true,
-      defaultValue: "0",
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "est_rejetee",
-    },
-    estTraite: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: "0",
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "est_traite",
-    },
-    estAnnulee: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: "0",
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "est_annulee",
+      field: 'montant',
     },
     dateEnlevementSouhaitee: {
       type: DataTypes.DATEONLY,
@@ -81,7 +36,7 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "date_enlevement_souhaitee",
+      field: 'date_enlevement_souhaitee',
     },
     dateEnlevementReelle: {
       type: DataTypes.DATEONLY,
@@ -90,25 +45,7 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "date_enlevement_reelle",
-    },
-    dateCreation: {
-      type: DataTypes.DATEONLY,
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "date_creation",
-    },
-    dateDerniereModification: {
-      type: DataTypes.DATEONLY,
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "date_derniere_modification",
+      field: 'date_enlevement_reelle',
     },
     dateExpressionBesoinClient: {
       type: DataTypes.DATEONLY,
@@ -117,42 +54,42 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "date_expression_besoin_client",
+      field: 'date_expression_besoin_client',
     },
-  };
+  }
   const options = {
-    tableName: "commande",
-    comment: "",
+    tableName: 'commande',
+    comment: '',
     indexes: [],
-  };
-  const CommandeModel = sequelize.define("Commande", attributes, options);
+  }
+  const CommandeModel = sequelize.define('Commande', attributes, options)
 
   CommandeModel.associate = function (models) {
     // associations can be defined here
     CommandeModel.belongsTo(models.Client, {
-      onDelete: "CASCADE",
+      onDelete: 'CASCADE',
       foreignKey: {
-        name: "clientId",
+        name: 'clientId',
         allowNull: false,
       },
-    });
+    })
 
-    CommandeModel.belongsTo(models.Magasin, {
-      onDelete: "CASCADE",
+    CommandeModel.belongsTo(models.EtatCommande, {
+      onDelete: 'CASCADE',
       foreignKey: {
-        name: "magasinId",
+        name: 'etatId',
         allowNull: false,
       },
-    });
+    })
 
     CommandeModel.belongsTo(models.Production, {
-      onDelete: "CASCADE",
+      onDelete: 'CASCADE',
       foreignKey: {
-        name: "productionId",
+        name: 'productionId',
         allowNull: false,
       },
-    });
-  };
+    })
+  }
 
-  return CommandeModel;
-};
+  return CommandeModel
+}

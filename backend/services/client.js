@@ -10,8 +10,9 @@ const createClient = async (data) => {
 
 const getAllClients = async (arg = {}) => {
   const clients = await service.findAll(Client)
-  console.log(clients.toJSON())
-  return clients.toJSON()
+  const clientsData = clients.map((client) => client.toJSON())
+  console.log(clientsData)
+  return clientsData
 }
 
 const getClientById = async (id) => {
@@ -22,13 +23,13 @@ const getClientById = async (id) => {
 
 const updateClient = async (id, data) => {
   const updated = service.update(Client, id, data)
-  console.log(updated.toJSON())
-  return updated.toJSON()
+  console.log(updated)
+  return updated
 }
 
 const deleteClient = async (id) => {
   const deleted = service.deleteByPk(Client, id)
-  return deleted.toJSON()
+  return deleted
 }
 
 module.exports = {

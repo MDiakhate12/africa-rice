@@ -1,7 +1,7 @@
 // const fs = require("fs");
 // const path = require("path");
-// const { events, eventResponse } = require("../utils/events");
-// const { ipcRenderer } = window.require("electron");
+const { events, eventResponse } = require('../utils/events')
+const { ipcRenderer } = window.require('electron')
 
 // fs.readdir("../../../../scrapping/regions-json", (err, files) => {
 //   let baseName = "";
@@ -20,7 +20,7 @@
 
 //       values.map((v) => {
 //         ipcRenderer.send(events.localisation.create, v);
-      
+
 //         ipcRenderer.on(eventResponse.localisation.created, (e, d) =>
 //           console.log("LOCALISATION", d)
 //         );
@@ -36,5 +36,27 @@
 //   });
 // });
 
+const localisations = [
+  {
+    region: 'ZIGUINCHOR',
+    departement: 'ZIGUINCHOR',
+    commune: 'Adeane',
+    village: 'Agnack Grand',
+    longitude: 380472,
+    latitude: 1390435,
+    zoneId: 3,
+  },
+  {
+    region: 'ZIGUINCHOR',
+    departement: 'ZIGUINCHOR',
+    commune: 'Adeane',
+    village: 'Agnack Petit',
+    longitude: 378500,
+    latitude: 1391004,
+    zoneId: 3,
+  },
+]
 
-  
+localisations.map((localisation) => {
+  ipcRenderer.send(events.localisation.create, localisation)
+})

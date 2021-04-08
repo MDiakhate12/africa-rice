@@ -4,7 +4,6 @@ import Paper from '@material-ui/core/Paper'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import ListProduction from './ListProductions'
-import StockState from './StockState'
 import { Box, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import '../../store/varieteInstitution/varietes'
@@ -17,10 +16,10 @@ import Stock from './Stock'
 // import '../../store/speculationInstitution/speculationInstitution'
 // import '../../store/localisation/localisation'
 // import '../../store/niveau/niveau'
+// import '../../store/niveau/etatCommande'
 // import '../../store/niveauInstitution/niveauInstitution'
 // import '../../store/magasin/magasin'
 // import '../../store/varieteInstitution/varietes'
-// import '../../store/production/production'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -77,16 +76,12 @@ export default function CenteredTabs() {
         >
           <Tab label="Production" />
           <Tab label="Etat Stock " />
-          <Tab label="Etat Stock (updated)" />
         </Tabs>
       </Paper>
       <TabPanel value={value} index={0}>
         <ListProduction />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <StockState />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
         <Stock />
       </TabPanel>
     </div>
