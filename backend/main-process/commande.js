@@ -4,6 +4,7 @@ const {
   getAllCommandes,
   getCommandeById,
   updateCommande,
+  getCommandeSumBySpeculationByMonth
 } = require('../services/commande')
 
 module.exports = (ipcMain, events, eventResponse) => {
@@ -51,4 +52,14 @@ module.exports = (ipcMain, events, eventResponse) => {
       })
       .catch((err) => console.log(err))
   })
+
+  ipcMain.on("getCommandeSumBySpeculationByMonth", (event, arg) => {
+    getCommandeSumBySpeculationByMonth(arg)
+      .then((data) => {
+        console.log(data)
+        event.reply("gotCommandeSumBySpeculationByMonth", data)
+      })
+      .catch((err) => console.log(err))
+  })
+  
 }

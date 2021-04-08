@@ -1,6 +1,22 @@
+const { Production } = Models
 const Models = require('../models').default
 const service = require('./index')
-const { Commande, Client, EtatCommande, Production } = Models
+
+const {
+  Production,
+  Client,
+  EtatCommande,
+  SpeculationInstitution,
+  Magasin,
+  Localisation,
+  NiveauInstitution,
+  NiveauDeProduction,
+  VarieteInstitution,
+  Variete,
+  sequelize,
+  Speculation,
+  Commande,
+} = Models
 
 const createCommande = async (data) => {
   const commande = await service.create(Commande, data)
@@ -35,10 +51,42 @@ const deleteCommande = async (id) => {
   return deleted
 }
 
+const getCommandeSumBySpeculationByMonth = async () => {
+  let option = {
+    include: [
+      {
+        model: Production,
+        include: [
+          {
+            model: VarieteInstitution,
+            include: [
+              Variete,
+              { model: SpeculationInstitution, include: Speculation },
+            ],
+          },
+        ],
+      },
+    ],
+    group: ['Production.varieteInstitutionId'],
+    attributes: [
+      [
+        sequelize.fn('sum', sequelize.col('quantite')),
+        'totalQuantiteCommandee',
+      ],
+    ],
+  }
+
+  const commandes = await service.findAll(Commande, option)
+  const commandesData = commandes.map((commande) => commande.toJSON())
+  console.log(commandesData)
+  return commandesData
+}
+
 module.exports = {
   createCommande,
   getAllCommandes,
   getCommandeById,
   deleteCommande,
   updateCommande,
+  getCommandeSumBySpeculationByMonth,
 }
