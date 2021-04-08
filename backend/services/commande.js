@@ -1,4 +1,3 @@
-const { Production } = Models
 const Models = require('../models').default
 const service = require('./index')
 
