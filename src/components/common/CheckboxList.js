@@ -81,7 +81,7 @@ export default function CheckboxList() {
       <ConfirmDialog handleClose={handleDialogClose} />
       <Grid container justify="center" alignItem="center">
         <Grid item sm={11}>
-          <Typography align="center" variant="button">Nos niveaux de production</Typography>
+          <Typography align="center" variant="button">Niveaux de production</Typography>
         </Grid>
         <Grid item sm={12}>
           {" "}

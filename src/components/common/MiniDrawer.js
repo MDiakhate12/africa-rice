@@ -82,6 +82,15 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
+  toolbarColored: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    backgroundColor: theme.palette.secondary.main,
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -156,7 +165,7 @@ export default function MiniDrawer() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Gestion des semences
+            Gestion des semences - Title
           </Typography>
         </Toolbar>
       </AppBar>
@@ -173,12 +182,12 @@ export default function MiniDrawer() {
           }),
         }}
       >
-        <div className={classes.toolbar}>
+        <div className={classes.toolbarColored}>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
+              <ChevronRightIcon color="primary" />
             ) : (
-              <ChevronLeftIcon />
+              <ChevronLeftIcon color="primary" />
             )}
           </IconButton>
         </div>
