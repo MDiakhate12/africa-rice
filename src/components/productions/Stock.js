@@ -1,114 +1,170 @@
-import React, { useContext, useEffect, useState } from "react";
-import DataTable from "../common/DataTable";
-import StockCard from "./StockCard";
-import riz from "../../components/images/riz.jpg";
-import mil from "../../components/images/mil.jpg";
-import defaultImage from "../../components/images/default.jpg";
-import { Grid } from "@material-ui/core";
-import { GlobalContext } from "../../store/GlobalProvider";
-import CommonDialog from "../common/CommonDialog";
+import React, { useContext, useEffect, useState } from 'react'
+import DataTable from '../common/DataTable'
+import StockCard from './StockCard'
+import riz from '../../components/images/riz.jpg'
+import mil from '../../components/images/mil.jpg'
+import defaultImage from '../../components/images/default.jpg'
+import { Grid } from '@material-ui/core'
+import { GlobalContext } from '../../store/GlobalProvider'
+import CommonDialog from '../common/CommonDialog'
 
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
-
-const varieteColumn = {
-  type: "string",
-  field: "variete",
-  headerName: "Variete",
-  width: 180,
-  renderCell: (params) =>
-    params.getValue("VarieteInstitution")?.Variete.nomVariete,
-};
-
-const speculationColumn = {
-  type: "string",
-  field: "speculation",
-  headerName: "Speculation",
-  width: 180,
-};
+const { ipcRenderer } = window.require('electron')
+const { events, eventResponse } = require('../../store/utils/events')
 
 const columns = [
-  { type: "string", field: "id", headerName: "idProduction", hide: true },
-  varieteColumn,
+  { type: 'string', field: 'id', headerName: 'idProduction', hide: true },
   {
-    type: "number",
-    field: "totalQuantiteProduite",
-    headerName: "Quantite Total Produite",
+    type: 'string',
+    field: 'variete',
+    headerName: 'Variete',
+    width: 180,
+    renderCell: (params) =>
+      params.getValue('VarieteInstitution')?.Variete.nomVariete,
+  },
+  {
+    type: 'number',
+    field: 'totalQuantiteProduite',
+    headerName: 'Quantite Total Produite',
     width: 200,
   },
   {
-    type: "number",
-    field: "totalQuantiteDisponible",
-    headerName: "Quantite Total Disponible",
+    type: 'number',
+    field: 'totalQuantiteDisponible',
+    headerName: 'Quantite Total Disponible',
     width: 200,
   },
   {
-    type: "number",
-    field: "totalPrix",
-    headerName: "Prix Total",
+    type: 'number',
+    field: 'totalStock',
+    headerName: 'Total Stock ',
     width: 160,
   },
-];
+  {
+    type: 'number',
+    field: 'totalPrix',
+    headerName: 'Prix Total',
+    width: 160,
+  },
+]
 
 function Stock() {
-  const [productions, setProductions] = useState([]);
+  // const [productions, setProductions] = useState([]);
+  const [productionsBySpeculation, setProductionBySpec] = useState([])
+  const [productionsByVariete, setProductionByVariete] = useState([])
+  const { openDialog, dialog } = useContext(GlobalContext)
 
-  const getAllProductions = () => {
-    ipcRenderer.send("getByVarietes");
-    ipcRenderer.on("gotByVarietes", (event, data) => {
-      console.log(data);
-      // updateColumn(false)
-      setProductions(data);
-      // setTimeout(() => {
-      //   updateColumn(true)
-      //   setProductions(groupBySpeculation(data))
-      // }, 3000)
-      //   setSpeculations(data.productions.map(production => produc))
-    });
-  };
-
-  useEffect(() => {
-    getAllProductions();
-    console.log(productions);
-  }, []);
-
-  // PRODUCTIONS GROUPED BY SPECULATION 
+  // PRODUCTIONS GROUPED BY SPECULATION
   const [speculations, setSpeculations] = useState([
     {
-      nomSpeculation: "Riz",
-      dateDerniereProduction: "12 Décembre 2013",
+      nomSpeculation: 'Riz',
+      dateDerniereProduction: '12 Décembre 2013',
       imageSpeculation: riz,
       quantiteProduite: 2000,
     },
     {
-      nomSpeculation: "Mil",
-      dateDerniereProduction: "29 Octobre 2012",
+      nomSpeculation: 'Mil',
+      dateDerniereProduction: '29 Octobre 2012',
       imageSpeculation: mil,
       quantiteProduite: 3000,
     },
     {
-      nomSpeculation: "Total",
-      dateDerniereProduction: "14 Février 2014",
+      nomSpeculation: 'Total',
+      dateDerniereProduction: '14 Février 2014',
       imageSpeculation: defaultImage,
       quantiteProduite: 5000,
     },
-  ]);
+  ])
 
-  const { openDialog, dialog } = useContext(GlobalContext);
+  const getAllProductions = () => {
+    ipcRenderer.send('getByVarietes')
+    ipcRenderer.on('gotByVarietes', (event, data) => {
+      console.log(data)
+      let sommeStock = 0
+      let sommeQDispo = 0
+      groupBySpeculation(data).map((value) => {
+        sommeStock += value.totalStock
+        sommeQDispo += value.totalQuantiteDisponible
+      })
+      setProductionByVariete(data)
+      setProductionBySpec([
+        ...groupBySpeculation(data),
+        {
+          varieteInstitutionId: 0,
+          nomSpeculation: 'Total',
+          dateDerniereProduction: '14 Février 2014',
+          imageSpeculation: defaultImage,
+          totalStock: sommeStock,
+          totalQuantiteDisponible: sommeQDispo,
+        },
+      ])
+    })
+  }
+
+  const groupBySpeculation = (data) => {
+    const bySpeculation = {}
+    data.map((value) => {
+      if (
+        !Object.keys(bySpeculation).includes(
+          value.VarieteInstitution.speculationInstitutionId.toString(),
+        )
+      ) {
+        bySpeculation[value.VarieteInstitution.speculationInstitutionId] = {
+          totalPrix: value.totalPrix,
+          totalStock: value.totalStock,
+          totalQuantiteProduite: value.totalQuantiteProduite,
+          totalQuantiteDisponible: value.totalQuantiteDisponible,
+          nomSpeculation:
+            value.VarieteInstitution.SpeculationInstitution.Speculation
+              .nomSpeculation,
+          imageSpeculation:
+            value.VarieteInstitution.SpeculationInstitution.Speculation
+              .imageSpeculation,
+          varieteInstitutionId:
+            value.VarieteInstitution.speculationInstitutionId,
+        }
+      } else {
+        bySpeculation[
+          value.VarieteInstitution.speculationInstitutionId
+        ].totalPrix =
+          bySpeculation[value.VarieteInstitution.speculationInstitutionId]
+            .totalPrix + value.totalPrix
+        bySpeculation[
+          value.VarieteInstitution.speculationInstitutionId
+        ].totalStock =
+          bySpeculation[value.VarieteInstitution.speculationInstitutionId]
+            .totalStock + value.totalStock
+        bySpeculation[
+          value.VarieteInstitution.speculationInstitutionId
+        ].totalQuantiteProduite =
+          bySpeculation[value.VarieteInstitution.speculationInstitutionId]
+            .totalQuantiteProduite + value.totalQuantiteProduite
+        bySpeculation[
+          value.VarieteInstitution.speculationInstitutionId
+        ].totalQuantiteDisponible =
+          bySpeculation[value.VarieteInstitution.speculationInstitutionId]
+            .totalQuantiteDisponible + value.totalQuantiteDisponible
+      }
+    })
+    return Object.values(bySpeculation)
+  }
+
+  useEffect(() => {
+    getAllProductions()
+  }, [])
 
   const handleDialogClose = (response, data) => {
-    if (response === "yes") {
-      console.log(data);
-      return;
+    if (response === 'yes') {
+      console.log(data)
+      return
     }
-    return;
-  };
+    return
+  }
 
   return (
     <div>
       <CommonDialog handleClose={handleDialogClose} />
       <Grid container spacing={3}>
-        {speculations.map((speculation) => (
+        {productionsBySpeculation.map((speculation) => (
           <Grid item sm={4}>
             <StockCard
               data={speculation}
@@ -118,10 +174,17 @@ function Stock() {
                   content: (
                     <DataTable
                       columns={columns}
-                      rows={productions.map((v) => ({
-                        id: v.varieteInstitutionId,
-                        ...v,
-                      }))}
+                      rows={productionsByVariete
+                        .filter(
+                          (v) =>
+                            v.VarieteInstitution.speculationInstitutionId ===
+                              speculation.varieteInstitutionId ||
+                            speculation.varieteInstitutionId === 0,
+                        )
+                        .map((v) => ({
+                          id: v.varieteInstitutionId,
+                          ...v,
+                        }))}
                     />
                   ),
                 })
@@ -129,17 +192,23 @@ function Stock() {
             >
               <DataTable
                 columns={columns}
-                rows={productions.map((v) => ({
-                  id: v.varieteInstitutionId,
-                  ...v,
-                }))}
+                rows={productionsByVariete
+                  .filter(
+                    (v) =>
+                      v.VarieteInstitution.speculationInstitutionId ===
+                      speculation.varieteInstitutionId,
+                  )
+                  .map((v) => ({
+                    id: v.varieteInstitutionId,
+                    ...v,
+                  }))}
               />
             </StockCard>
           </Grid>
         ))}
       </Grid>
     </div>
-  );
+  )
 }
 
-export default Stock;
+export default Stock

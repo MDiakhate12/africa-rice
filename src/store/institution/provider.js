@@ -63,7 +63,7 @@ export default function Provider() {
   };
 
   useEffect(() => {
-    getOne(4);
+    getOne(1);
   }, []);
 
   return [institutions, institution, add, getOne, getAll, update, deleteById];

@@ -7,7 +7,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { GlobalContext } from "../../store/GlobalProvider";
 
-export default function CommonDialog({ handleClose }) {
+export default function CommonDialog({ handleClose, maxWidth }) {
   const {
     dialog: { open, title, content },
     closeDialog,
@@ -23,7 +23,7 @@ export default function CommonDialog({ handleClose }) {
   return (
     <div>
       <Dialog
-        maxWidth="md"
+        maxWidth={maxWidth || "md"}
         fullWidth
         open={open}
         onClose={close}

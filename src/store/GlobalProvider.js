@@ -27,6 +27,13 @@ import patate_douce from '../components/images/patate_douce.jpg'
 import gombo from '../components/images/gombo.jpg'
 import aubergine from '../components/images/aubergine.jpg'
 
+// import './institution/institution'
+// import './speculation/speculation'
+// import './zone/zones'
+// import './variete/varietes'
+// import './niveau/niveau'
+// import './niveau/etatCommande'
+
 export const GlobalContext = createContext();
 
 export default function GlobalProvider({ children }) {

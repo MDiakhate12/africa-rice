@@ -21,6 +21,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import ConfirmDialog from "../common/ConfirmDialog";
 import { MagasinContext } from "../../store/magasin/provider";
 
+import { events, eventResponse } from "../../store/utils/events";
+const { ipcRenderer } = window.require("electron");
+
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     marginBottom: theme.spacing(1),
@@ -122,7 +126,7 @@ export default function Magasin() {
     departement: "",
     commune: "",
     village: "",
-    idInstitution: institution.idInstitution,
+    idInstitution: 1,
   };
 
   const reducer = (state, action) => {
@@ -153,11 +157,11 @@ export default function Magasin() {
 
       case "ON_COMMUNE_CHANGE":
         localisation = localisations.find((l) => l[name] === value);
-
+        console.log(localisation)
         return {
           ...state,
           [name]: value,
-          village: localisation.village,
+          village: localisation.idLocalisation,
         };
 
       case "ON_VILLAGE_CHANGE":

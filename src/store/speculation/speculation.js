@@ -78,8 +78,4 @@ export const allSpeculations = [
 
 allSpeculations.map((s) => {
   ipcRenderer.send(events.speculation.create, s)
-
-  // ipcRenderer.on(eventResponse.speculation.created, (e, d) => {
-  //   console.log(d);
-  // });
 })

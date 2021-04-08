@@ -104,9 +104,17 @@ const events = {
     delete: 'deleteProduction',
     getOne: 'getOneProduction',
   },
+  etatCommande: {
+    create: 'createEtatCommande',
+    getAll: 'getAllEtatCommandes',
+    update: 'updateEtatCommande',
+    delete: 'deleteEtatCommande',
+    getOne: 'getOneEtatCommande',
+  },
+
   imageDialog: {
-    openImageDialog: "openImageDialog",
-  }
+    openImageDialog: 'openImageDialog',
+  },
 }
 
 const eventResponse = {
@@ -215,9 +223,16 @@ const eventResponse = {
     deleted: 'deletedProduction',
     gotOne: 'gotOneProduction',
   },
+  etatCommande: {
+    created: 'createdEtatCommande',
+    gotAll: 'gotAllEtatCommandes',
+    updated: 'updatedEtatCommande',
+    deleted: 'deletedEtatCommande',
+    gotOne: 'gotOneEtatCommande',
+  },
   imageDialog: {
-    closedImageDialog: "closedImageDialog",
-  }
+    closedImageDialog: 'closedImageDialog',
+  },
 }
 
 module.exports = {

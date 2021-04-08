@@ -5,7 +5,6 @@ import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,7 +53,7 @@ export default function SingleLineGridList({ data }) {
       <GridList cellHeight={60} className={classes.gridList} cols={5}>
         {data.map((tile) => (
           <GridListTile key={tile.img}>
-            <img src={tile.img} alt={tile.title} />
+            <img src={tile.img} alt={tile.title} width={"100%"} />
             <GridListTileBar
               title={tile.title}
               // subtitle={<span></span>}

@@ -10,6 +10,6 @@ const institution = {
 }
 
 ipcRenderer.send(events.institution.create, institution)
-ipcRenderer.on(eventResponse.institution.created, (ev, data) => {
+ipcRenderer.once(eventResponse.institution.created, (ev, data) => {
   console.log(data)
 })
