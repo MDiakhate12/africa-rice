@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Pie, Line, Bar } from "react-chartjs-2";
-import ProductionByVariete from "./ProductionVariete";
+import Production from "./Production";
+import Commande from "./Commande";
+import { Grid } from "@material-ui/core";
+import ProductionCommande from "./ProductionCommande";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -126,7 +129,17 @@ export default function Rapports() {
 
   return (
     <div>
-     <ProductionByVariete />
+      <Grid container spacing={2}>
+        <Grid item sm={6}>
+          <Production />
+        </Grid>
+        <Grid item sm={6}>
+          <Commande />
+        </Grid>
+        <Grid item sm={6}>
+          <ProductionCommande />
+        </Grid>
+      </Grid>
     </div>
   );
 }

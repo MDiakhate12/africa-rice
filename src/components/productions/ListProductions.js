@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Button } from "@material-ui/core";
 import DataTable from "../common/DataTable";
-import Modal from "@material-ui/core/Modal";
 import AddProduction from "./AddProduction";
-import CommonDialog from "../common/CommonDialog";
 import { GlobalContext } from "../../store/GlobalProvider";
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -73,24 +71,27 @@ const columns = [
 ];
 
 export default function Productions() {
-  const [open, setOpen] = React.useState(false);
   const [productions, setProductions] = useState([]);
   const handleOpen = () => {
     // setOpen(true);
-    openDialog({ title: "Nouvelle Production", content: <AddProduction /> });
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+    openProductionFormDialog({ title: "Nouvelle Production" });
   };
 
   const handleDialogClose = (response, data) => {
-    if (response === 'yes') {
-      console.log(data)
-      return
+    if (response === "yes") {
+      console.log(data);
+      handleSubmitProduction(data);
+      getAllProductions();
+      return;
     }
-    return
-  }
+    return;
+  };
+
+  const handleSubmitProduction = (formData) => {
+    const data = { ...formData, institutionId: 1 };
+    console.log(data);
+    ipcRenderer.send(events.production.create, data);
+  };
 
   const getAllProductions = () => {
     ipcRenderer.send(events.production.getAll);
@@ -104,8 +105,7 @@ export default function Productions() {
     console.log(productions);
   }, []);
 
-
-  const { openDialog } = useContext(GlobalContext);
+  const { openProductionFormDialog } = useContext(GlobalContext);
 
   return (
     <div>
@@ -121,7 +121,7 @@ export default function Productions() {
       >
         <AddProduction handleClose={handleClose} />
       </Modal> */}
-      <CommonDialog handleClose={handleClose} maxWidth="xs" />
+      <AddProduction handleClose={handleDialogClose} />
       <DataTable
         columns={columns}
         rows={productions.map((v) => ({ id: v.idProduction, ...v }))}
