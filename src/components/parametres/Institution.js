@@ -7,7 +7,6 @@ import photoImage from "../images/photo.svg";
 import { eventResponse, events } from "../../store/utils/events";
 import { GlobalContext } from "../../store/GlobalProvider";
 import CheckboxList from "../common/CheckboxList";
-// import ContactFormDialog from "../common/ContactFormDialog";
 
 const { ipcRenderer } = window.require("electron");
 

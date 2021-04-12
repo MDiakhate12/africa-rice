@@ -5,7 +5,7 @@ export default function Provider() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const openDialog = (payload) => {
-    dispatch({ type: "ON_OPEN__DIALOG", payload });
+    dispatch({ type: "ON_OPEN_DIALOG", payload });
   };
 
   const closeDialog = (payload) => {

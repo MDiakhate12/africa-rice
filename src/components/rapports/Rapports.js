@@ -129,14 +129,14 @@ export default function Rapports() {
 
   return (
     <div>
-      <Grid container spacing={2}>
-        <Grid item sm={6}>
+      <Grid container spacing={1}>
+        <Grid item >
           <Production />
         </Grid>
-        <Grid item sm={6}>
+        <Grid item >
           <Commande />
         </Grid>
-        <Grid item sm={6}>
+        <Grid item >
           <ProductionCommande />
         </Grid>
       </Grid>

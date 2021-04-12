@@ -1,6 +1,8 @@
 html {
   --primary-main: #009688;
+  --primary-light: #0cccb9;
   --secondary-main: #ffc107;
+  --secondary-light: #ffdc74;
 }
 
 body {

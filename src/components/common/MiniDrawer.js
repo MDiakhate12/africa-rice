@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    background: theme.gradient.primary_reverse,
   },
   appBarShift: {
     marginLeft: drawerWidth,
@@ -89,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    backgroundColor: theme.palette.secondary.main,
+    // backgroundColor: theme.palette.primary.main,
   },
   content: {
     flexGrow: 1,

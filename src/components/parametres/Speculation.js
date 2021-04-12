@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     width: "25ch",
   },
   addButton: {
-    width: "29ch",
+    width: "25ch",
   },
   gridContainer: {
     display: "flex",

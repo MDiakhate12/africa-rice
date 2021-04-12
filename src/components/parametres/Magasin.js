@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   addButton: {
-    width: "29ch",
+    width: "25ch",
   },
   gridContainer: {
     display: "flex",

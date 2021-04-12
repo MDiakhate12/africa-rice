@@ -6,7 +6,6 @@ import Tab from '@material-ui/core/Tab'
 import ListProduction from './ListProductions'
 import { Box, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import '../../store/varieteInstitution/varietes'
 import Stock from './Stock'
 
 // import '../../store/speculation/speculation'

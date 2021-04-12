@@ -10,6 +10,15 @@ const columns = [
   { type: "string", field: "id", headerName: "idProduction", hide: true },
   {
     type: "string",
+    field: "speculation",
+    headerName: "Speculation",
+    width: 120,
+    renderCell: (params) =>
+      params.getValue("VarieteInstitution").SpeculationInstitution.Speculation
+        .nomSpeculation,
+  },
+  {
+    type: "string",
     field: "variete",
     headerName: "Variete",
     width: 120,
@@ -34,44 +43,50 @@ const columns = [
   {
     type: "string",
     field: "localisation",
-    headerName: "Localisation",
-    width: 100,
+    headerName: "Localité",
+    width: 210,
     renderCell: (params) => params.getValue("Localisation").village,
   },
   {
     type: "number",
     field: "quantiteProduite",
     headerName: "Quantite Produite",
-    width: 130,
+    width: 160,
+    renderCell: (params) => `${params.getValue("quantiteProduite")} KG`,
   },
   {
     type: "number",
     field: "prixUnitaire",
     headerName: "Prix Unitaire",
     width: 100,
+    renderCell: (params) => `${params.getValue("prixUnitaire")} FCFA`,
   },
   {
     type: "number",
     field: "quantiteDisponible",
     headerName: "Quantite Disponible",
     width: 100,
+    renderCell: (params) => `${params.getValue("quantiteDisponible")} KG`,
   },
   {
     type: "number",
     field: "stockDeSecurite",
     headerName: "Stock De Securite",
     width: 100,
+    renderCell: (params) => `${params.getValue("stockDeSecurite")} KG`,
+
   },
   {
     type: "date",
     field: "dateDeProduction",
     headerName: "Date De Production",
-    width: 130,
+    width: 160,
   },
 ];
 
 export default function Productions() {
   const [productions, setProductions] = useState([]);
+  const [created, setCreated] = useState(false);
   const handleOpen = () => {
     // setOpen(true);
     openProductionFormDialog({ title: "Nouvelle Production" });
@@ -81,7 +96,8 @@ export default function Productions() {
     if (response === "yes") {
       console.log(data);
       handleSubmitProduction(data);
-      getAllProductions();
+      // getAllProductions();
+      setCreated(!created);
       return;
     }
     return;
@@ -102,8 +118,7 @@ export default function Productions() {
 
   useEffect(() => {
     getAllProductions();
-    console.log(productions);
-  }, []);
+  }, [created]);
 
   const { openProductionFormDialog } = useContext(GlobalContext);
 

@@ -21,39 +21,63 @@ const colors = [
 ];
 
 export default function Commande() {
-  const [commandes, setCommandes] = useState([]);
+  const [commandesByVariete, setCommandesByVariete] = useState([]);
+  const [commandesBySpeculation, setCommandesBySpeculation] = useState([]);
+  const [
+    commandesBySpeculationByState,
+    setCommandesBySpeculationByState,
+  ] = useState([]);
 
-  const getCommandeSumBySpeculationByMonth = () => {
-    ipcRenderer.send("getCommandeSumBySpeculationByMonth");
-    ipcRenderer.once("gotCommandeSumBySpeculationByMonth", (event, data) => {
-      setCommandes(data);
+  const getCommandeSumByVarietes = () => {
+    ipcRenderer.send("getCommandeSumByVarietes");
+    ipcRenderer.once("gotCommandeSumByVarietes", (event, data) => {
+      setCommandesByVariete(data);
+    });
+  };
+
+  const getCommandeSumBySpeculation = () => {
+    ipcRenderer.send("getCommandeSumBySpeculation");
+    ipcRenderer.once("gotCommandeSumBySpeculation", (event, data) => {
+      setCommandesBySpeculation(data);
+    });
+  };
+
+  const getCommandeSumBySpeculationByState = () => {
+    ipcRenderer.send("getCommandeSumBySpeculationByState");
+    ipcRenderer.once("gotCommandeSumBySpeculationByState", (event, data) => {
+      setCommandesBySpeculationByState(data);
       console.log("DIIAAAAF", data);
     });
   };
 
   useEffect(() => {
-    getCommandeSumBySpeculationByMonth();
+    getCommandeSumByVarietes();
+    getCommandeSumBySpeculation();
+    getCommandeSumBySpeculationByState();
     // console.log(commandes)
   }, []);
 
-  const data = {
-    labels: commandes.map(
+  const dataByVariete = {
+    labels: commandesByVariete.map(
       (commande) => commande.Production.VarieteInstitution.Variete.nomVariete
     ),
     datasets: [
       {
-        label: "Commande par variété",
-        data: commandes.map((commande) => commande.totalQuantiteCommandee),
-        backgroundColor: colors.slice(3, commandes.length + 3),
+        label: "Commande",
+        data: commandesByVariete.map(
+          (commande) => commande.totalQuantiteCommandee
+        ),
+        backgroundColor: colors.slice(3, commandesByVariete.length + 3),
       },
     ],
   };
 
-  const options = {
+  
+  const optionsSpeculation = {
     title: {
       display: true,
-      text: "Quantité commandée par variété",
-      position: "bottom",
+      text: "Quantité commandée",
+      // position: "bottom",
     },
     scales: {
       yAxes: [
@@ -67,9 +91,96 @@ export default function Commande() {
     },
   };
 
+  const optionsVariete = {
+    title: {
+      display: true,
+      text: "Quantité commandée par variété",
+      // position: "bottom",
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            stepSize: 200,
+          },
+        },
+      ],
+    },
+  };
+
+  
+  const optionsSpeculationByState = {
+    title: {
+      display: true,
+      text: "Quantité commandée VS Quantité livrée par spéculation",
+      // position: "bottom",
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            stepSize: 200,
+          },
+        },
+      ],
+    },
+  };
+
+  const dataBySpeculation = {
+    labels: commandesBySpeculation.map(
+      (commande) =>
+        commande.Production.VarieteInstitution.SpeculationInstitution
+          .Speculation.nomSpeculation
+    ),
+    datasets: [
+      {
+        label: "Commande",
+        data: commandesBySpeculation.map(
+          (commande) => commande.totalQuantiteCommandee
+        ),
+        backgroundColor: colors.slice(3, commandesBySpeculation.length + 3),
+      },
+    ],
+  };
+
+  const dataBySpeculationByState = {
+    labels: commandesBySpeculationByState.map(
+      (commande) =>
+        commande.Production.VarieteInstitution.SpeculationInstitution
+          .Speculation.nomSpeculation
+    ),
+    datasets: [
+      {
+        label: "Commande",
+        data: commandesBySpeculationByState.map(
+          (commande) => commande.totalQuantiteCommandee
+        ),
+        backgroundColor: colors.slice(
+          3,
+          commandesBySpeculationByState.length + 3
+        ),
+      },
+      {
+        label: "Enlèvement",
+        data: commandesBySpeculationByState
+          .filter((commande) => commande.etatId === 5)
+          .map((commande) => commande.totalQuantiteCommandee),
+        backgroundColor: colors.slice(
+          5,
+          commandesBySpeculationByState.length + 5
+        ),
+      },
+    ],
+  };
+
+
   return (
     <div>
-      <Bar data={data} options={options} />
+      <Bar data={dataByVariete} options={optionsVariete} />
+      <Bar data={dataBySpeculation} options={optionsSpeculation} />
+      <Bar data={dataBySpeculationByState} options={optionsSpeculationByState} />
     </div>
   );
 }

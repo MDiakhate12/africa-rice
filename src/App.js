@@ -7,6 +7,14 @@ import { amber, teal } from "@material-ui/core/colors";
 import { BrowserRouter, Route } from "react-router-dom";
 
 const theme = createMuiTheme({
+  gradient: {
+    primary:
+      "linear-gradient(to right, var(--primary-main), var(--primary-light));",
+    primary_reverse:
+      "linear-gradient(to right, var(--primary-main), var(--secondary-main));",
+    secondary:
+      "linear-gradient(to right, var(--secondary-light), var(--secondary-main));",
+  },
   palette: {
     type: "light",
     primary: {
@@ -26,6 +34,15 @@ const theme = createMuiTheme({
     // E.g., shift from Red 500 to Red 300 or Red 700.
     tonalOffset: 0.2,
   },
+  typography: {
+    allVariants: {
+      fontSize: "0.8rem"
+    },
+    // button: { fontSize: "0.8rem" },
+    h1: { fontSize: "1.3rem" },
+    // body1: { fontSize: "0.8rem" },
+    // body2: { fontSize: "0.8rem" },
+  },
 });
 
 function App() {
@@ -40,4 +57,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

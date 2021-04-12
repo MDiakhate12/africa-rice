@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Accordion from '@material-ui/core/Accordion'
-import AccordionSummary from '@material-ui/core/AccordionSummary'
-import AccordionDetails from '@material-ui/core/AccordionDetails'
-import Typography from '@material-ui/core/Typography'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import DeleteIcon from '@material-ui/icons/Delete'
+import React, { useContext, useEffect, useReducer, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import Typography from "@material-ui/core/Typography";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import DeleteIcon from "@material-ui/icons/Delete";
 
-import './style.css'
+import "./style.css";
 
 import {
   FilledInput,
@@ -20,100 +20,109 @@ import {
   MenuItem,
   Select,
   Tooltip,
-} from '@material-ui/core'
-import { GlobalContext } from '../../store/GlobalProvider'
+} from "@material-ui/core";
+import { GlobalContext } from "../../store/GlobalProvider";
+import DatePicker from "../common/DatePicker";
 
-const { ipcRenderer } = window.require('electron')
-const { events, eventResponse } = require('../../store/utils/events')
+const { ipcRenderer } = window.require("electron");
+const { events, eventResponse } = require("../../store/utils/events");
 
 const useStyles = makeStyles((theme) => ({
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     fontWeight: theme.typography.fontWeightRegular,
   },
   secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(12),
     color: theme.palette.text.secondary,
   },
   gridContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   accordionSummaryContent: {
-    margin: '0px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    margin: "0px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
-  formControl: {
-    marginBottom: theme.spacing(1),
-  },
-}))
+  // formControl: {
+  //   marginBottom: theme.spacing(1),
+  // },
+}));
 
-function SimpleAccordion({ index, handleDataChange }) {
-  const classes = useStyles()
-  const [formData, setFormData] = useState({})
-  const [productions, setProductions] = useState([])
-  const [varietes, setVarietes] = useState([])
-  const [speculations, setSpeculations] = useState([])
-  const [niveauxInstitution, setNiveauxInstitution] = useState([])
-  const [expanded, setExpanded] = useState(false)
-  const { openConfirmDialog } = useContext(GlobalContext)
+function SimpleAccordion({
+  index,
+  handleDataChange,
+  expandedFromDialog,
+  setExpandedFromDialog,
+  handleDeleteArticle,
+}) {
+  const classes = useStyles();
+  const [formData, setFormData] = useState({});
+  const [productions, setProductions] = useState([]);
+  const [varietes, setVarietes] = useState([]);
+  const [speculations, setSpeculations] = useState([]);
+  const [niveauxInstitution, setNiveauxInstitution] = useState([]);
+  const [expanded, setExpanded] = useState(false);
+
+  const { openConfirmDialog } = useContext(GlobalContext);
 
   // const groupByKey = (key, array) => [
   //   ...new Map(array.map((item) => [item[key], item])).values(),
   // ];
 
   const getAllProductions = () => {
-    ipcRenderer.send(events.production.getAll)
+    ipcRenderer.send(events.production.getAll);
     ipcRenderer.once(eventResponse.production.gotAll, (event, data) => {
-      setProductions(data)
+      setProductions(data);
 
       setSpeculations([
         ...new Set(
           data.map(
             (production) =>
               production.VarieteInstitution.SpeculationInstitution.Speculation
-                .nomSpeculation,
-          ),
+                .nomSpeculation
+          )
         ),
-      ])
+      ]);
       setNiveauxInstitution([
         ...new Set(
           data.map(
             (production) =>
-              production.NiveauInstitution.NiveauDeProduction.nomNiveau,
-          ),
+              production.NiveauInstitution.NiveauDeProduction.nomNiveau
+          )
         ),
-      ])
-    })
-  }
+      ]);
+    });
+  };
 
   useEffect(() => {
-    getAllProductions()
+    getAllProductions();
 
     // console.log("productions:", productions);
     // console.log("niveaux:", niveauxInstitution);
     // console.log("speculations:", speculations);
-  }, [])
+  }, []);
 
   const handleToggle = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false)
-  }
+    setExpanded(newExpanded ? panel : false);
+    setExpandedFromDialog(index);
+  };
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    console.log(name, value)
+    const { name, value } = e.target;
+    console.log(name, value);
 
-    setFormData({ ...formData, [name]: value })
-    handleDataChange(e, index)
-  }
+    setFormData({ ...formData, [name]: value });
+    handleDataChange(e, index);
+  };
 
   return (
     <>
       <Accordion
-        expanded={expanded === `panel-${index}`}
+        expanded={expanded === `panel-${index}` || expandedFromDialog}
         onChange={handleToggle(`panel-${index}`)}
         expandIcon={<ExpandMoreIcon />}
       >
@@ -141,14 +150,16 @@ function SimpleAccordion({ index, handleDataChange }) {
           <Tooltip title="Supprimer l'article">
             <IconButton
               onClick={(event) => {
-                event.stopPropagation()
+                event.stopPropagation();
+                if (Object.keys(formData).length === 0)
+                  return handleDeleteArticle(index);
 
                 openConfirmDialog({
-                  title: 'Suppression',
+                  title: "Suppression",
                   content:
-                    "Souhaitez vous réellement supprimer l'article ? Cette action est irréversible.",
+                    "L'article contient des informations. Souhaitez vous réellement le supprimer ? Cette action est irréversible.",
                   data: index,
-                })
+                });
               }}
             >
               <DeleteIcon color="secondary" />
@@ -160,6 +171,7 @@ function SimpleAccordion({ index, handleDataChange }) {
             <Grid item sm={12}>
               <FormControl
                 fullWidth
+                margin="dense"
                 variant="filled"
                 className={classes.formControl}
               >
@@ -167,7 +179,7 @@ function SimpleAccordion({ index, handleDataChange }) {
                 <Select
                   labelId="Niveau-label"
                   id="Niveau-select"
-                  value={formData?.niveau || ''}
+                  value={formData?.niveau || ""}
                   name="niveau"
                   onChange={handleChange}
                   fullWidth
@@ -184,6 +196,7 @@ function SimpleAccordion({ index, handleDataChange }) {
             <Grid item sm={12}>
               <FormControl
                 fullWidth
+                margin="dense"
                 variant="filled"
                 className={classes.formControl}
               >
@@ -191,7 +204,7 @@ function SimpleAccordion({ index, handleDataChange }) {
                 <Select
                   labelId="Spéculation-label"
                   id="Spéculation-select"
-                  value={formData?.speculation || ''}
+                  value={formData?.speculation || ""}
                   name="speculation"
                   onChange={handleChange}
                 >
@@ -207,6 +220,7 @@ function SimpleAccordion({ index, handleDataChange }) {
             <Grid item sm={12}>
               <FormControl
                 fullWidth
+                margin="dense"
                 variant="filled"
                 className={classes.formControl}
               >
@@ -214,7 +228,7 @@ function SimpleAccordion({ index, handleDataChange }) {
                 <Select
                   labelId="Production-label"
                   id="Production-select"
-                  value={formData.production || ''}
+                  value={formData.production || ""}
                   name="production"
                   onChange={handleChange}
                 >
@@ -233,15 +247,15 @@ function SimpleAccordion({ index, handleDataChange }) {
                         >
                           {`${production?.VarieteInstitution?.Variete?.nomVariete} - ${production?.Localisation?.village}`}
                         </MenuItem>
-                      )
+                      );
                     }
                   })}
                 </Select>
                 <FormHelperText>
-                  Production commandée{' '}
+                  Production commandée{" "}
                   {formData?.production?.VarieteInstitution?.Variete?.nomVariete
                     ? ` - ${formData?.production?.prixUnitaire} FCFA`
-                    : ''}
+                    : ""}
                 </FormHelperText>
               </FormControl>
             </Grid>
@@ -252,7 +266,7 @@ function SimpleAccordion({ index, handleDataChange }) {
                 </InputLabel>
 
                 <FilledInput
-                  value={formData.quantite || ''}
+                  value={formData.quantite || ""}
                   onChange={handleChange}
                   autoFocus
                   margin="dense"
@@ -267,13 +281,37 @@ function SimpleAccordion({ index, handleDataChange }) {
                 <FormHelperText>
                   Quantité désirée pour cette production
                 </FormHelperText>
-              </FormControl>{' '}
+              </FormControl>{" "}
+            </Grid>
+            <Grid item sm={12}>
+              <DatePicker
+                variant="filled"
+                label="Date d'expression du besoin par le client"
+                disableFuture={true}
+                fullWidth={true}
+                selectedDate={formData.dateExpressionBesoinClient}
+                handleChange={handleChange}
+                format="d MMMM yyyy"
+                name="dateExpressionBesoinClient"
+              />
+            </Grid>
+            <Grid item sm={12}>
+              <DatePicker
+                variant="filled"
+                label="Date d'enlèvement souhaité par le client"
+                disablePast={true}
+                fullWidth={true}
+                selectedDate={formData.dateEnlevementSouhaitee}
+                handleChange={handleChange}
+                format="d MMMM yyyy"
+                name="dateEnlevementSouhaitee"
+              />
             </Grid>
           </Grid>
         </AccordionDetails>
       </Accordion>
     </>
-  )
+  );
 }
 
-export default SimpleAccordion
+export default SimpleAccordion;

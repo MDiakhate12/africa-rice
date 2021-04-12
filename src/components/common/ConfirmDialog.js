@@ -8,13 +8,13 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { GlobalContext } from "../../store/GlobalProvider";
 
-export default function ConfirmDialog({ handleClose }) {
+export default function ConfirmDialog({ handleClose, maxWidth }) {
   const {
     confirmDialog: { open, title, content, data },
     closeConfirmDialog,
   } = useContext(GlobalContext);
 
-  const close = (response, dataFromOpen=null) => {
+  const close = (response, dataFromOpen = null) => {
     closeConfirmDialog();
     handleClose(response, dataFromOpen);
   };
@@ -25,6 +25,8 @@ export default function ConfirmDialog({ handleClose }) {
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
+        fullWidth
+        maxWidth={maxWidth || "xs"}
       >
         <DialogTitle id="form-dialog-title">{title}</DialogTitle>
         <DialogContent>

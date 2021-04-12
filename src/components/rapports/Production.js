@@ -21,43 +21,49 @@ const colors = [
   "rgba(102, 26, 168, 0.2)",
 ];
 export default function Production() {
-  const [productions, setProductions] = useState([]);
+  const [productionsByVariete, setProductionsByVariete] = useState([]);
+  const [productionsBySpeculation, setProductionsBySpeculation] = useState([]);
 
-  const getAllProductions = () => {
+  const getProductionsSumByVarietes = () => {
     ipcRenderer.send("getByVarietes");
     ipcRenderer.once("gotByVarietes", (event, data) => {
       console.log(data);
-      // updateColumn(false)
-      setProductions(data);
-      // setTimeout(() => {
-      //   updateColumn(true)
-      //   setProductions(groupBySpeculation(data))
-      // }, 3000)
+      setProductionsByVariete(data);
+    });
+  };
+  const getProductionsSumBySpeculation = () => {
+    ipcRenderer.send("getProductionsSumBySpeculation");
+    ipcRenderer.once("gotProductionsSumBySpeculation", (event, data) => {
+      console.log(data);
+      setProductionsBySpeculation(data);
     });
   };
 
   useEffect(() => {
-    getAllProductions();
+    getProductionsSumByVarietes();
+    getProductionsSumBySpeculation();
     // console.log(productions)
   }, []);
 
-  const data = {
-    labels: productions.map(
+  const dataByVariete = {
+    labels: productionsByVariete.map(
       (production) => production.VarieteInstitution.Variete.nomVariete
     ),
     datasets: [
       {
-        label: "Production par variété",
-        data: productions.map((production) => production.totalQuantiteProduite),
-        backgroundColor: colors.slice(0, productions.length),
+        label: "Production",
+        data: productionsByVariete.map(
+          (production) => production.totalQuantiteProduite
+        ),
+        backgroundColor: colors.slice(0, productionsByVariete.length),
       },
     ],
   };
-  const options = {
+  const optionsVariete = {
     title: {
       display: true,
       text: "Quantité produite par variété",
-      position: "bottom",
+      // position: "bottom",
     },
     scales: {
       yAxes: [
@@ -72,9 +78,45 @@ export default function Production() {
     },
   };
 
+  const dataBySpeculations = {
+    labels: productionsBySpeculation.map(
+      (production) =>
+        production.VarieteInstitution.SpeculationInstitution.Speculation
+          .nomSpeculation
+    ),
+    datasets: [
+      {
+        label: "Production",
+        data: productionsBySpeculation.map(
+          (production) => production.totalQuantiteProduite
+        ),
+        backgroundColor: colors.slice(0, productionsBySpeculation.length),
+      },
+    ],
+  };
+  const optionsSpeculation = {
+    title: {
+      display: true,
+      text: "Quantité produite par spéculation",
+      // position: "bottom",
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            // count: 5,
+            stepSize: 2000,
+          },
+        },
+      ],
+    },
+  };
+
   return (
     <div>
-      <Bar data={data} options={options} />
+      <Bar data={dataByVariete} options={optionsVariete} />
+      <Bar data={dataBySpeculations} options={optionsSpeculation} />
     </div>
   );
 }
