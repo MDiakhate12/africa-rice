@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
+import React, { useContext, useEffect, useState } from 'react'
+import clsx from 'clsx'
+import { makeStyles } from '@material-ui/core/styles'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
 import {
   Box,
   Button,
@@ -12,7 +12,7 @@ import {
   InputAdornment,
   TextField,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core'
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
   //   alignItems: "center",
   // },
   modal: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     // backgroundColor: theme.palette.background.paper,
     // boxShadow: theme.shadows[4],
     paddingLeft: theme.spacing(3),
@@ -52,29 +52,29 @@ const useStyles = makeStyles((theme) => ({
     // marginRight: theme.spacing('50'),
     // marginBottom: theme.spacing('7'),
   },
-}));
+}))
 
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
+const { ipcRenderer } = window.require('electron')
+const { events, eventResponse } = require('../../store/utils/events')
 
 export default function ProductionFormDialog({ handleClose }) {
   const {
     productionFormDialog: { open },
     closeProductionFormDialog,
-  } = useContext(GlobalContext);
+  } = useContext(GlobalContext)
 
   const close = (response, dataFromOpen = null) => {
-    closeProductionFormDialog();
-    handleClose(response, dataFromOpen);
-  };
+    closeProductionFormDialog()
+    handleClose(response, dataFromOpen)
+  }
 
-  const classes = useStyles();
-  const [formData, setFormData] = useState({});
-  const [speculations, setSpeculation] = useState([]);
-  const [varietes, setVarietes] = useState([]);
-  const [magasins, setMagasin] = useState([]);
-  const [localisations, setLocalisation] = useState([]);
-  const [niveau, setNiveau] = useState([]);
+  const classes = useStyles()
+  const [formData, setFormData] = useState({})
+  const [speculations, setSpeculation] = useState([])
+  const [varietes, setVarietes] = useState([])
+  const [magasins, setMagasin] = useState([])
+  const [localisations, setLocalisation] = useState([])
+  const [niveau, setNiveau] = useState([])
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -82,54 +82,54 @@ export default function ProductionFormDialog({ handleClose }) {
     setFormData({
       ...formData,
       [name]: value,
-    });
-  };
+    })
+  }
 
   const getVarietesInstitution = () => {
-    ipcRenderer.send(events.varieteInstitution.getAll, { institutionId: 1 });
+    ipcRenderer.send(events.varieteInstitution.getAll, { institutionId: 1 })
     ipcRenderer.on(eventResponse.varieteInstitution.gotAll, (event, data) => {
-      setVarietes(data);
-      console.log(data);
-    });
-  };
+      setVarietes(data)
+      console.log(data)
+    })
+  }
   const getSpeculationsInstitution = () => {
     ipcRenderer.send(events.speculationInstitution.getAll, {
       institutionId: 1,
-    });
+    })
     ipcRenderer.on(
       eventResponse.speculationInstitution.gotAll,
       (event, data) => {
-        setSpeculation(data);
-        console.log(data);
-      }
-    );
-  };
+        setSpeculation(data)
+        console.log(data)
+      },
+    )
+  }
   const getMagasins = () => {
-    ipcRenderer.send(events.magasin.getAll);
+    ipcRenderer.send(events.magasin.getAll)
     ipcRenderer.on(eventResponse.magasin.gotAll, (event, data) => {
-      setMagasin(data);
-    });
-  };
+      setMagasin(data)
+    })
+  }
   const getLocalisations = () => {
-    ipcRenderer.send(events.localisation.getAll);
+    ipcRenderer.send(events.localisation.getAll)
     ipcRenderer.on(eventResponse.localisation.gotAll, (event, data) => {
-      setLocalisation(data);
-    });
-  };
+      setLocalisation(data)
+    })
+  }
   const getNiveau = () => {
-    ipcRenderer.send(events.niveauInstitution.getAll, { institutionId: 1 });
+    ipcRenderer.send(events.niveauInstitution.getAll, { institutionId: 1 })
     ipcRenderer.on(eventResponse.niveauInstitution.gotAll, (event, data) => {
-      setNiveau(data);
-    });
-  };
+      setNiveau(data)
+    })
+  }
 
   useEffect(() => {
-    getSpeculationsInstitution();
-    getVarietesInstitution();
-    getMagasins();
-    getLocalisations();
-    getNiveau();
-  }, []);
+    getSpeculationsInstitution()
+    getVarietesInstitution()
+    getMagasins()
+    getLocalisations()
+    getNiveau()
+  }, [])
 
   return (
     <div>
@@ -145,8 +145,8 @@ export default function ProductionFormDialog({ handleClose }) {
           <div className={classes.modal}>
             <Box
               style={{
-                display: "flex",
-                justifyContent: "center",
+                display: 'flex',
+                justifyContent: 'center',
               }}
             >
               <Typography variant="button">Ajouter Une Production</Typography>
@@ -194,7 +194,7 @@ export default function ProductionFormDialog({ handleClose }) {
                       .filter(
                         (variete) =>
                           variete.speculationInstitutionId ===
-                          formData.speculationInstitutionId
+                          formData.speculationInstitutionId,
                       )
                       .map((variete) => (
                         <MenuItem
@@ -214,7 +214,7 @@ export default function ProductionFormDialog({ handleClose }) {
                   margin="dense"
                   id="state.filstockDeSecurite-star || ''t -adornment"
                   name="quantiteProduite"
-                  value={formData.quantiteProduite || ""}
+                  value={formData.quantiteProduite || ''}
                   type="number"
                   className={classes.marginDense}
                   variant="filled"
@@ -233,7 +233,7 @@ export default function ProductionFormDialog({ handleClose }) {
                   margin="dense"
                   id="state.filstockDeSecurite-star || ''t -adornment"
                   name="quantiteDisponible"
-                  value={formData.quantiteDisponible || ""}
+                  value={formData.quantiteDisponible || ''}
                   type="number"
                   className={classes.marginDense}
                   variant="filled"
@@ -290,7 +290,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.region || ""}
+                    value={formData.region || ''}
                     name="region"
                     color="secondary"
                     onChange={handleChange}
@@ -303,7 +303,7 @@ export default function ProductionFormDialog({ handleClose }) {
                             <MenuItem key={r} value={r}>
                               {r}
                             </MenuItem>
-                          );
+                          )
                       })}
                   </Select>
                 </FormControl>
@@ -315,7 +315,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.departement || ""}
+                    value={formData.departement || ''}
                     name="departement"
                     color="secondary"
                     onChange={handleChange}
@@ -326,7 +326,7 @@ export default function ProductionFormDialog({ handleClose }) {
                           l.region.toLowerCase() ===
                           formData.region?.toLowerCase()
                         )
-                          return l.departement;
+                          return l.departement
                       })
                       .map((d, i, s) => {
                         if (s.indexOf(d) === i)
@@ -334,7 +334,7 @@ export default function ProductionFormDialog({ handleClose }) {
                             <MenuItem key={d} value={d}>
                               {d}
                             </MenuItem>
-                          );
+                          )
                       })}
                   </Select>
                 </FormControl>{" "}
@@ -346,7 +346,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.commune || ""}
+                    value={formData.commune || ''}
                     name="commune"
                     color="secondary"
                     onChange={handleChange}
@@ -357,7 +357,7 @@ export default function ProductionFormDialog({ handleClose }) {
                           l?.departement?.toLowerCase() ===
                           formData?.departement?.toLowerCase()
                         )
-                          return l.commune;
+                          return l.commune
                       })
                       .map((c, i, s) => {
                         if (s.indexOf(c) === i)
@@ -365,7 +365,7 @@ export default function ProductionFormDialog({ handleClose }) {
                             <MenuItem key={c} value={c}>
                               {c}
                             </MenuItem>
-                          );
+                          )
                       })}
                   </Select>
                 </FormControl>
@@ -377,7 +377,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.localisationId || ""}
+                    value={formData.localisationId || ''}
                     name="localisationId"
                     color="secondary"
                     onChange={handleChange}
@@ -391,7 +391,7 @@ export default function ProductionFormDialog({ handleClose }) {
                           <MenuItem key={l.village} value={l.idLocalisation}>
                             {l.village}
                           </MenuItem>
-                        );
+                        )
                       }
                     })}
                   </Select>
@@ -476,14 +476,14 @@ export default function ProductionFormDialog({ handleClose }) {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => close("no", formData)} color="primary">
+          <Button onClick={() => close('no', formData)} color="primary">
             Annuler
           </Button>
-          <Button onClick={() => close("yes", formData)} color="primary">
+          <Button onClick={() => close('yes', formData)} color="primary">
             Entregistrer
           </Button>
         </DialogActions>
       </Dialog>
     </div>
-  );
+  )
 }
