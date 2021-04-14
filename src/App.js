@@ -40,6 +40,7 @@ const theme = createMuiTheme({
     },
     // button: { fontSize: "0.8rem" },
     h1: { fontSize: "1.3rem" },
+    h2: { fontSize: "0.9rem" },
     // body1: { fontSize: "0.8rem" },
     // body2: { fontSize: "0.8rem" },
   },

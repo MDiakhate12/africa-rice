@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import clsx from "clsx";
-import { Button, Grid, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Grid, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { GlobalContext } from "../../../store/GlobalProvider";
 import "./LoginRegisterForm.css";
@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   },
   addButton: {
     width: "100%",
-    background: theme.gradient.primary,
+    background: theme.gradient.primary_reverse,
   },
   gridContainer: {
     display: "flex",
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function LoginRegisterForm() {
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(true);
 
   const classes = useStyles();
 
@@ -248,10 +248,7 @@ export default function LoginRegisterForm() {
           <div class="overlay">
             <div class="overlay-panel overlay-left">
               <h1>Déja enregistré ? </h1>
-              <p>
-                Connectez vous avec l'email et le mot de passe de l'institution
-                en cliquant sur le boutton ci-dessous.
-              </p>
+              <p>Connectez vous en cliquant sur le boutton ci-dessous.</p>
               <button
                 class="ghost"
                 id="signIn"

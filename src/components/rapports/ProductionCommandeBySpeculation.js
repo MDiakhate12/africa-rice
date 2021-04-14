@@ -20,17 +20,9 @@ const colors = [
   "rgba(255, 51, 51, 0.2)",
 ];
 
-export default function ProductionCommande() {
-  const [commandesByVariete, setCommandesByVariete] = useState([]);
+export default function ProductionCommandeBySpeculation() {
   const [commandesBySpeculation, setCommandesBySpeculation] = useState([]);
 
-  const getCommandeSumByVarietes = () => {
-    ipcRenderer.send("getCommandeSumByVarietes");
-    ipcRenderer.once("gotCommandeSumByVarietes", (event, data) => {
-      setCommandesByVariete(data);
-      console.log("DIIAAAAF", data);
-    });
-  };
   const getCommandeSumBySpeculation = () => {
     ipcRenderer.send("getCommandeSumBySpeculation");
     ipcRenderer.once("gotCommandeSumBySpeculation", (event, data) => {
@@ -40,21 +32,11 @@ export default function ProductionCommande() {
   };
 
   useEffect(() => {
-    getCommandeSumByVarietes();
     getCommandeSumBySpeculation();
-    // console.log(commandes)
   }, []);
 
-  const [productionsByVariete, setProductionsByVariete] = useState([]);
   const [productionsBySpeculation, setProductionsBySpeculation] = useState([]);
 
-  const getProductionsSumByVarietes = () => {
-    ipcRenderer.send("getByVarietes");
-    ipcRenderer.once("gotByVarietes", (event, data) => {
-      console.log(data);
-      setProductionsByVariete(data);
-    });
-  };
   const getProductionsSumBySpeculation = () => {
     ipcRenderer.send("getProductionsSumBySpeculation");
     ipcRenderer.once("gotProductionsSumBySpeculation", (event, data) => {
@@ -64,32 +46,9 @@ export default function ProductionCommande() {
   };
 
   useEffect(() => {
-    getProductionsSumByVarietes();
     getProductionsSumBySpeculation();
-    // console.log(productions)
   }, []);
 
-  const dataByVariete = {
-    labels: productionsByVariete.map(
-      (production) => production.VarieteInstitution.Variete.nomVariete
-    ),
-    datasets: [
-      {
-        label: "Production",
-        data: productionsByVariete.map(
-          (production) => production.totalQuantiteProduite
-        ),
-        backgroundColor: colors[0],
-      },
-      {
-        label: "Commande",
-        data: commandesByVariete.map(
-          (commande) => commande.totalQuantiteCommandee
-        ),
-        backgroundColor: colors[1],
-      },
-    ],
-  };
   const dataBySpeculation = {
     labels: productionsBySpeculation.map(
       (production) =>
@@ -114,23 +73,6 @@ export default function ProductionCommande() {
     ],
   };
 
-  const optionsVariete = {
-    title: {
-      display: true,
-      text: "Quantité produite VS Quantité commandée par variété",
-      // position: "bottom",
-    },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            stepSize: 1000,
-          },
-        },
-      ],
-    },
-  };
   const optionsSpeculation = {
     title: {
       display: true,
@@ -149,10 +91,5 @@ export default function ProductionCommande() {
     },
   };
 
-  return (
-    <div>
-      <Bar data={dataByVariete} options={optionsVariete} />
-      <Bar data={dataBySpeculation} options={optionsSpeculation} />
-    </div>
-  );
+  return <Bar data={dataBySpeculation} options={optionsSpeculation} />;
 }

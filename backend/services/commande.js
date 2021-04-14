@@ -102,7 +102,6 @@ const getCommandeSumBySpeculation = async () => {
 const getCommandeSumBySpeculationByState = async () => {
   let option = {
     include: [
-      EtatCommande,
       {
         model: Production,
         include: [
@@ -116,13 +115,10 @@ const getCommandeSumBySpeculationByState = async () => {
         ],
       },
     ],
-    group: [
-      "etatId",
-      "Production.VarieteInstitution.speculationInstitutionId",
-    ],
+    group: ["etatId", "Production.VarieteInstitution.SpeculationInstitution.speculationId"],
     attributes: [
+      "Production.VarieteInstitution.SpeculationInstitution.speculationId",
       "etatId",
-      "Production.VarieteInstitution.speculationInstitutionId",
       [
         sequelize.fn("sum", sequelize.col("quantite")),
         "totalQuantiteCommandee",

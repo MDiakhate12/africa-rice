@@ -74,7 +74,6 @@ const columns = [
     headerName: "Stock De Securite",
     width: 100,
     renderCell: (params) => `${params.getValue("stockDeSecurite")} KG`,
-
   },
   {
     type: "date",

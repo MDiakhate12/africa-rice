@@ -20,9 +20,8 @@ const colors = [
   "rgba(3, 179, 0, 0.2)",
   "rgba(102, 26, 168, 0.2)",
 ];
-export default function Production() {
+export default function ProductionByVariete() {
   const [productionsByVariete, setProductionsByVariete] = useState([]);
-  const [productionsBySpeculation, setProductionsBySpeculation] = useState([]);
 
   const getProductionsSumByVarietes = () => {
     ipcRenderer.send("getByVarietes");
@@ -31,18 +30,9 @@ export default function Production() {
       setProductionsByVariete(data);
     });
   };
-  const getProductionsSumBySpeculation = () => {
-    ipcRenderer.send("getProductionsSumBySpeculation");
-    ipcRenderer.once("gotProductionsSumBySpeculation", (event, data) => {
-      console.log(data);
-      setProductionsBySpeculation(data);
-    });
-  };
 
   useEffect(() => {
     getProductionsSumByVarietes();
-    getProductionsSumBySpeculation();
-    // console.log(productions)
   }, []);
 
   const dataByVariete = {
@@ -78,45 +68,5 @@ export default function Production() {
     },
   };
 
-  const dataBySpeculations = {
-    labels: productionsBySpeculation.map(
-      (production) =>
-        production.VarieteInstitution.SpeculationInstitution.Speculation
-          .nomSpeculation
-    ),
-    datasets: [
-      {
-        label: "Production",
-        data: productionsBySpeculation.map(
-          (production) => production.totalQuantiteProduite
-        ),
-        backgroundColor: colors.slice(0, productionsBySpeculation.length),
-      },
-    ],
-  };
-  const optionsSpeculation = {
-    title: {
-      display: true,
-      text: "Quantité produite par spéculation",
-      // position: "bottom",
-    },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            // count: 5,
-            stepSize: 2000,
-          },
-        },
-      ],
-    },
-  };
-
-  return (
-    <div>
-      <Bar data={dataByVariete} options={optionsVariete} />
-      <Bar data={dataBySpeculations} options={optionsSpeculation} />
-    </div>
-  );
+  return <Bar data={dataByVariete} options={optionsVariete} />;
 }
