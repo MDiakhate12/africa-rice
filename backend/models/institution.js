@@ -65,6 +65,10 @@ module.exports = (sequelize) => {
       comment: null,
       field: 'email',
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   }
   const options = {
     tableName: 'institution',

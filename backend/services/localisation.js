@@ -13,7 +13,7 @@ const getAllLocalisations = async (arg = {}) => {
   const localisationsData = localisations.map((localisation) =>
     localisation.toJSON(),
   )
-  console.log(localisationsData)
+  // console.log(localisationsData)
   return localisationsData
 }
 

@@ -25,7 +25,14 @@ const createCommande = async (data) => {
 
 const getAllCommandes = async (arg = {}) => {
   const commandes = await service.findAll(Commande, {
-    include: [Client, Production, EtatCommande],
+    include: [
+      Client,
+      EtatCommande,
+      {
+        model: Production,
+        include: [{ model: VarieteInstitution, include: [Variete] }],
+      },
+    ],
   })
   const commandesData = commandes.map((commande) => commande.toJSON())
   console.log(commandesData)
