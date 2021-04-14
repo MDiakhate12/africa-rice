@@ -81,11 +81,11 @@ export default function ProductionFormDialog({ handleClose }) {
   const [niveau, setNiveau] = useState([])
 
   const handleChange = (evt) => {
-    const value = evt.target.value
+    const { name, value } = evt.target
     console.log(value)
     setFormData({
       ...formData,
-      [evt.target.name]: value,
+      [name]: value,
     })
   }
 

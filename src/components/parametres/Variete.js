@@ -1,10 +1,17 @@
-import React, { useContext, useEffect, useReducer } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { Box, Button, Grid, IconButton, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
 import DataTable from "../common/DataTable";
 import { GlobalContext } from "../../store/GlobalProvider";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -30,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   addButton: {
-    width: "29ch",
+    width: "25ch",
   },
   gridContainer: {
     display: "flex",
@@ -40,7 +47,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Variete() {
-  const { varietes, institution, openConfirmDialog } = useContext(GlobalContext);
+  const { varietes, institution, openConfirmDialog } = useContext(
+    GlobalContext
+  );
 
   const columns = [
     { type: "string", field: "id", headerName: "idVariete", hide: true },
@@ -77,23 +86,81 @@ export default function Variete() {
     {
       type: "string",
       field: "delete",
-      headerName: "Supprimer",
+      headerName: "Action",
       width: 120,
+
       renderCell: (params) => (
-        <IconButton
-          onClick={() => {
-            openConfirmDialog({
-              title: "Suppression",
-              content: `Souhaitez vous réellement supprimer la variété ${
-                params.getValue("Variete").nomVariete
-              } ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`,
-              data: params.getValue("idVarieteInstitution"),
-            });
-            console.log(params.getValue("idVarieteInstitution"));
-          }}
+        <Tooltip
+          title={
+            params.api.getSelectedRows().length > 1
+              ? `Supprimer les variétés sélectionnées`
+              : `Supprimer ${params.getValue("Variete").nomVariete}`
+          }
         >
-          <DeleteIcon />
-        </IconButton>
+          <IconButton
+            onClick={(e) => {
+              const removeIdAndAssociations = (idName, obj) => {
+                let result = {};
+                for (let [key, value] of Object.entries(obj)) {
+                  if (key !== idName && typeof value !== "object") {
+                    result[key] = value;
+                  }
+                }
+                return result;
+              };
+
+              let selectedRows = params.api.getSelectedRows();
+              let content = "";
+              let data = "";
+              let title = "";
+
+              console.log(selectedRows);
+              if (selectedRows.length > 1) {
+                title = "Suppression multiple";
+
+                data = selectedRows;
+
+                if (!selectedRows.includes(params.row)) {
+                  data.push(params.row);
+                }
+
+                content = `Souhaitez vous réellement toutes ces variétés:\n
+                ${data.reduce((result, row, index) => {
+                  if (index === 1) {
+                    console.log("result:", result);
+                    console.log("row:", row);
+                    console.log("DIAAAAAF:", index);
+
+                    return `${result?.Variete?.nomVariete}, ${row?.Variete?.nomVariete}`;
+                  } else {
+                    console.log("result:", result);
+                    console.log("row:", row);
+                    console.log("index:", index);
+                    return `${result}, ${row?.Variete?.nomVariete}`;
+                  }
+                })} ?
+                \nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`;
+
+                data = selectedRows.map((row) =>
+                  removeIdAndAssociations("id", row)
+                );
+              } else {
+                title = "Suppression"
+                data = removeIdAndAssociations("id", params.row);
+
+                content = `Souhaitez vous réellement supprimer la variété ${params?.row?.Variete?.nomVariete} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`;
+              }
+
+              openConfirmDialog({
+                title,
+                content,
+                data,
+              });
+            }}
+          >
+            <DeleteIcon color="secondary" />
+          </IconButton>
+        </Tooltip>
       ),
     },
   ];
@@ -103,7 +170,7 @@ export default function Variete() {
   const {
     varietesInstitution,
     addVarieteInstitution,
-    deleteByIdVarieteInstitution,
+    deleteByIdVarieteInstitution: deleteVarieteInstitution,
   } = useContext(VarieteInstitutionContext);
 
   const { speculationsInstitution } = useContext(SpeculationInstitutionContext);
@@ -163,7 +230,10 @@ export default function Variete() {
   const handleDialogClose = (res, data) => {
     if (res === "yes") {
       try {
-        return deleteByIdVarieteInstitution(data);
+        if (data.length > 1) {
+          return data.map((d) => deleteVarieteInstitution(d));
+        }
+        return deleteVarieteInstitution(data);
       } catch (error) {
         console.error(error);
       }
@@ -172,11 +242,10 @@ export default function Variete() {
   };
 
   let initialState = {
-    speculationInstitution: {},
-    variete: {},
+    speculationInstitution: "",
+    variete: "",
     idInstitution: institution?.idInstitution,
   };
-
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -206,12 +275,12 @@ export default function Variete() {
         <Grid>
           <Grid item className={classes.gridContainer}>
             <FormControl variant="filled" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-filled-label">
+              <InputLabel id="speculation-label">
                 Spéculation
               </InputLabel>
               <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
+                labelId="speculation-label"
+                id="speculation-select"
                 value={state.speculationInstitution || ""}
                 name="speculationInstitution"
                 onChange={handleChange}
@@ -226,12 +295,12 @@ export default function Variete() {
           </Grid>
           <Grid item className={classes.gridContainer}>
             <FormControl variant="filled" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-filled-label">
+              <InputLabel id="variete-label">
                 Variétés
               </InputLabel>
               <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
+                labelId="variete-label"
+                id="variete-select"
                 value={state.variete || ""}
                 name="variete"
                 onChange={handleChange}

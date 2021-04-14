@@ -44,8 +44,9 @@ const updateVarieteInstitution = async (id, data) => {
 };
 
 const deleteVarieteInstitution = async (id) => {
-  const deleted = service.deleteByPk(VarieteInstitution, id);
-  return deleted.toJSON();
+  const deleted = await service.deleteByPk(VarieteInstitution, id);
+  console.log(deleted)
+  return deleted;
 };
 
 module.exports = {

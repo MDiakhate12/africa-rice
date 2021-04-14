@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import { GlobalContext } from '../../store/GlobalProvider'
-import { makeStyles } from '@material-ui/core'
-import IconButton from '@material-ui/core/IconButton'
-import GroupAddIcon from '@material-ui/icons/GroupAdd'
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
+import React, { useContext, useEffect, useState } from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { GlobalContext } from "../../store/GlobalProvider";
+import { makeStyles } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import {
   FormControl,
   Grid,
@@ -17,14 +17,14 @@ import {
   MenuItem,
   Select,
   Tooltip,
-} from '@material-ui/core'
-import ClientFormDialog from '../common/ClientFormDialog'
-import Accordions from '../common/Accordions'
-import CommandeAccordionItem from './CommandeAccordionItem'
-import ConfirmDialog from '../common/ConfirmDialog'
+} from "@material-ui/core";
+import ClientFormDialog from "../common/ClientFormDialog";
+import Accordions from "../common/Accordions";
+import CommandeAccordionItem from "./CommandeAccordionItem";
+import ConfirmDialog from "../common/ConfirmDialog";
 
-const { ipcRenderer } = window.require('electron')
-const { events, eventResponse } = require('../../store/utils/events')
+const { ipcRenderer } = window.require("electron");
+const { events, eventResponse } = require("../../store/utils/events");
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -35,115 +35,112 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(5),
     paddingRight: theme.spacing(5),
   },
-}))
+}));
 
 function CommandeFormDialog({ handleClose }) {
   const {
     commandeFormDialog: { open },
     closeCommandeFormDialog,
     openClientFormDialog,
-  } = useContext(GlobalContext)
+  } = useContext(GlobalContext);
   const [formState, setFormState] = useState({
-    clientId: {},
+    clientId: "",
     articles: [{}],
-  })
-  const classes = useStyles()
-  const [max, setMax] = useState(10)
-  const [clients, setClients] = useState([])
-  const [state, setState] = useState('')
+  });
+  const classes = useStyles();
+  const [clients, setClients] = useState([]);
 
   const getClients = () => {
-    ipcRenderer.send(events.client.getAll)
+    ipcRenderer.send(events.client.getAll);
     ipcRenderer.on(eventResponse.client.gotAll, (ev, data) => {
-      setClients(data)
-    })
-  }
+      setClients(data);
+    });
+  };
 
   useEffect(() => {
-    getClients()
-  }, [])
+    getClients();
+  }, []);
 
   const createClient = (data) => {
-    ipcRenderer.send(events.client.create, data)
+    ipcRenderer.send(events.client.create, data);
     ipcRenderer.on(eventResponse.client.created, (ev, data) => {
-      setState(clients.length + 1)
-      setFormState({ ...formState, clientId: clients.length + 1 })
-      getClients()
-    })
-  }
+      setFormState({ ...formState, clientId: clients.length + 1 });
+      getClients();
+    });
+  };
 
   const close = (response, dataFromOpen = null) => {
-    closeCommandeFormDialog()
-    handleClose(response, dataFromOpen)
-  }
+    closeCommandeFormDialog();
+    handleClose(response, dataFromOpen);
+  };
 
   const handleChange = (e) => {
-    let { name, value } = e.target
-    setState(value)
-    setFormState({ ...formState, clientId: value })
-  }
+    let { name, value } = e.target;
+    setFormState({ ...formState, [name]: value });
+  };
 
   const handleArticleChange = (e, idx) => {
-    let { name, value } = e.target
-    console.log(name, value)
-    setState({
+    let { name, value } = e.target;
+    console.log(name, value);
+    setFormState({
       ...formState,
-      articles: [
-        ...formState.articles,
-        formState.articles.map((article, index) => {
-          if (index === idx) {
-            article[name] = value
-          }
-          return article
-        }),
-      ],
-    })
-    console.log(formState)
-  }
+      articles: formState.articles.map((article, index) => {
+        if (index === idx) {
+          article[name] = value;
+        }
+        return article;
+      }),
+    });
+    console.log(formState);
+  };
 
   const handleClientFormDialogClose = (res, data) => {
-    if (res === 'yes') {
-      console.log(data)
-      createClient(data)
-      // setMax(max + 1)
-      // setClients([
-      //   ...clients,
-      //   {
-      //     idClient: max,
-      //     ...data,
-      //   },
-      // ])
-      // setState(max)
-      return
+    if (res === "yes") {
+      console.log(data);
+      createClient(data);
+      return;
     }
-    return
-  }
+    return;
+  };
 
   const handleDeleteArticle = (index) => {
     setFormState({
       ...formState,
       articles: formState.articles.filter((_, idx) => idx !== index),
-    })
-  }
+    });
+  };
 
-  const addCommandeArtcile = () => {
+  const addCommandeArticle = () => {
     setFormState({
       ...formState,
-      articles: [...formState.articles, {}],
-    })
-  }
+      articles: [...formState.articles, { expandedFromDialog: true }],
+    });
+  };
 
   const handleDeleteDialogClose = (res, data) => {
-    if (res === 'yes') {
+    if (res === "yes") {
       try {
         // console.log(data)
-        return handleDeleteArticle(data)
+        return handleDeleteArticle(data);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     }
-    return
-  }
+    return;
+  };
+
+  const setExpandedFromDialog = (idx) => {
+    console.log(idx)
+    setFormState({
+      ...formState,
+      articles: formState.articles.map((article, index) => {
+        if (index === idx) {
+          article["expandedFromDialog"] = false;
+        }
+        return article;
+      }),
+    });
+  };
 
   return (
     <div>
@@ -154,7 +151,7 @@ function CommandeFormDialog({ handleClose }) {
         open={open}
         onClose={close}
         aria-labelledby="form-dialog-title"
-        maxWidth="sm"
+        maxWidth="xs"
         fullWidth
       >
         <DialogTitle id="form-dialog-title">Nouvelle commande</DialogTitle>
@@ -163,7 +160,7 @@ function CommandeFormDialog({ handleClose }) {
             <Grid item sm={10}>
               <FormControl
                 fullWidth
-                variant="standard"
+                variant="filled"
                 className={classes.formControl}
               >
                 <InputLabel id="client-label" color="secondary">
@@ -172,8 +169,8 @@ function CommandeFormDialog({ handleClose }) {
                 <Select
                   labelId="client-label"
                   id="client-select"
-                  value={state || ''}
-                  name="client"
+                  value={formState.clientId || ""}
+                  name="clientId"
                   color="secondary"
                   fullWidth
                   onChange={handleChange}
@@ -187,13 +184,13 @@ function CommandeFormDialog({ handleClose }) {
               </FormControl>
             </Grid>
             <Grid item sm={2}>
-              {' '}
+              {" "}
               <Tooltip title="Ajouter un nouveau client">
                 <IconButton
                   onClick={() => openClientFormDialog()}
                   color="secondary"
                 >
-                  <GroupAddIcon fontSize="large" />
+                  <GroupAddIcon fontSize="default" />
                 </IconButton>
               </Tooltip>
             </Grid>
@@ -202,12 +199,14 @@ function CommandeFormDialog({ handleClose }) {
           <Grid container justify="space-between" alignItems="flex-end">
             <Grid item sm={10}>
               <Accordions>
-                {formState.articles.map((data, index) => (
+                {formState.articles.map((data, index, self) => (
                   <CommandeAccordionItem
                     key={index}
                     index={index}
                     handleDataChange={handleArticleChange}
                     handleDeleteArticle={handleDeleteArticle}
+                    closedOnNewAdded={data.expanded}
+                    setExpandedFromDialog={setExpandedFromDialog}
                   />
                 ))}
               </Accordions>
@@ -215,27 +214,27 @@ function CommandeFormDialog({ handleClose }) {
             <Grid item sm={2}>
               <Tooltip title="Ajouter un nouvel article">
                 <IconButton
-                  onClick={() => addCommandeArtcile()}
+                  onClick={addCommandeArticle}
                   color="secondary"
                   variant="outlined"
                 >
-                  <AddShoppingCartIcon fontSize="large" />
+                  <AddShoppingCartIcon fontSize="default" />
                 </IconButton>
-              </Tooltip>{' '}
+              </Tooltip>{" "}
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => close('no', formState)} color="secondary">
+          <Button onClick={() => close("no", formState)} color="secondary">
             Annuler
           </Button>
-          <Button onClick={() => close('yes', formState)} color="primary">
+          <Button onClick={() => close("yes", formState)} color="primary">
             Entregistrer
           </Button>
         </DialogActions>
       </Dialog>
     </div>
-  )
+  );
 }
 
-export default CommandeFormDialog
+export default CommandeFormDialog;

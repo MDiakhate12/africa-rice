@@ -5,6 +5,7 @@ const {
   getProductionsSumByVarietes,
   getProductionById,
   updateProduction,
+  getProductionsSumBySpeculation,
 } = require('../services/production')
 
 module.exports = (ipcMain, events, eventResponse) => {
@@ -52,6 +53,14 @@ module.exports = (ipcMain, events, eventResponse) => {
     updateProduction(arg.id, arg.data)
       .then((data) => {
         event.reply(eventResponse.Production.gotOne, data)
+      })
+      .catch((err) => console.log(err))
+  })
+
+  ipcMain.on("getProductionsSumBySpeculation", (event, arg) => {
+    getProductionsSumBySpeculation(arg)
+      .then((data) => {
+        event.reply("gotProductionsSumBySpeculation", data)
       })
       .catch((err) => console.log(err))
   })

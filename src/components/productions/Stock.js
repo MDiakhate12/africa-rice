@@ -54,26 +54,26 @@ function Stock() {
   const { openDialog, dialog } = useContext(GlobalContext)
 
   // PRODUCTIONS GROUPED BY SPECULATION
-  const [speculations, setSpeculations] = useState([
-    {
-      nomSpeculation: 'Riz',
-      dateDerniereProduction: '12 Décembre 2013',
-      imageSpeculation: riz,
-      quantiteProduite: 2000,
-    },
-    {
-      nomSpeculation: 'Mil',
-      dateDerniereProduction: '29 Octobre 2012',
-      imageSpeculation: mil,
-      quantiteProduite: 3000,
-    },
-    {
-      nomSpeculation: 'Total',
-      dateDerniereProduction: '14 Février 2014',
-      imageSpeculation: defaultImage,
-      quantiteProduite: 5000,
-    },
-  ])
+  // const [speculations, setSpeculations] = useState([
+  //   {
+  //     nomSpeculation: 'Riz',
+  //     dateDerniereProduction: '12 Décembre 2013',
+  //     imageSpeculation: riz,
+  //     quantiteProduite: 2000,
+  //   },
+  //   {
+  //     nomSpeculation: 'Mil',
+  //     dateDerniereProduction: '29 Octobre 2012',
+  //     imageSpeculation: mil,
+  //     quantiteProduite: 3000,
+  //   },
+  //   {
+  //     nomSpeculation: 'Total',
+  //     dateDerniereProduction: '14 Février 2014',
+  //     imageSpeculation: defaultImage,
+  //     quantiteProduite: 5000,
+  //   },
+  // ])
 
   const getAllProductions = () => {
     ipcRenderer.send('getByVarietes')
@@ -165,7 +165,7 @@ function Stock() {
       <CommonDialog handleClose={handleDialogClose} />
       <Grid container spacing={3}>
         {productionsBySpeculation.map((speculation) => (
-          <Grid item sm={4}>
+          <Grid item sm={3}>
             <StockCard
               data={speculation}
               handleOpenDialog={() =>

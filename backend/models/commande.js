@@ -30,16 +30,16 @@ module.exports = (sequelize) => {
       field: 'montant',
     },
     dateEnlevementSouhaitee: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: true,
-      defaultValue: null,
+      defaultValue: null,   
       primaryKey: false,
       autoIncrement: false,
       comment: null,
       field: 'date_enlevement_souhaitee',
     },
     dateEnlevementReelle: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null,
       primaryKey: false,
@@ -48,7 +48,7 @@ module.exports = (sequelize) => {
       field: 'date_enlevement_reelle',
     },
     dateExpressionBesoinClient: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null,
       primaryKey: false,

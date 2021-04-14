@@ -44,6 +44,27 @@ function Commandes() {
     { type: 'string', field: 'montant', headerName: 'montant', width: 130 },
     {
       type: 'string',
+      field: 'nomSpeculation',
+      headerName: 'Spéculation',
+      width: 140,
+      renderCell: (params) =>
+        `${
+          params.getValue('Production')?.VarieteInstitution
+            ?.SpeculationInstitution?.Speculation.nomSpeculation
+        }`,
+    },
+    {
+      type: 'string',
+      field: 'productionId',
+      headerName: 'Production',
+      width: 210,
+      renderCell: (params) =>
+        `${
+          params.getValue('Production')?.VarieteInstitution?.Variete?.nomVariete
+        } - ${params.getValue('Production')?.Localisation?.village}`,
+    },
+    {
+      type: 'string',
       field: 'etat',
       headerName: 'Etat',
       renderCell: (params) => {
@@ -64,30 +85,22 @@ function Commandes() {
     },
     {
       type: 'string',
+      field: 'dateExpressionBesoinClient',
+      headerName: 'Commandé le',
+      width: 130,
+    },
+    {
+      type: 'string',
+      field: 'dateEnlevementSouhaitee',
+      headerName: 'Enlevement souhaite',
+      width: 130,
+    },
+    {
+      type: 'string',
       field: 'dateEnlevementReelle',
-      headerName: 'dateEnlevementReelle',
+      headerName: 'Enlevé le',
       valueFormatter: (params) =>
         params.value?.toDateString() || 'Pas encore enlevee',
-      width: 130,
-    },
-    {
-      type: 'string',
-      field: 'createdAt',
-      headerName: 'date creation',
-      valueFormatter: (params) => params.value.toDateString(),
-      width: 130,
-    },
-    {
-      type: 'string',
-      field: 'updatedAt',
-      valueFormatter: (params) => params.value.toDateString(),
-      headerName: 'date Derniere Modification',
-      width: 130,
-    },
-    {
-      type: 'string',
-      field: 'dateExpressionBesoinClient',
-      headerName: 'dateExpressionBesoinClient',
       width: 130,
     },
     {
@@ -97,14 +110,6 @@ function Commandes() {
       renderCell: (params) =>
         params.getValue('Client').nomCompletStructure ||
         params.getValue('Client').prenom,
-      width: 130,
-    },
-    {
-      type: 'string',
-      field: 'productionId',
-      headerName: 'Variete',
-      renderCell: (params) =>
-        params.getValue('Production').VarieteInstitution.Variete.nomVariete,
       width: 130,
     },
     {
@@ -149,7 +154,7 @@ function Commandes() {
     },
   ]
   const [commandes, setCommandes] = useState([])
-  const [created, setCreated] = useState(false)
+  // const [created, setCreated] = useState(false)
   // const [updated, setUpdated] = useState(false)
 
   const getAllCommandes = () => {
@@ -167,6 +172,18 @@ function Commandes() {
     data.id = id
     ipcRenderer.send(events.etatCommande.getOne, { etat })
     ipcRenderer.once(eventResponse.etatCommande.gotOne, (ev, response) => {
+      if (etat === 'Accepte') {
+        const { Production } = row
+        const payload = {
+          id: Production.idProduction,
+          data: {
+            idProduction: Production.idProduction,
+            quantiteDisponible: Production.quantiteDisponible - row.quantite,
+          },
+        }
+        console.log(payload)
+        ipcRenderer.send(events.production.update, payload)
+      }
       data.data.idCommande = row.id
       data.data.etatId = response.idEtat
       console.log(data)
@@ -175,14 +192,13 @@ function Commandes() {
     })
   }
 
-  // FORMDATA FOR MOR KAIRE
-
   useEffect(() => {
     getAllCommandes()
   }, [])
 
   const createCommande = (data) => {
     ipcRenderer.send(events.commande.create, data)
+    getAllCommandes()
   }
 
   // OnSubmit de la creation de commande
@@ -195,11 +211,13 @@ function Commandes() {
         commande.clientId = clientId
         commande.productionId = article.production.idProduction
         commande.quantite = article.quantite
+        commande.dateExpressionBesoinClient = article.dateExpressionBesoinClient
+        commande.dateEnlevementSouhaitee = article.dateEnlevementSouhaitee
         commande.montant = article.quantite * article.production.prixUnitaire
         commande.etatId = 1
         console.log(commande)
         createCommande(commande)
-        setCreated(!created)
+        // setCreated(!created)
       })
       return
     }
@@ -209,7 +227,6 @@ function Commandes() {
   // FORMDATA FOR MOR KAIRE
 
   const { openCommandeFormDialog } = useContext(GlobalContext)
-
   return (
     <div>
       <CommandeFormDialog

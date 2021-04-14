@@ -18,7 +18,7 @@ import { Button, Tooltip } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 300,
+    maxWidth: 250,
   },
   media: {
     height: 0,
@@ -82,7 +82,7 @@ export default function StockCard({
         title={`Stock de ${nomSpeculation}`}
       />
       <CardContent>
-        <Typography variant="h3" color="primary" component="p">
+        <Typography variant="h1" color="primary" component="p">
           {totalQuantiteDisponible - totalStock} KG
         </Typography>
       </CardContent>

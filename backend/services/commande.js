@@ -27,11 +27,21 @@ const getAllCommandes = async (arg = {}) => {
   const commandes = await service.findAll(Commande, {
     include: [
       Client,
-      EtatCommande,
       {
         model: Production,
-        include: [{ model: VarieteInstitution, include: [Variete] }],
+        include: [
+          Localisation,
+          {
+            model: VarieteInstitution,
+            include: [
+              Variete,
+              { model: SpeculationInstitution, include: Speculation },
+            ],
+          },
+        ],
       },
+
+      EtatCommande,
     ],
   })
   const commandesData = commandes.map((commande) => commande.toJSON())
@@ -57,7 +67,73 @@ const deleteCommande = async (id) => {
   return deleted
 }
 
-const getCommandeSumBySpeculationByMonth = async () => {
+const getCommandeSumBySpeculation = async () => {
+  let option = {
+    include: [
+      {
+        model: Production,
+        include: [
+          {
+            model: VarieteInstitution,
+            include: [
+              Variete,
+              { model: SpeculationInstitution, include: Speculation },
+            ],
+          },
+        ],
+      },
+    ],
+    group: ['Production.VarieteInstitution.speculationInstitutionId'],
+    attributes: [
+      'Production.VarieteInstitution.speculationInstitutionId',
+      [
+        sequelize.fn('sum', sequelize.col('quantite')),
+        'totalQuantiteCommandee',
+      ],
+    ],
+  }
+
+  const commandes = await service.findAll(Commande, option)
+  const commandesData = commandes.map((commande) => commande.toJSON())
+  console.log(commandesData)
+  return commandesData
+}
+
+const getCommandeSumBySpeculationByState = async () => {
+  let option = {
+    include: [
+      EtatCommande,
+      {
+        model: Production,
+        include: [
+          {
+            model: VarieteInstitution,
+            include: [
+              Variete,
+              { model: SpeculationInstitution, include: Speculation },
+            ],
+          },
+        ],
+      },
+    ],
+    group: ['etatId', 'Production.VarieteInstitution.speculationInstitutionId'],
+    attributes: [
+      'etatId',
+      'Production.VarieteInstitution.speculationInstitutionId',
+      [
+        sequelize.fn('sum', sequelize.col('quantite')),
+        'totalQuantiteCommandee',
+      ],
+    ],
+  }
+
+  const commandes = await service.findAll(Commande, option)
+  const commandesData = commandes.map((commande) => commande.toJSON())
+  console.log(commandesData)
+  return commandesData
+}
+
+const getCommandeSumByVarietes = async () => {
   let option = {
     include: [
       {
@@ -94,5 +170,7 @@ module.exports = {
   getCommandeById,
   deleteCommande,
   updateCommande,
-  getCommandeSumBySpeculationByMonth,
+  getCommandeSumByVarietes,
+  getCommandeSumBySpeculation,
+  getCommandeSumBySpeculationByState,
 }

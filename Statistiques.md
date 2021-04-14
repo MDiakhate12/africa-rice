@@ -1,4 +1,4 @@
-### Statistiques
+### ApStatistiques
 
 | Métrique                                                | graphique             | fonction                                                     |
 | ------------------------------------------------------- | --------------------- | ------------------------------------------------------------ |
@@ -26,3 +26,16 @@
 ![image-20210408132139105](C:\Users\odiak\AppData\Roaming\Typora\typora-user-images\image-20210408132139105.png)
 
 ![image-20210408132206661](C:\Users\odiak\AppData\Roaming\Typora\typora-user-images\image-20210408132206661.png)
+
+
+
+
+
+
+
+- [ ] Formulaire Login
+- [ ] Formulaire Register
+- [ ] Power Point Architecture
+- [ ] App Engine Standard VS App Engine Flexible
+- [ ] App Engine PHP 7 Standard Tutorial
+- [ ] Cloud RUN

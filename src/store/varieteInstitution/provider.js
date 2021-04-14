@@ -13,21 +13,24 @@ export default function VarieteInstitutionProvider({ children }) {
     console.log(payload);
     ipcRenderer.send(events.varieteInstitution.create, payload);
 
-    ipcRenderer.once(eventResponse.varieteInstitution.created, (event, data) => {
-      console.log("EVENT:", event);
-      console.log("DATA:", data);
-      getAllVarieteInstitution();
+    ipcRenderer.once(
+      eventResponse.varieteInstitution.created,
+      (event, data) => {
+        console.log("EVENT:", event);
+        console.log("DATA:", data);
+        getAllVarieteInstitution();
 
-      // dispatch({ type: actions.ON_ADD, payload: data });
-    });
+        // dispatch({ type: actions.ON_ADD, payload: data });
+      }
+    );
   };
   const getOneVarieteInstitution = (payload) => {
-    dispatch({ type: actions.ON_GET_ONE, payload });
     ipcRenderer.send(events.varieteInstitution.getOne);
 
     ipcRenderer.once(eventResponse.varieteInstitution.gotOne, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
+      dispatch({ type: actions.ON_GET_ONE, payload });
     });
   };
 
@@ -45,21 +48,27 @@ export default function VarieteInstitutionProvider({ children }) {
     dispatch({ type: actions.ON_UPDATE, payload });
     ipcRenderer.send(events.varieteInstitution.update);
 
-    ipcRenderer.once(eventResponse.varieteInstitution.updated, (event, data) => {
-      console.log("EVENT:", event);
-      console.log("DATA:", data);
-    });
+    ipcRenderer.once(
+      eventResponse.varieteInstitution.updated,
+      (event, data) => {
+        console.log("EVENT:", event);
+        console.log("DATA:", data);
+      }
+    );
   };
 
   const deleteByIdVarieteInstitution = (payload) => {
     console.log("DELETE:", payload);
     ipcRenderer.send(events.varieteInstitution.delete, payload);
 
-    ipcRenderer.once(eventResponse.varieteInstitution.deleted, (event, data) => {
-      console.log("EVENT:", event);
-      console.log("DATA:", data);
-      dispatch({ type: actions.ON_DELETE, payload: data });
-    });
+    ipcRenderer.once(
+      eventResponse.varieteInstitution.deleted,
+      (event, data) => {
+        console.log("EVENT:", event);
+        console.log("DATA:", data);
+        dispatch({ type: actions.ON_DELETE, payload });
+      }
+    );
   };
 
   useEffect(() => {
@@ -68,7 +77,9 @@ export default function VarieteInstitutionProvider({ children }) {
     return () => {
       ipcRenderer.removeAllListeners([
         eventResponse.varieteInstitution.gotAll,
+        eventResponse.varieteInstitution.created,
         events.varieteInstitution.getAll,
+        events.varieteInstitution.create,
       ]);
     };
   }, []);

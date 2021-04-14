@@ -40,7 +40,7 @@ export default function ClientFormDialog({ handleClose }) {
 
   return (
     <div>
-      <Dialog open={open} onClose={close} aria-labelledby="form-dialog-title">
+      <Dialog open={open} onClose={close} aria-labelledby="form-dialog-title" fullWidth maxWidth="xs">
         <DialogTitle id="form-dialog-title">Nouveau client</DialogTitle>
         <DialogContent>
           <FormControl component="fieldset">
