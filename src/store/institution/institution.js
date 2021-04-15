@@ -6,6 +6,8 @@ const institution = {
   nomComplet: 'Africa Mil',
   sigle: 'AM',
   logo: 'img',
+  email: 'kaire@kaire.fr',
+  password: 'testest',
   addresse: 'Thies',
 }
 

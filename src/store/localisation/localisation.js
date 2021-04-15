@@ -36,27 +36,27 @@ const { ipcRenderer } = window.require('electron')
 //   });
 // });
 
-// const localisations = [
-//   {
-//     region: 'ZIGUINCHOR',
-//     departement: 'ZIGUINCHOR',
-//     commune: 'Adeane',
-//     village: 'Agnack Grand',
-//     longitude: 380472,
-//     latitude: 1390435,
-//     zoneId: 3,
-//   },
-//   {
-//     region: 'ZIGUINCHOR',
-//     departement: 'ZIGUINCHOR',
-//     commune: 'Adeane',
-//     village: 'Agnack Petit',
-//     longitude: 378500,
-//     latitude: 1391004,
-//     zoneId: 3,
-//   },
-// ]
+const localisations = [
+  {
+    region: 'ZIGUINCHOR',
+    departement: 'ZIGUINCHOR',
+    commune: 'Adeane',
+    village: 'Agnack Grand',
+    longitude: 380472,
+    latitude: 1390435,
+    zoneId: 3,
+  },
+  {
+    region: 'ZIGUINCHOR',
+    departement: 'ZIGUINCHOR',
+    commune: 'Adeane',
+    village: 'Agnack Petit',
+    longitude: 378500,
+    latitude: 1391004,
+    zoneId: 3,
+  },
+]
 
-// localisations.map((localisation) => {
-//   ipcRenderer.send(events.localisation.create, localisation)
-// })
+localisations.map((localisation) => {
+  ipcRenderer.send(events.localisation.create, localisation)
+})
