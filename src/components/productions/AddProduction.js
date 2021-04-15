@@ -14,44 +14,40 @@ import {
   Typography,
 } from '@material-ui/core'
 
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import { GlobalContext } from '../../store/GlobalProvider'
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { GlobalContext } from "../../store/GlobalProvider";
+import DatePicker from "../common/DatePicker";
 
 const useStyles = makeStyles((theme) => ({
-  formControl: {
-    marginBottom: theme.spacing(1),
-    width: '50ch',
-  },
-  margin: {
-    marginBottom: theme.spacing(1),
+  marginDense: {
+    margin: theme.spacing(0),
   },
   withoutLabel: {
-    marginTop: theme.spacing(3),
+    // marginTop: theme.spacing(3),
   },
-  textField: {
-    width: '50ch',
-  },
+
   selectEmpty: {
-    marginTop: theme.spacing(2),
+    // marginTop: theme.spacing(2),
   },
   addButton: {
-    width: '20ch',
-    margin: theme.spacing(2),
+    width: "20ch",
+    // margin: theme.spacing(2),
   },
-  gridContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  // gridContainer: {
+  //   display: "flex",
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  // },
   modal: {
     alignItems: 'center',
     justifyContent: 'center',
     // backgroundColor: theme.palette.background.paper,
     // boxShadow: theme.shadows[4],
-    // padding: theme.spacing(3, 3, 3),
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
     // marginLeft: theme.spacing('50'),
     // marginRight: theme.spacing('50'),
     // marginBottom: theme.spacing('7'),
@@ -81,8 +77,8 @@ export default function ProductionFormDialog({ handleClose }) {
   const [niveau, setNiveau] = useState([])
 
   const handleChange = (evt) => {
-    const { name, value } = evt.target
-    console.log(value)
+    const { name, value } = evt.target;
+    console.log(value);
     setFormData({
       ...formData,
       [name]: value,
@@ -155,14 +151,16 @@ export default function ProductionFormDialog({ handleClose }) {
             >
               <Typography variant="button">Ajouter Une Production</Typography>
             </Box>
-            <Grid container spacing={1} alignItems="flex-start">
-              <Grid item className={classes.gridContainer}>
-                <FormControl variant="filled" className={classes.formControl}>
+            {/* <Grid container spacing={1} direction="column" alignItems="center"> */}
+            <Grid container spacing={1}>
+              <Grid item sm={12}>
+                <FormControl variant="filled" fullWidth>
                   <InputLabel id="demo-simple-select-filled-label">
                     Speculation
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-filled-label"
+                    margin="dense"
                     id="demo-simple-select-filled"
                     value={formData.speculationInstitutionId}
                     name="speculationInstitutionId"
@@ -179,14 +177,14 @@ export default function ProductionFormDialog({ handleClose }) {
                   </Select>
                 </FormControl>
               </Grid>
-
-              <Grid item className={classes.gridContainer}>
-                <FormControl variant="filled" className={classes.formControl}>
+              <Grid item sm={12}>
+                <FormControl variant="filled" fullWidth>
                   <InputLabel id="demo-simple-select-filled-label">
                     Variétés
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-filled-label"
+                    margin="dense"
                     id="demo-simple-select-filled"
                     value={formData.varieteInstitutionId}
                     name="varieteInstitutionId"
@@ -209,15 +207,16 @@ export default function ProductionFormDialog({ handleClose }) {
                   </Select>
                 </FormControl>
               </Grid>
-
-              <Grid item className={classes.gridContainer}>
+              <Grid item sm={12}>
                 <TextField
                   label="Quantité Produite"
+                  fullWidth
+                  margin="dense"
                   id="state.filstockDeSecurite-star || ''t -adornment"
                   name="quantiteProduite"
                   value={formData.quantiteProduite || ''}
                   type="number"
-                  className={clsx(classes.margin, classes.textField)}
+                  className={classes.marginDense}
                   variant="filled"
                   onChange={handleChange}
                   InputProps={{
@@ -227,15 +226,16 @@ export default function ProductionFormDialog({ handleClose }) {
                   }}
                 />
               </Grid>
-
-              <Grid item className={classes.gridContainer}>
+              <Grid item sm={12}>
                 <TextField
                   label="Quantité Disponible"
+                  fullWidth
+                  margin="dense"
                   id="state.filstockDeSecurite-star || ''t -adornment"
                   name="quantiteDisponible"
                   value={formData.quantiteDisponible || ''}
                   type="number"
-                  className={clsx(classes.margin, classes.textField)}
+                  className={classes.marginDense}
                   variant="filled"
                   onChange={handleChange}
                   InputProps={{
@@ -245,15 +245,16 @@ export default function ProductionFormDialog({ handleClose }) {
                   }}
                 />
               </Grid>
-
-              <Grid item className={classes.gridContainer}>
+              <Grid item sm={12}>
                 <TextField
                   label="Prix Unitaire"
+                  fullWidth
+                  margin="dense"
                   id="state.filstockDeSecurite-star || ''t -adornment"
                   name="prixUnitaire"
                   value={formData.prixUnitaire}
                   type="number"
-                  className={clsx(classes.margin, classes.textField)}
+                  className={classes.marginDense}
                   variant="filled"
                   onChange={handleChange}
                   InputProps={{
@@ -263,14 +264,15 @@ export default function ProductionFormDialog({ handleClose }) {
                   }}
                 />
               </Grid>
-
-              <Grid item className={classes.gridContainer}>
+              <Grid item sm={12}>
                 <TextField
                   label="Stock de Securite"
+                  fullWidth
+                  margin="dense"
                   id="state.fillongueurCycle-star || ''t -adornment"
                   name="stockDeSecurite"
                   value={formData.stockDeSecurite}
-                  className={clsx(classes.margin, classes.textField)}
+                  className={classes.marginDense}
                   variant="filled"
                   onChange={handleChange}
                   InputProps={{
@@ -280,13 +282,13 @@ export default function ProductionFormDialog({ handleClose }) {
                   }}
                 />
               </Grid>
-
-              <Grid item sm={6} className={classes.gridContainer}>
-                {' '}
-                <FormControl variant="filled" className={classes.formControl}>
+              <Grid item sm={6}>
+                {" "}
+                <FormControl variant="filled" fullWidth>
                   <InputLabel color="secondary">Région</InputLabel>
                   <Select
                     labelId="demo-simple-select-filled-label"
+                    margin="dense"
                     id="demo-simple-select-filled"
                     value={formData.region || ''}
                     name="region"
@@ -306,12 +308,12 @@ export default function ProductionFormDialog({ handleClose }) {
                   </Select>
                 </FormControl>
               </Grid>
-
-              <Grid item sm={6} className={classes.gridContainer}>
-                <FormControl variant="filled" className={classes.formControl}>
+              <Grid item sm={6}>
+                <FormControl variant="filled" fullWidth>
                   <InputLabel color="secondary">Département</InputLabel>
                   <Select
                     labelId="demo-simple-select-filled-label"
+                    margin="dense"
                     id="demo-simple-select-filled"
                     value={formData.departement || ''}
                     name="departement"
@@ -335,14 +337,14 @@ export default function ProductionFormDialog({ handleClose }) {
                           )
                       })}
                   </Select>
-                </FormControl>
+                </FormControl>{" "}
               </Grid>
-              <Grid item sm={6} className={classes.gridContainer}>
-                {' '}
-                <FormControl variant="filled" className={classes.formControl}>
+              <Grid item sm={6}>
+                <FormControl variant="filled" fullWidth>
                   <InputLabel color="secondary">Commune</InputLabel>
                   <Select
                     labelId="demo-simple-select-filled-label"
+                    margin="dense"
                     id="demo-simple-select-filled"
                     value={formData.commune || ''}
                     name="commune"
@@ -368,12 +370,12 @@ export default function ProductionFormDialog({ handleClose }) {
                   </Select>
                 </FormControl>
               </Grid>
-
-              <Grid item sm={6} className={classes.gridContainer}>
-                <FormControl variant="filled" className={classes.formControl}>
+              <Grid item sm={6}>
+                <FormControl variant="filled" fullWidth>
                   <InputLabel color="secondary">Localité</InputLabel>
                   <Select
                     labelId="demo-simple-select-filled-label"
+                    margin="dense"
                     id="demo-simple-select-filled"
                     value={formData.localisationId || ''}
                     name="localisationId"
@@ -395,39 +397,14 @@ export default function ProductionFormDialog({ handleClose }) {
                   </Select>
                 </FormControl>
               </Grid>
-
-              {/*
-        <Grid item className={classes.gridContainer}>
-          <FormControl variant="filled" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-filled-label">
-              Localisation
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-filled-label"
-              id="demo-simple-select-filled"
-              value={formData.localisationId}
-              name="localisationId"
-              onChange={handleChange}
-            >
-              {localisations.map((localisation) => (
-                <MenuItem
-                  key={localisation.idLocalisation}
-                  value={localisation.idLocalisation}
-                >
-                  {localisation.commune}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-              */}
-              <Grid item className={classes.gridContainer}>
-                <FormControl variant="filled" className={classes.formControl}>
+              <Grid item sm={12}>
+                <FormControl variant="filled" fullWidth>
                   <InputLabel id="demo-simple-select-filled-label">
                     Magasin
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-filled-label"
+                    margin="dense"
                     id="demo-simple-select-filled"
                     value={formData.magasinId}
                     name="magasinId"
@@ -444,14 +421,14 @@ export default function ProductionFormDialog({ handleClose }) {
                   </Select>
                 </FormControl>
               </Grid>
-
-              <Grid item className={classes.gridContainer}>
-                <FormControl variant="filled" className={classes.formControl}>
+              <Grid item sm={12}>
+                <FormControl variant="filled" fullWidth>
                   <InputLabel id="demo-simple-select-filled-label">
                     Niveau Semences
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-filled-label"
+                    margin="dense"
                     id="demo-simple-select-filled"
                     value={formData.niveauInstitutionId}
                     name="niveauInstitutionId"
@@ -468,41 +445,33 @@ export default function ProductionFormDialog({ handleClose }) {
                   </Select>
                 </FormControl>
               </Grid>
-
-              <Grid item className={classes.gridContainer}>
+              {/* <Grid item sm={12}>
                 <TextField
                   id="dateDeProduction"
                   label="Date de Production"
                   type="date"
                   onChange={handleChange}
+                  fullWidth
                   name="dateDeProduction"
                   defaultValue="now"
-                  className={classes.textField}
                   InputLabelProps={{
                     shrink: true,
                   }}
                 />
+              </Grid> */}
+              <Grid item sm={12}>
+                <DatePicker
+                  id="dateDeProduction"
+                  variant="filled"
+                  label="Date de production"
+                  disableFuture={true}
+                  fullWidth={true}
+                  selectedDate={formData.dateDeProduction}
+                  handleChange={handleChange}
+                  format="d MMMM yyyy"
+                  name="dateDeProduction"
+                />
               </Grid>
-              {/* 
-        <Grid item className={classes.gridContainer}>
-          <Button
-            color="secondary"
-            variant="contained"
-            className={classes.addButton}
-            onClick={handleClose}
-          >
-            Annuler
-          </Button>
-
-          <Button
-            color="primary"
-            variant="contained"
-            className={classes.addButton}
-            onClick={handleSubmitProduction}
-          >
-            Ajouter
-          </Button>
-        </Grid> */}
             </Grid>
           </div>
         </DialogContent>

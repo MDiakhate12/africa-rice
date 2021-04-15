@@ -12,6 +12,8 @@ import SpeculationVariete from "./SpeculationVariete";
 import MagasinProvider from "../../store/magasin/provider";
 import VarieteInstitutionProvider from "../../store/varieteInstitution/provider";
 import SpeculationInstitutionProvider from "../../store/speculationInstitution/provider";
+
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 

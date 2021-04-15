@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
       field: 'id_production',
     },
     dateDeProduction: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null,
       primaryKey: false,

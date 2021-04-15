@@ -65,6 +65,15 @@ const findByKey = (model, key) =>
     where: key,
   })
 
+// const Models = require("../models").default;
+
+// const { sequelize } = Models;
+
+// const query = (queryString) => {
+//   const [results, metadata] = sequelize.query(queryString);
+//   return results;
+// };
+
 module.exports = {
   findByPk,
   count,
@@ -74,4 +83,6 @@ module.exports = {
   findOrCreate,
   create,
   findAll,
-}
+  // query,
+};
+

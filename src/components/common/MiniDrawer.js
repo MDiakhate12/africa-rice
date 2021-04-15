@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -18,12 +18,21 @@ import PrintIcon from "@material-ui/icons/Print";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import StoreIcon from "@material-ui/icons/Store";
 import DrawerItem from "./DrawerItem";
-import { Route, Switch } from "react-router";
+import { Route, Switch, useLocation } from "react-router";
 import Productions from "../productions/Productions";
 import Commandes from "../commandes/Commandes";
 import Parametres from "../parametres/Parametres";
 import Rapports from "../rapports/Rapports";
 import Impressions from "../impressions/Impressions";
+import {
+  Button,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  MenuList,
+} from "@material-ui/core";
+import { Link } from "react-router-dom";
+import { LocationOnSharp } from "@material-ui/icons";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -96,12 +105,19 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  title: {
+    flexGrow: 1,
+  },
+  selected: {
+    backgroundColor: "rgba(0, 150, 136, 0.3)"
+  },
 }));
 
 export default function MiniDrawer() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const location = useLocation();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -144,6 +160,16 @@ export default function MiniDrawer() {
     },
   ];
 
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [title, setTitle] = useState(items[0].text);
+
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    console.log(location);
+    console.log(items[index].text);
+    setTitle(items[index].text);
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -165,9 +191,11 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            Gestion des semences - Title
+          <Typography variant="h1" className={classes.title}>
+            Gestion des semences
           </Typography>
+
+          <Typography variant="button">{title}</Typography>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -193,7 +221,7 @@ export default function MiniDrawer() {
           </IconButton>
         </div>
         <Divider />
-        <List>
+        {/* <List>
           {items.map(({ text, icon, to }, index) => (
             <Fragment key={text}>
               <DrawerItem to={to} text={text}>
@@ -202,7 +230,27 @@ export default function MiniDrawer() {
               {index === 1 ? <Divider /> : ""}
             </Fragment>
           ))}
-        </List>
+        </List> */}
+        <MenuList>
+          {items.map(({ text, icon, to }, index) => (
+            <Link to={to} className={classes.default}>
+              <MenuItem
+                key={text}
+                selected={index === selectedIndex}
+                onClick={(event) => handleMenuItemClick(event, index)}
+                classes={{
+                  selected: classes.selected,
+                }}
+              >
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText
+                  primary={text}
+                  className={classes.itemText}
+                />{" "}
+              </MenuItem>
+            </Link>
+          ))}
+        </MenuList>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
