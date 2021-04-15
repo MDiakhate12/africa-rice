@@ -102,6 +102,7 @@ const getCommandeSumBySpeculation = async () => {
 const getCommandeSumBySpeculationByState = async () => {
   let option = {
     include: [
+      EtatCommande,
       {
         model: Production,
         include: [

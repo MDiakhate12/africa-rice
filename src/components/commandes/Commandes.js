@@ -28,7 +28,10 @@ const useStyles = makeStyles((theme) => ({
   AccepteBadge: {
     backgroundColor: "#00C677",
   },
-}));
+  InsuffisantBadge: {
+    backgroundColor: '#FF0077',
+  },
+}))
 
 function Commandes() {
   const classes = useStyles();
@@ -89,6 +92,7 @@ function Commandes() {
             }}
             badgeContent={etat}
           />
+          
         );
       },
       width: 120,
@@ -123,21 +127,24 @@ function Commandes() {
       width: 130,
     },
     {
-      type: "string",
-      field: "action",
-      headerName: "Action",
-      width: 130,
+      type: 'string',
+      field: 'action',
+      headerName: 'Action',
+      width: 240,
       renderCell: (params) => {
-        const etat = params.getValue("EtatCommande").etat;
-        let etatSuivant;
-        switch (params.getValue("EtatCommande").etat) {
-          case "Acceptable":
-            etatSuivant = "Accepte";
-            break;
-          case "Accepte":
-            etatSuivant = "Enleve";
-            break;
-          case "Enleve":
+        const etat = params.getValue('EtatCommande').etat
+        let etatSuivants = []
+        switch (params.getValue('EtatCommande').etat) {
+          case 'Acceptable':
+            etatSuivants.push('Accepte')
+            etatSuivants.push('Rejete')
+            etatSuivants.push('Annule')
+            break
+          case 'Accepte':
+            etatSuivants.push('Enleve')
+            etatSuivants.push('Annule')
+            break
+          case 'Enleve':
             // etatSuivant = 'primary'
             break;
           case "Annule":
@@ -145,19 +152,20 @@ function Commandes() {
             break;
           case "Rejete":
             // etatSuivant = 'primary'
-            break;
+            break
+          case 'Insuffisant':
+            etatSuivants.push('Rejete')
+            break
           default:
             break;
         }
         return (
           <div>
-            {etatSuivant ? (
+            {etatSuivants.map((etatSuivant) => (
               <Button onClick={(evt) => onClick(evt, params, etatSuivant)}>
                 {etatSuivant}
               </Button>
-            ) : (
-              ""
-            )}
+            ))}
           </div>
         );
       },
@@ -190,17 +198,19 @@ function Commandes() {
             idProduction: Production.idProduction,
             quantiteDisponible: Production.quantiteDisponible - row.quantite,
           },
-        };
-        console.log(payload);
-        ipcRenderer.send(events.production.update, payload);
+        }
+        ipcRenderer.send(events.production.update, payload)
+      } else if (etat === 'Enleve') {
+        data.data.dateEnlevementReelle = new Date()
       }
-      data.data.idCommande = row.id;
-      data.data.etatId = response.idEtat;
-      console.log(data);
-      ipcRenderer.send(events.commande.update, data);
-      getAllCommandes();
-    });
-  };
+
+      data.data.idCommande = row.id
+      data.data.etatId = response.idEtat
+      console.log(data)
+      ipcRenderer.send(events.commande.update, data)
+      getAllCommandes()
+    })
+  }
 
   useEffect(() => {
     getAllCommandes();
@@ -217,20 +227,32 @@ function Commandes() {
       console.log(data);
       const { clientId } = data;
       data.articles.map((article) => {
-        const commande = {};
-        commande.clientId = clientId;
-        commande.productionId = article.production.idProduction;
-        commande.quantite = article.quantite;
-        commande.dateExpressionBesoinClient =
-          article.dateExpressionBesoinClient;
-        commande.dateEnlevementSouhaitee = article.dateEnlevementSouhaitee;
-        commande.montant = article.quantite * article.production.prixUnitaire;
-        commande.etatId = 1;
-        console.log(commande);
-        createCommande(commande);
-        // setCreated(!created)
-      });
-      return;
+        const commande = {}
+        commande.clientId = clientId
+        commande.productionId = article.production.idProduction
+        commande.quantite = article.quantite
+        commande.dateExpressionBesoinClient = article.dateExpressionBesoinClient
+        commande.dateEnlevementSouhaitee = article.dateEnlevementSouhaitee
+        commande.montant = article.quantite * article.production.prixUnitaire
+        ipcRenderer.send(events.etatCommande.getAll)
+        ipcRenderer.once(eventResponse.etatCommande.gotAll, (ev, etats) => {
+          console.log(etats)
+          if (commande.quantite > article.production.quantiteDisponible) {
+            commande.etatId = etats.filter(
+              (etat) => etat.etat === 'Insuffisant',
+            )[0].idEtat
+          } else {
+            commande.etatId = etats.filter(
+              (etat) => etat.etat === 'Acceptable',
+            )[0].idEtat
+          }
+          console.log(commande)
+          createCommande(commande)
+        })
+        // commande.etatId = 1
+        // createCommande(commande)
+      })
+      return
     }
     return;
   };

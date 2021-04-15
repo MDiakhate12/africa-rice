@@ -41,7 +41,7 @@ module.exports = (ipcMain, events, eventResponse) => {
       .catch((err) => console.log(err))
   })
 
-  ipcMain.on(events.production.update, (event, arg) => {
+  ipcMain.on(events.production.getOne, (event, arg) => {
     getProductionById(arg)
       .then((data) => {
         event.reply(eventResponse.production.updated, data)
@@ -49,7 +49,7 @@ module.exports = (ipcMain, events, eventResponse) => {
       .catch((err) => console.log(err))
   })
 
-  ipcMain.on(events.production.getOne, (event, arg) => {
+  ipcMain.on(events.production.update, (event, arg) => {
     updateProduction(arg.id, arg.data)
       .then((data) => {
         event.reply(eventResponse.Production.gotOne, data)
@@ -57,10 +57,10 @@ module.exports = (ipcMain, events, eventResponse) => {
       .catch((err) => console.log(err))
   })
 
-  ipcMain.on("getProductionsSumBySpeculation", (event, arg) => {
+  ipcMain.on('getProductionsSumBySpeculation', (event, arg) => {
     getProductionsSumBySpeculation(arg)
       .then((data) => {
-        event.reply("gotProductionsSumBySpeculation", data)
+        event.reply('gotProductionsSumBySpeculation', data)
       })
       .catch((err) => console.log(err))
   })

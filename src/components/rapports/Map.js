@@ -16,10 +16,10 @@ function getColor(d) {
 
 export default function Map() {
   // const position = [14.7319,-17.4572]
-//   const position = [14.4750607, -14.4529612];
-  const position = [37.8, -96];
+  const position = [14.4750607, -14.4529612];
+  // const position = [37.8, -96];
   return (
-    <MapContainer id="mapid" center={position} zoom={4} scrollWheelZoom={false}>
+    <MapContainer id="mapid" center={position} zoom={7.5} scrollWheelZoom={false}>
       <TileLayer
         // attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

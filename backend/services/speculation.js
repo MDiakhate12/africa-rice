@@ -13,7 +13,7 @@ const getAllSpeculations = async (arg = {}) => {
   const speculationsData = speculations.map((speculation) =>
     speculation.toJSON(),
   )
-  console.log(speculationsData)
+  // console.log(speculationsData)
   return speculationsData
 }
 

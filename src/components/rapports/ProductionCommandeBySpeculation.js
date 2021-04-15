@@ -1,12 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { Pie, Line, Bar } from "react-chartjs-2";
+import DataTable from "../common/DataTable";
 import { Colors } from "./Colors";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
 
+const getNomSpeculation = (params) =>
+  params.getValue("VarieteInstitution").SpeculationInstitution.Speculation
+    .nomSpeculation;
 
-export default function ProductionCommandeBySpeculation() {
+const columns = [
+  { type: "string", field: "id", headerName: "idProduction", hide: true },
+  {
+    type: "string",
+    field: "production",
+    headerName: "Production",
+    width: 160,
+    renderCell: getNomSpeculation,
+    valueGetter: getNomSpeculation,
+  },
+  {
+    type: "number",
+    field: "totalQuantiteProduite",
+    width: 130,
+    headerName: "Total produit",
+  },
+  {
+    type: "number",
+    field: "totalQuantiteCommandee",
+    headerName: "Total commandé",
+    width: 150,
+  },
+];
+
+export default function ProductionCommandeBySpeculation({ display }) {
   const [commandesBySpeculation, setCommandesBySpeculation] = useState([]);
 
   const getCommandeSumBySpeculation = () => {
@@ -77,5 +105,20 @@ export default function ProductionCommandeBySpeculation() {
     },
   };
 
-  return <Bar data={dataBySpeculation} options={optionsSpeculation} />;
+  //   return <Bar data={dataBySpeculation} options={optionsSpeculation} />;
+  // }
+
+  const rows = commandesBySpeculation.map((v, i) => ({
+    id: v.Production.VarieteInstitution.SpeculationInstitution.speculationId,
+    ...v,
+    ...productionsBySpeculation[i],
+  }));
+
+  return display === "chart" ? (
+    <Bar data={dataBySpeculation} options={optionsSpeculation} />
+  ) : (
+    <>
+      <DataTable height={350} pageSize={4} columns={columns} rows={rows} />
+    </>
+  );
 }

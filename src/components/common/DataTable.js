@@ -1,26 +1,54 @@
-import * as React from 'react'
-import { DataGrid } from '@material-ui/data-grid'
-import { makeStyles } from '@material-ui/core'
+import * as React from "react";
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarExport,
+  GridToolbar,
+  GridColumnsToolbarButton,
+} from "@material-ui/data-grid";
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& .MuiDataGrid-window': {
-      overflowY: 'hidden',
+    "& .MuiDataGrid-window": {
+      overflowY: "hidden",
     },
   },
-}))
+}));
 
-export default function DataTable({ columns, rows }) {
-  const classes = useStyles()
+function CustomToolbar() {
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <GridToolbarContainer>
+      <GridColumnsToolbarButton />
+      <GridToolbarExport />
+    </GridToolbarContainer>
+  );
+}
+
+export default function DataTable({
+  columns,
+  rows,
+  height,
+  pageSize,
+  disableColumnSelector,
+  checkboxSelection,
+}) {
+  const classes = useStyles();
+  return (
+    <div style={{ height: height || 400, width: "100%" }}>
       <DataGrid
         className={classes.root}
         rows={rows}
         columns={columns}
-        pageSize={8}
-        checkboxSelection
+        pageSize={pageSize || 8}
+        checkboxSelection={checkboxSelection || false}
+        disableColumnSelector={disableColumnSelector || false}
+        rowHeight={35}
+        components={{
+          Toolbar: CustomToolbar,
+          // Toolbar: GridToolbar,
+        }}
       />
     </div>
-  )
+  );
 }
