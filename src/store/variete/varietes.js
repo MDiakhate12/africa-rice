@@ -288,10 +288,7 @@ export const allVarietes = [
   {
     nomVariete: 'Obatampa',
     longueurCycle: 45,
-    ZoneAgroEcologique: {
-      idZone: 2,
-      nomZone: 'Centre',
-    },
+    zoneId: 2,
     speculationId: 4,
   },
   {

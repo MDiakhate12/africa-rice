@@ -65,14 +65,13 @@ const findByKey = (model, key) =>
     where: key,
   })
 
-// const Models = require("../models").default;
-
-// const { sequelize } = Models;
-
-// const query = (queryString) => {
-//   const [results, metadata] = sequelize.query(queryString);
-//   return results;
-// };
+const findInstitution = (model, payload) =>
+  model.findOne({
+    where: {
+      email: payload,
+    },
+    logging: false,
+  })
 
 module.exports = {
   findByPk,
@@ -83,6 +82,6 @@ module.exports = {
   findOrCreate,
   create,
   findAll,
+  findInstitution,
   // query,
-};
-
+}

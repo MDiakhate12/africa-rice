@@ -45,13 +45,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoginRegisterForm() {
   const [active, setActive] = useState(true);
+  const [error, setError] = useState({});
 
   const classes = useStyles();
 
-  const [formState, setFormState] = useState({});
+  const [formState, setFormState] = useState({
+    nomComplet: "",
+    sigle: "",
+    addresse: "",
+    telephone: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const { institution } = useContext(GlobalContext);
-  const [error, setError] = useState({});
 
   const timeout = null;
 
@@ -77,7 +85,7 @@ export default function LoginRegisterForm() {
 
   const handleSubmit = (e) => {
     if (Object.keys(formState).length === 0) return;
-    
+
     for (let [key, value] of Object.entries(error)) {
       if (value === true) {
         check({ target: { name: key, value } });
@@ -86,7 +94,7 @@ export default function LoginRegisterForm() {
     }
 
     for (let [key, value] of Object.entries(formState)) {
-      if (value) {
+      if (value === "") {
         check({ target: { name: key, value } });
         return;
       }
@@ -131,6 +139,7 @@ export default function LoginRegisterForm() {
 
     clearTimeout(timeout);
   };
+
   const check = (e) => {
     let { name, value } = e.target;
 
@@ -147,10 +156,12 @@ export default function LoginRegisterForm() {
       name !== "confirmPassword" &&
       setError({ ...error, [name]: value === "" });
   };
+
   const checkInterval = (e) => {
     clearTimeout(timeout);
     setTimeout(() => check(e), interval);
   };
+
   return (
     <div class="body">
       <div
@@ -348,7 +359,7 @@ export default function LoginRegisterForm() {
                   label="Mot de passe"
                   name="password"
                   margin="dense"
-                  value={formState?.password || ""}
+                  value={formState?.password || ''}
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}

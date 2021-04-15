@@ -10,17 +10,19 @@ const {
 } = require('../utils')
 
 const registerInstitution = async (data) => {
-  let response
+  let response = {}
 
   if (!validatePassword(data.password)) {
     response.status = 'error'
-    response.message = 'Password length should be more than 8 characters'
+    response.message =
+      'La longueur du mot de passe doit etre superieur a 8 caracteres'
     return response
   }
 
-  if (data.password !== data.confirmPassword) {
+  if (data.password != data.password2) {
     response.status = 'error'
-    response.message = 'password and passwordConfirm are not the same'
+    response.message =
+      'Le mot de passe et la confirmation ne sont pas conformes'
     return response
   }
 
@@ -30,7 +32,7 @@ const registerInstitution = async (data) => {
 
   if (!validateEmail(email)) {
     response.status = 'error'
-    response.message = 'email is not correct'
+    response.message = "L'email est correct"
     return response
   }
 
@@ -42,38 +44,35 @@ const registerInstitution = async (data) => {
 
   if (!created) {
     response.status = 'error'
-    response.message = 'institution already exist'
+    response.message = 'Un institution avec cet email existe deja'
     return data
   }
 
   response.status = 'success'
-  response.message =
-    'institution successfully created go and check you email to validate your institution'
+  response.message = 'institution creer avec succes '
   response.payload = _.omit(institution.toJSON(), ['password'])
-
   return response
 }
 
 const loginInstitution = async (data) => {
+  let response = {}
   const { email, password } = data
 
-  const user = await findUser(User, email)
+  const institution = await service.findInstitution(Institution, email)
 
-  if (!user) {
-    return res.status(400).json({
-      status: 'error',
-      message: 'Invalid credential email not good',
-    })
+  if (!institution) {
+    response.status = 'error'
+    response.message = 'Invalid credential email not good'
+    return response
   }
 
-  if (!(await comparePassword(password, user.password))) {
-    return res.status(400).json({
-      status: 'error',
-      message: 'Invalid credential password not good',
-    })
+  if (!(await comparePassword(password, institution.password))) {
+    response.status = 'error'
+    response.message = 'Invalid credential password not good'
+    return response
   }
 
-  user.toJSON()
+  return institution.toJSON()
 }
 
 module.exports = {

@@ -14,12 +14,12 @@ import {
   Typography,
 } from '@material-ui/core'
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { GlobalContext } from "../../store/GlobalProvider";
-import DatePicker from "../common/DatePicker";
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import { GlobalContext } from '../../store/GlobalProvider'
+import DatePicker from '../common/DatePicker'
 
 const useStyles = makeStyles((theme) => ({
   marginDense: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     // marginTop: theme.spacing(2),
   },
   addButton: {
-    width: "20ch",
+    width: '20ch',
     // margin: theme.spacing(2),
   },
   // gridContainer: {
@@ -77,8 +77,8 @@ export default function ProductionFormDialog({ handleClose }) {
   const [niveau, setNiveau] = useState([])
 
   const handleChange = (evt) => {
-    const { name, value } = evt.target;
-    console.log(value);
+    const { name, value } = evt.target
+    console.log(value)
     setFormData({
       ...formData,
       [name]: value,
@@ -226,25 +226,27 @@ export default function ProductionFormDialog({ handleClose }) {
                   }}
                 />
               </Grid>
-              <Grid item sm={12}>
-                <TextField
-                  label="Quantité Disponible"
-                  fullWidth
-                  margin="dense"
-                  id="state.filstockDeSecurite-star || ''t -adornment"
-                  name="quantiteDisponible"
-                  value={formData.quantiteDisponible || ''}
-                  type="number"
-                  className={classes.marginDense}
-                  variant="filled"
-                  onChange={handleChange}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">Kg</InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
+              {/*
+                <Grid item sm={12}>
+                  <TextField
+                    label="Quantité Disponible"
+                    fullWidth
+                    margin="dense"
+                    id="state.filstockDeSecurite-star || ''t -adornment"
+                    name="quantiteDisponible"
+                    value={formData.quantiteDisponible || ''}
+                    type="number"
+                    className={classes.marginDense}
+                    variant="filled"
+                    onChange={handleChange}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">Kg</InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                */}
               <Grid item sm={12}>
                 <TextField
                   label="Prix Unitaire"
@@ -283,7 +285,7 @@ export default function ProductionFormDialog({ handleClose }) {
                 />
               </Grid>
               <Grid item sm={6}>
-                {" "}
+                {' '}
                 <FormControl variant="filled" fullWidth>
                   <InputLabel color="secondary">Région</InputLabel>
                   <Select
@@ -337,7 +339,7 @@ export default function ProductionFormDialog({ handleClose }) {
                           )
                       })}
                   </Select>
-                </FormControl>{" "}
+                </FormControl>{' '}
               </Grid>
               <Grid item sm={6}>
                 <FormControl variant="filled" fullWidth>
