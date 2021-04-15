@@ -39,6 +39,7 @@ export default function LoginRegisterForm() {
   const classes = useStyles()
 
   const [formState, setFormState] = useState({})
+  const [formStateLogin, setFormStateLogin] = useState({})
 
   const { institution } = useContext(GlobalContext)
 
@@ -51,8 +52,18 @@ export default function LoginRegisterForm() {
       }
     })
   }
+  const handleChangeLogin = (e) => {
+    let { name, value } = e.target
+    setFormStateLogin((state) => {
+      return {
+        ...state,
+        [name]: value,
+      }
+    })
+  }
 
   const handleSubmit = (e) => {
+    setError()
     console.log(formState)
     ipcRenderer.send(events.auth.register, formState)
     ipcRenderer.once(eventResponse.auth.registered, (ev, data) => {
@@ -62,6 +73,18 @@ export default function LoginRegisterForm() {
       }
     })
     // updateInstitution({ id: formState.idInstitution, data: formState });
+  }
+
+  const handleSubmitLogin = (e) => {
+    setError()
+    console.log(formStateLogin)
+    ipcRenderer.send(events.auth.login, formStateLogin)
+    ipcRenderer.once(eventResponse.auth.logged, (ev, data) => {
+      console.log(data)
+      if (data.status === 'error') {
+        setError(data.message)
+      }
+    })
   }
 
   return (
@@ -208,10 +231,10 @@ export default function LoginRegisterForm() {
                   label="Email"
                   name="email"
                   margin="dense"
-                  value={formState?.email || ''}
+                  value={formStateLogin?.email || ''}
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
-                  onChange={handleChange}
+                  onChange={handleChangeLogin}
                 />
               </Grid>
 
@@ -221,11 +244,14 @@ export default function LoginRegisterForm() {
                   label="Mot de passe"
                   name="password"
                   margin="dense"
-                  value={formState?.password || ''}
+                  value={formStateLogin?.password || ''}
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
-                  onChange={handleChange}
+                  onChange={handleChangeLogin}
                 />
+              </Grid>
+              <Grid item sm={12}>
+                {error ? <p style={{ color: 'red' }}>{error}</p> : ''}
               </Grid>
               <Grid item sm={12} className={classes.gridContainer}>
                 <Button
@@ -233,7 +259,7 @@ export default function LoginRegisterForm() {
                   variant="contained"
                   className={classes.addButton}
                   // size="large"
-                  onClick={handleSubmit}
+                  onClick={handleSubmitLogin}
                 >
                   Connexion
                 </Button>

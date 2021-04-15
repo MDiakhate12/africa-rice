@@ -62,13 +62,13 @@ const loginInstitution = async (data) => {
 
   if (!institution) {
     response.status = 'error'
-    response.message = 'Invalid credential email not good'
+    response.message = "Email n'est pas bon"
     return response
   }
 
   if (!(await comparePassword(password, institution.password))) {
     response.status = 'error'
-    response.message = 'Invalid credential password not good'
+    response.message = 'Mot de passe incorrect'
     return response
   }
 
