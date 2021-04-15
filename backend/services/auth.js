@@ -18,11 +18,11 @@ const registerInstitution = async (data) => {
     return response
   }
 
-  // if (data.password != data.confirmPassword) {
-  //   response.status = 'error'
-  //   response.message = 'password and passwordConfirm are not the same'
-  //   return response
-  // }
+  if (data.password !== data.confirmPassword) {
+    response.status = 'error'
+    response.message = 'password and passwordConfirm are not the same'
+    return response
+  }
 
   const password = await hashPassword(data.password)
 
@@ -48,7 +48,7 @@ const registerInstitution = async (data) => {
 
   response.status = 'success'
   response.message =
-    'user successfully created go and check you email to validate your institution'
+    'institution successfully created go and check you email to validate your institution'
   response.payload = _.omit(institution.toJSON(), ['password'])
 
   return response

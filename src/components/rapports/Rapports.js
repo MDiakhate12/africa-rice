@@ -3,14 +3,16 @@ import { Grid, Paper, Tab, Tabs } from "@material-ui/core";
 
 import ProductionBySpeculation from "./ProductionBySpeculation";
 import ProductionByVariete from "./ProductionByVariete";
-import CommandeBySpeculation from "./CommandeLivraisonBySpeculation";
+import CommandeBySpeculation from "./CommandeBySpeculation";
 import CommandeByVariete from "./CommandeByVariete";
 import ProductionCommandeBySpeculation from "./ProductionCommandeBySpeculation";
 import ProductionCommandeByVariete from "./ProductionCommandeByVariete";
 import CommandeLivraisonBySpeculation from "./CommandeLivraisonBySpeculation";
+import CommandeLivraisonByVariete from "./CommandeLivraisonByVariete";
 import { Box, Typography } from "@material-ui/core";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
+import Map from "./Map";
 
 export default function Rapports() {
   // const colors = [
@@ -52,6 +54,7 @@ export default function Rapports() {
           >
             <Tab label="Statistiques spéculations" />
             <Tab label="Statistiques variétés" />
+            <Tab label="Cartographie" />
           </Tabs>
         </Paper>
       </div>
@@ -89,7 +92,15 @@ export default function Rapports() {
           <Grid item sm={6}>
             <ProductionCommandeByVariete />
           </Grid>
+
+          <Grid item sm={6}>
+            <CommandeLivraisonByVariete />
+          </Grid>
         </Grid>
+      </TabPanel>
+
+      <TabPanel value={value} index={2}>
+        <Map />
       </TabPanel>
     </div>
   );

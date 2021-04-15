@@ -7,6 +7,7 @@ const {
   getCommandeSumBySpeculation,
   getCommandeSumByVarietes,
   getCommandeSumBySpeculationByState,
+  getCommandeSumByVarieteByState,
 } = require('../services/commande')
 
 module.exports = (ipcMain, events, eventResponse) => {
@@ -78,6 +79,15 @@ module.exports = (ipcMain, events, eventResponse) => {
       .then((data) => {
         console.log(data)
         event.reply('gotCommandeSumBySpeculationByState', data)
+      })
+      .catch((err) => console.log(err))
+  })
+
+  ipcMain.on('getCommandeSumByVarieteByState', (event, arg) => {
+    getCommandeSumByVarieteByState(arg)
+      .then((data) => {
+        console.log(data)
+        event.reply('gotCommandeSumByVarieteByState', data)
       })
       .catch((err) => console.log(err))
   })

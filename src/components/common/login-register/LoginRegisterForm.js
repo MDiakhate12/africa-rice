@@ -1,9 +1,22 @@
 import React, { useContext, useState } from "react";
 import clsx from "clsx";
-import { Box, Button, Grid, TextField, Typography } from "@material-ui/core";
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  Grid,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+  TextField,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { GlobalContext } from "../../../store/GlobalProvider";
 import "./LoginRegisterForm.css";
+import { validateEmail, validatePassword } from "../../../store/utils";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     fontSize: "10px",
+    marginTop: "-4px",
   },
 }));
 
@@ -37,10 +51,22 @@ export default function LoginRegisterForm() {
   const [formState, setFormState] = useState({});
 
   const { institution } = useContext(GlobalContext);
+  const [error, setError] = useState({});
+
+  const timeout = null;
 
   const handleChange = (e) => {
     console.log(e.target.value);
     let { name, value } = e.target;
+
+    // name === "password" &&
+    //   setError({ ...error, password: !validatePassword(value) });
+
+    // name === "confirmPassword" &&
+    //   setError({ ...error, confirmPassword: formState.password !== value });
+
+    // name === "email" && setError({ ...error, email: !validateEmail(value) });
+
     setFormState((state) => {
       return {
         ...state,
@@ -50,10 +76,81 @@ export default function LoginRegisterForm() {
   };
 
   const handleSubmit = (e) => {
+    if (Object.keys(formState).length === 0) return;
+    
+    for (let [key, value] of Object.entries(error)) {
+      if (value === true) {
+        check({ target: { name: key, value } });
+        return;
+      }
+    }
+
+    for (let [key, value] of Object.entries(formState)) {
+      if (value) {
+        check({ target: { name: key, value } });
+        return;
+      }
+    }
+
     console.log(formState);
     // updateInstitution({ id: formState.idInstitution, data: formState });
   };
 
+  const handleClickShowPassword = () => {
+    setFormState({ ...formState, showPassword: !formState.showPassword });
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClickShowConfirmPassword = () => {
+    setFormState({
+      ...formState,
+      showConfirmPassword: !formState.showConfirmPassword,
+    });
+  };
+
+  const handleMouseDownConfirmPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const interval = 1300;
+
+  const clearOrCheck = (e) => {
+    let { name, value } = e.target;
+
+    if (name === "password" && formState.password?.length === 8)
+      return check(e);
+
+    if (
+      name === "confirmPassword" &&
+      formState.password === formState.confirmPassword
+    )
+      return check(e);
+
+    clearTimeout(timeout);
+  };
+  const check = (e) => {
+    let { name, value } = e.target;
+
+    name === "password" &&
+      setError({ ...error, password: !validatePassword(value) });
+
+    name === "confirmPassword" &&
+      setError({ ...error, confirmPassword: formState.password !== value });
+
+    name === "email" && setError({ ...error, email: !validateEmail(value) });
+
+    name !== "email" &&
+      name !== "password" &&
+      name !== "confirmPassword" &&
+      setError({ ...error, [name]: value === "" });
+  };
+  const checkInterval = (e) => {
+    clearTimeout(timeout);
+    setTimeout(() => check(e), interval);
+  };
   return (
     <div class="body">
       <div
@@ -76,7 +173,7 @@ export default function LoginRegisterForm() {
             </div> */}
             {/* <span>or use your email for registration</span> */}
 
-            <Grid container>
+            <Grid container spacing={1}>
               <Grid item sm={12}>
                 <TextField
                   fullWidth
@@ -87,6 +184,12 @@ export default function LoginRegisterForm() {
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
+                  onKeyDown={clearOrCheck}
+                  onKeyUp={checkInterval}
+                  error={error.nomComplet}
+                  helperText={
+                    error.nomComplet ? "Ce champ est obligatoire" : ""
+                  }
                 />
               </Grid>
               <Grid item sm={12}>
@@ -99,6 +202,10 @@ export default function LoginRegisterForm() {
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
+                  onKeyDown={clearOrCheck}
+                  onKeyUp={checkInterval}
+                  error={error.sigle}
+                  helperText={error.sigle ? "Ce champ est obligatoire" : ""}
                 />
               </Grid>
               <Grid item sm={12}>
@@ -111,6 +218,10 @@ export default function LoginRegisterForm() {
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
+                  onKeyDown={clearOrCheck}
+                  onKeyUp={checkInterval}
+                  error={error.addresse}
+                  helperText={error.addresse ? "Ce champ est obligatoire" : ""}
                 />
               </Grid>
 
@@ -124,6 +235,10 @@ export default function LoginRegisterForm() {
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
+                  onKeyDown={clearOrCheck}
+                  onKeyUp={checkInterval}
+                  error={error.telephone}
+                  helperText={error.telephone ? "Ce champ est obligatoire" : ""}
                 />
               </Grid>
 
@@ -137,10 +252,97 @@ export default function LoginRegisterForm() {
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
+                  error={error.email}
+                  onKeyDown={clearOrCheck}
+                  onKeyUp={checkInterval}
+                  helperText={
+                    error.email ? "Le format de l'email est invalide" : ""
+                  }
                 />
               </Grid>
 
               <Grid item sm={12}>
+                <FormControl
+                  className={clsx(classes.margin, classes.textField)}
+                  fullWidth
+                  error={error.password}
+                >
+                  <InputLabel htmlFor="standard-adornment-password">
+                    Mot de passe
+                  </InputLabel>
+                  <Input
+                    id="standard-adornment-password"
+                    type={formState.showPassword ? "text" : "password"}
+                    value={formState.password}
+                    name="password"
+                    onChange={handleChange}
+                    onKeyDown={clearOrCheck}
+                    onKeyUp={checkInterval}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {formState.showPassword ? (
+                            <Visibility />
+                          ) : (
+                            <VisibilityOff />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  <FormHelperText>
+                    {error.password
+                      ? "Le mdp doit contenir au moins 8 caractères"
+                      : ""}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+
+              <Grid item sm={12}>
+                <FormControl
+                  className={clsx(classes.margin, classes.textField)}
+                  fullWidth
+                  error={error.confirmPassword}
+                >
+                  <InputLabel htmlFor="standard-adornment-password">
+                    Confirmer le mot de passe
+                  </InputLabel>
+                  <Input
+                    id="standard-adornment-password"
+                    type={formState.showConfirmPassword ? "text" : "password"}
+                    value={formState.confirmPassword}
+                    name="confirmPassword"
+                    onChange={handleChange}
+                    onKeyDown={clearOrCheck}
+                    onKeyUp={checkInterval}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowConfirmPassword}
+                          onMouseDown={handleMouseDownConfirmPassword}
+                        >
+                          {formState.showConfirmPassword ? (
+                            <Visibility />
+                          ) : (
+                            <VisibilityOff />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  <FormHelperText>
+                    {error.confirmPassword
+                      ? "Les mdp doivent être conformes"
+                      : ""}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+              {/* <Grid item sm={12}>
                 <TextField
                   fullWidth
                   label="Mot de passe"
@@ -150,21 +352,33 @@ export default function LoginRegisterForm() {
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
+                  error={error.password}
+                  helperText={
+                    error.password
+                      ? "Le mdp doit contenir au moins 8 caractères"
+                      : ""
+                  }
                 />
               </Grid>
 
               <Grid item sm={12}>
                 <TextField
                   fullWidth
-                  label="Répéter le mot de passe"
-                  name="password2"
+                  label="Confirmer le mot de passe"
+                  name="confirmPassword"
                   margin="dense"
-                  value={formState?.password2 || ""}
+                  value={formState?.confirmPassword || ""}
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
+                  error={error.confirmPassword}
+                  helperText={
+                    error.confirmPassword
+                      ? "Les mdp doivent être conformes"
+                      : ""
+                  }
                 />
-              </Grid>
+              </Grid>*/}
 
               <Grid item sm={12} className={classes.gridContainer}>
                 <Button
