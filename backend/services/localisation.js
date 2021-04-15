@@ -4,7 +4,7 @@ const { Localisation } = Models
 
 const createLocalisation = async (data) => {
   const localisation = await service.create(Localisation, data)
-  console.log(localisation.toJSON())
+  // console.log(localisation.toJSON())
   return localisation.toJSON()
 }
 
@@ -19,7 +19,7 @@ const getAllLocalisations = async (arg = {}) => {
 
 const getLocalisationById = async (id) => {
   const localisation = await service.findByKey(Localisation, id)
-  console.log(localisation.toJSON())
+  // console.log(localisation.toJSON())
   return localisation.toJSON()
 }
 

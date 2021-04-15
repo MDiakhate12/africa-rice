@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
   AccepteBadge: {
     backgroundColor: '#00C677',
   },
+  InsuffisantBadge: {
+    backgroundColor: '#FF0077',
+  },
 }))
 
 function Commandes() {
@@ -99,8 +102,7 @@ function Commandes() {
       type: 'string',
       field: 'dateEnlevementReelle',
       headerName: 'Enlevé le',
-      valueFormatter: (params) =>
-        params.value?.toDateString() || 'Pas encore enlevee',
+      valueFormatter: (params) => params.value || 'Pas encore enlevee',
       width: 130,
     },
     {
@@ -116,16 +118,19 @@ function Commandes() {
       type: 'string',
       field: 'action',
       headerName: 'Action',
-      width: 130,
+      width: 240,
       renderCell: (params) => {
         const etat = params.getValue('EtatCommande').etat
-        let etatSuivant
+        let etatSuivants = []
         switch (params.getValue('EtatCommande').etat) {
           case 'Acceptable':
-            etatSuivant = 'Accepte'
+            etatSuivants.push('Accepte')
+            etatSuivants.push('Rejete')
+            etatSuivants.push('Annule')
             break
           case 'Accepte':
-            etatSuivant = 'Enleve'
+            etatSuivants.push('Enleve')
+            etatSuivants.push('Annule')
             break
           case 'Enleve':
             // etatSuivant = 'primary'
@@ -136,18 +141,19 @@ function Commandes() {
           case 'Rejete':
             // etatSuivant = 'primary'
             break
+          case 'Insuffisant':
+            etatSuivants.push('Rejete')
+            break
           default:
             break
         }
         return (
           <div>
-            {etatSuivant ? (
+            {etatSuivants.map((etatSuivant) => (
               <Button onClick={(evt) => onClick(evt, params, etatSuivant)}>
                 {etatSuivant}
               </Button>
-            ) : (
-              ''
-            )}
+            ))}
           </div>
         )
       },
@@ -181,9 +187,11 @@ function Commandes() {
             quantiteDisponible: Production.quantiteDisponible - row.quantite,
           },
         }
-        console.log(payload)
         ipcRenderer.send(events.production.update, payload)
+      } else if (etat === 'Enleve') {
+        data.data.dateEnlevementReelle = new Date()
       }
+
       data.data.idCommande = row.id
       data.data.etatId = response.idEtat
       console.log(data)
@@ -214,10 +222,23 @@ function Commandes() {
         commande.dateExpressionBesoinClient = article.dateExpressionBesoinClient
         commande.dateEnlevementSouhaitee = article.dateEnlevementSouhaitee
         commande.montant = article.quantite * article.production.prixUnitaire
-        commande.etatId = 1
-        console.log(commande)
-        createCommande(commande)
-        // setCreated(!created)
+        ipcRenderer.send(events.etatCommande.getAll)
+        ipcRenderer.once(eventResponse.etatCommande.gotAll, (ev, etats) => {
+          console.log(etats)
+          if (commande.quantite > article.production.quantiteDisponible) {
+            commande.etatId = etats.filter(
+              (etat) => etat.etat === 'Insuffisant',
+            )[0].idEtat
+          } else {
+            commande.etatId = etats.filter(
+              (etat) => etat.etat === 'Acceptable',
+            )[0].idEtat
+          }
+          console.log(commande)
+          createCommande(commande)
+        })
+        // commande.etatId = 1
+        // createCommande(commande)
       })
       return
     }
