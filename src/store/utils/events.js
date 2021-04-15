@@ -112,6 +112,11 @@ const events = {
     getOne: 'getOneEtatCommande',
   },
 
+  auth: {
+    register: 'register',
+    login: 'login',
+  },
+
   imageDialog: {
     openImageDialog: 'openImageDialog',
   },
@@ -230,6 +235,12 @@ const eventResponse = {
     deleted: 'deletedEtatCommande',
     gotOne: 'gotOneEtatCommande',
   },
+
+  auth: {
+    registered: 'registered',
+    logged: 'logged',
+  },
+
   imageDialog: {
     closedImageDialog: 'closedImageDialog',
   },
