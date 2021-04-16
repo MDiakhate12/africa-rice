@@ -76,6 +76,7 @@ const getProductionsSumBySpeculation = async (arg = {}) => {
 const getProductionsSumByVarietes = async (arg = {}) => {
   let option = {
     include: [
+      Localisation,
       {
         model: VarieteInstitution,
         include: [

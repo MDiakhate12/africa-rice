@@ -1,40 +1,89 @@
-import React from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import * as React from "react";
+import { useState } from "react";
+import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import * as senegal from "./sn.json";
+import PinDropIcon from "@material-ui/icons/PinDrop";
 
-import "./Map.css";
+// import "mapbox-gl/dist/mapbox-gl.css";
 
-function getColor(d) {
-    return d > 1000 ? '#800026' :
-           d > 500  ? '#BD0026' :
-           d > 200  ? '#E31A1C' :
-           d > 100  ? '#FC4E2A' :
-           d > 50   ? '#FD8D3C' :
-           d > 20   ? '#FEB24C' :
-           d > 10   ? '#FED976' :
-                      '#FFEDA0';
-}
+import { IconButton } from "@material-ui/core";
 
-export default function Map() {
-  // const position = [14.7319,-17.4572]
-  const position = [14.4750607, -14.4529612];
-  // const position = [37.8, -96];
+const { ipcRenderer } = window.require("electron");
+const { events, eventResponse } = require("../../store/utils/events");
+
+export default function Map2() {
+  const [viewport, setViewport] = useState({
+    width: "100vw",
+    height: "100vh",
+    latitude: 14.4750607,
+    longitude: -14.4529612,
+    zoom: 7,
+  });
+
+  const [productionsByVariete, setProductionsByVariete] = useState([]);
+
+  const getProductionsSumByVarietes = () => {
+    ipcRenderer.send("getByVarietes");
+    ipcRenderer.once("gotByVarietes", (event, data) => {
+      console.log(data);
+      setProductionsByVariete(data);
+    });
+  };
+
+  React.useEffect(() => {
+    getProductionsSumByVarietes();
+  }, []);
+
   return (
-    <MapContainer id="mapid" center={position} zoom={7.5} scrollWheelZoom={false}>
-      <TileLayer
-        // attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    <ReactMapGL
+      {...viewport}
+      onViewportChange={(nextViewport) => setViewport(nextViewport)}
+      mapboxApiAccessToken="pk.eyJ1IjoibGlsY2hlaWtoIiwiYSI6ImNrODU5cm93bjA0MjQzZ3BqbWJtZDRkcG4ifQ.TrPm96_JjZB-0OogoZJp5A"
+      // scrollZoom={false}
+      // mapStyle="mapbox://styles/lilcheikh/cknjlxaqt03p417oannirmtxm" // Dark
+      // mapStyle="mapbox://styles/lilcheikh/cknjmc4st1awe18mmh54cr29r" // Navigation
+      mapStyle="mapbox://styles/lilcheikh/cknjmckc20jsl17npo19qnk83" // Satellite
+    >
+      {productionsByVariete.map((production) => {
+        let region = production.Localisation.region;
 
-        url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
-        attribution='Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
-        id="mapbox/streets-v11"
-        accessToken="pk.eyJ1IjoibGlsY2hlaWtoIiwiYSI6ImNrODU5cm93bjA0MjQzZ3BqbWJtZDRkcG4ifQ.TrPm96_JjZB-0OogoZJp5A"
-        
-      />
-      <Marker position={position}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
-    </MapContainer>
+        let index = senegal.cities
+          .map((location) => location.city.toLowerCase())
+          .indexOf(region.toLowerCase());
+
+        if (index > -1) {
+          console.log(index);
+          console.log(parseFloat(senegal.cities[index].lat));
+          console.log(parseFloat(senegal.cities[index].lng));
+          return (
+            <>
+              <Marker
+                key={production.VarieteInstitution.varieteId}
+                latitude={parseFloat(senegal.cities[index].lat)}
+                longitude={parseFloat(senegal.cities[index].lng)}
+              >
+                <IconButton>
+                  <PinDropIcon fontSize="large" color="secondary" />
+                </IconButton>
+              </Marker>
+              <Popup
+                key={production.VarieteInstitution.varieteId}
+                latitude={parseFloat(senegal.cities[index].lat)}
+                longitude={parseFloat(senegal.cities[index].lng)}
+              >
+                <div>
+                  {`Département: ${production.Localisation.departement}`}
+                </div>
+                <div>{`Localité: ${production.Localisation.village}`}</div>
+                <div>{`Varété: ${production.VarieteInstitution.Variete.nomVariete}`}</div>
+                <div>{`Total produit: ${production.totalQuantiteProduite} KG`}</div>
+              </Popup>
+            </>
+          );
+        } else {
+          return null;
+        }
+      })}
+    </ReactMapGL>
   );
 }

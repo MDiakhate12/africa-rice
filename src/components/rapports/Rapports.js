@@ -19,6 +19,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import Map2 from "./Map2";
 
 export default function Rapports() {
   const classes = useStyles();
@@ -50,29 +51,30 @@ export default function Rapports() {
         </Paper>
       </div>
 
-      <Box marginTop={3}>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Affichage</FormLabel>
-          <RadioGroup
-            aria-label="display"
-            name="display"
-            value={display}
-            onChange={(e) => setDisplay(e.target.value)}
-          >
-            <FormControlLabel
-              value="chart"
-              control={<Radio />}
-              label="Graphique"
-            />
-            <FormControlLabel
-              value="table"
-              control={<Radio />}
-              label="Tableau"
-            />
-          </RadioGroup>
-        </FormControl>
-      </Box>
-
+      {value < 2 && (
+        <Box marginTop={3}>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Affichage</FormLabel>
+            <RadioGroup
+              aria-label="display"
+              name="display"
+              value={display}
+              onChange={(e) => setDisplay(e.target.value)}
+            >
+              <FormControlLabel
+                value="chart"
+                control={<Radio />}
+                label="Graphique"
+              />
+              <FormControlLabel
+                value="table"
+                control={<Radio />}
+                label="Tableau"
+              />
+            </RadioGroup>
+          </FormControl>
+        </Box>
+      )}
       {/* <FormControlLabel
         control={
           <Switch
@@ -126,6 +128,7 @@ export default function Rapports() {
 
       <TabPanel value={value} index={2}>
         <Map />
+        <Map2 />
       </TabPanel>
     </div>
   );
