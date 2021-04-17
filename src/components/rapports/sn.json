@@ -1,0 +1,169 @@
+{
+  "cities": [
+    {
+      "city": "Dakar",
+      "lat": "14.7319",
+      "lng": "-17.4572",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Dakar",
+      "capital": "primary",
+      "population": "1146053",
+      "population_proper": "1146053"
+    },
+    {
+      "city": "Thies",
+      "lat": "14.7833",
+      "lng": "-16.9167",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Thies",
+      "capital": "admin",
+      "population": "293001",
+      "population_proper": "293001"
+    },
+    {
+      "city": "Rufisque",
+      "lat": "14.7167",
+      "lng": "-17.2667",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Dakar",
+      "capital": "",
+      "population": "221066",
+      "population_proper": "221066"
+    },
+    {
+      "city": "Ziguinchor",
+      "lat": "12.5833",
+      "lng": "-16.2667",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Ziguinchor",
+      "capital": "admin",
+      "population": "205294",
+      "population_proper": "205294"
+    },
+    {
+      "city": "Saint-Louis",
+      "lat": "16.0333",
+      "lng": "-16.5000",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Saint-Louis",
+      "capital": "admin",
+      "population": "176000",
+      "population_proper": "176000"
+    },
+    {
+      "city": "Kaolack",
+      "lat": "14.1520",
+      "lng": "-16.0726",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Kaolack",
+      "capital": "admin",
+      "population": "172305",
+      "population_proper": "172305"
+    },
+    {
+      "city": "Diourbel",
+      "lat": "14.6550",
+      "lng": "-16.2314",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Diourbel",
+      "capital": "admin",
+      "population": "100445",
+      "population_proper": "100445"
+    },
+    {
+      "city": "Louga",
+      "lat": "15.6167",
+      "lng": "-16.2167",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Louga",
+      "capital": "admin",
+      "population": "85075",
+      "population_proper": "85075"
+    },
+    {
+      "city": "Tambacounda",
+      "lat": "13.7689",
+      "lng": "-13.6672",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Tambacounda",
+      "capital": "admin",
+      "population": "78800",
+      "population_proper": "78800"
+    },
+    {
+      "city": "Kolda",
+      "lat": "12.8958",
+      "lng": "-14.9408",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Kolda",
+      "capital": "admin",
+      "population": "62258",
+      "population_proper": "62258"
+    },
+    {
+      "city": "Fatick",
+      "lat": "14.3167",
+      "lng": "-16.4167",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Fatick",
+      "capital": "admin",
+      "population": "24243",
+      "population_proper": "24243"
+    },
+    {
+      "city": "Kedougou",
+      "lat": "12.5556",
+      "lng": "-12.1807",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Kedougou",
+      "capital": "admin",
+      "population": "18226",
+      "population_proper": "17922"
+    },
+    {
+      "city": "Kaffrine",
+      "lat": "14.1016",
+      "lng": "-15.5467",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Kaffrine",
+      "capital": "admin",
+      "population": "",
+      "population_proper": ""
+    },
+    {
+      "city": "Sedhiou",
+      "lat": "12.7081",
+      "lng": "-15.5569",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Sedhiou",
+      "capital": "admin",
+      "population": "",
+      "population_proper": ""
+    },
+    {
+      "city": "Matam",
+      "lat": "15.6167",
+      "lng": "-13.3333",
+      "country": "Senegal",
+      "iso2": "SN",
+      "admin_name": "Matam",
+      "capital": "admin",
+      "population": "",
+      "population_proper": ""
+    }
+  ]
+}
