@@ -128,7 +128,7 @@ export default function Rapports() {
 
       <TabPanel value={value} index={2}>
         <Map />
-        <Map2 />
+        {/* <Map2 /> */}
       </TabPanel>
     </div>
   );

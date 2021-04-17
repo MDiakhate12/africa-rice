@@ -1,9 +1,4 @@
-import React, {
-  createRef,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createRef, useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -14,6 +9,9 @@ import { GlobalContext } from "../../store/GlobalProvider";
 import SingleLineGridList from "../common/SingleLineGridList";
 import ConfirmDialog from "../common/ConfirmDialog";
 import { SpeculationInstitutionContext } from "../../store/speculationInstitution/provider";
+
+const { events, eventResponse } = require("../../store/utils/events");
+const { ipcRenderer } = window.require("electron");
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -31,12 +29,12 @@ const useStyles = makeStyles((theme) => ({
   },
   secondaryScroll: {
     "*::-webkit-scrollbar-thumb": {
-      background: theme.palette.primary.secondary
+      background: theme.palette.primary.secondary,
     },
     "*::-webkit-scrollbar-thumb:hover": {
-      background: theme.palette.primary.main
+      background: theme.palette.primary.main,
     },
-  }
+  },
 }));
 
 export default function Speculation() {
@@ -51,8 +49,24 @@ export default function Speculation() {
   const {
     speculations,
     openConfirmDialog,
-    institution
+    institution,
+    getAllSpeculation,
+    getAllLocalisation,
   } = useContext(GlobalContext);
+
+  useEffect(() => {
+    getAllSpeculation();
+    getAllLocalisation();
+
+    return () => {
+      ipcRenderer.removeAllListeners([
+        eventResponse.speculation.gotAll,
+        events.speculation.getAll,
+        eventResponse.localisation.gotAll,
+        events.localisation.getAll,
+      ]);
+    };
+  }, []);
 
   const [state, setState] = useState("");
 
@@ -71,7 +85,6 @@ export default function Speculation() {
     });
   };
 
-
   const handleDialogClose = (res, data) => {
     if (res === "yes") {
       try {
@@ -80,35 +93,37 @@ export default function Speculation() {
         console.error(error);
       }
     }
-    return 
+    return;
   };
-  
+
   return (
     <>
       <ConfirmDialog handleClose={handleDialogClose} />
       <Grid container spacing={2}>
         <Grid item sm={9} className={classes.secondaryScroll}>
           <SingleLineGridList
-            data={speculationsInstitution.map(
-              ({
-                Speculation: {
-                  imageSpeculation,
-                  nomSpeculation,
-                  idSpeculation,
-                },
-              }) => ({
-                img: imageSpeculation,
-                title: nomSpeculation,
-                onClick: () => {
-                  openConfirmDialog({
-                    title: "Suppression",
-                    content: `Souhaitez vous réellement supprimer la spéculation ${nomSpeculation} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`,
-                    data: idSpeculation,
-                  });
-                  console.log(idSpeculation);
-                },
-              })
-            )}
+            data={speculationsInstitution.map((speculation) => ({
+              img: speculation.Speculation.imageSpeculation,
+              title: speculation.Speculation.nomSpeculation,
+              onClick: () => {
+                const removeAssociations = (obj) => {
+                  let result = {};
+                  for (let [key, value] of Object.entries(obj)) {
+                    if (typeof value !== "object") {
+                      result[key] = value;
+                    }
+                  }
+                  return result;
+                };
+
+                console.log(removeAssociations(speculation))
+                openConfirmDialog({
+                  title: "Suppression",
+                  content: `Souhaitez vous réellement supprimer la spéculation ${speculation.Speculation.nomSpeculation} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`,
+                  data: removeAssociations(speculation),
+                });
+              },
+            }))}
           />
         </Grid>
         <Grid

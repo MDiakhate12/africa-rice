@@ -19,6 +19,9 @@ import ConfirmDialog from "../common/ConfirmDialog";
 import { VarieteInstitutionContext } from "../../store/varieteInstitution/provider";
 import { SpeculationInstitutionContext } from "../../store/speculationInstitution/provider";
 
+const { events, eventResponse } = require("../../store/utils/events");
+const { ipcRenderer } = window.require("electron");
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     marginBottom: theme.spacing(1),
@@ -47,9 +50,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Variete() {
-  const { varietes, institution, openConfirmDialog } = useContext(
-    GlobalContext
-  );
+  useEffect(() => {
+    getAllVariete();
+
+    return () => {
+      ipcRenderer.removeAllListeners([
+        eventResponse.variete.gotAll,
+        events.variete.getAll,
+      ]);
+    };
+  }, []);
+
+  const {
+    varietes,
+    institution,
+    openConfirmDialog,
+    getAllVariete,
+  } = useContext(GlobalContext);
 
   const columns = [
     { type: "string", field: "id", headerName: "idVariete", hide: true },
@@ -95,7 +112,6 @@ export default function Variete() {
       headerName: "Action",
       width: 120,
       sortable: false,
-      
 
       renderCell: (params) => (
         <Tooltip

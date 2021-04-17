@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useContext, useReducer } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -10,19 +10,16 @@ import {
   Button,
   Grid,
   IconButton,
-  InputAdornment,
   TextField,
   Typography,
 } from "@material-ui/core";
 import DataTable from "../common/DataTable";
 import { GlobalContext } from "../../store/GlobalProvider";
 import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
 import ConfirmDialog from "../common/ConfirmDialog";
 import { MagasinContext } from "../../store/magasin/provider";
 
-import { events, eventResponse } from "../../store/utils/events";
-const { ipcRenderer } = window.require("electron");
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -90,13 +87,23 @@ export default function Magasin() {
       renderCell: (params) => (
         <IconButton
           onClick={() => {
+            const removeIdAndAssociations = (idName, obj) => {
+              let result = {};
+              for (let [key, value] of Object.entries(obj)) {
+                if (key !== idName && typeof value !== "object") {
+                  result[key] = value;
+                }
+              }
+              return result;
+            };
             openConfirmDialog({
               title: "Suppression",
               content: `Souhaitez vous réellement supprimer le magasin ${
-                params.getValue("Magasin").nomMagasin
+                params.getValue("nomMagasin")
               } ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`,
-              data: params.getValue("idMagasin"),
+              data: removeIdAndAssociations("id", params.row),
             });
+            // console.log(removeIdAndAssociations("id", params.row))
           }}
         >
           <DeleteIcon />
@@ -270,7 +277,7 @@ export default function Magasin() {
                   {localisations
                     .map((l) => l.region.toLowerCase())
                     .map((r, i, s) => {
-                      if (s.indexOf(r) === i)
+                      if (r && s.indexOf(r) === i)
                         return (
                           <MenuItem key={r} value={r}>  
                             {r}
@@ -300,7 +307,7 @@ export default function Magasin() {
                         return l.departement;
                     })
                     .map((d, i, s) => {
-                      if (s.indexOf(d) === i)
+                      if (d && s.indexOf(d) === i)
                         return (
                           <MenuItem key={d} value={d}>
                             {d}
@@ -330,7 +337,7 @@ export default function Magasin() {
                         return l.commune;
                     })
                     .map((c, i, s) => {
-                      if (s.indexOf(c) === i)
+                      if (c && s.indexOf(c) === i)
                         return (
                           <MenuItem key={c} value={c}>
                             {c}

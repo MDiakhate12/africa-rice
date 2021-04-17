@@ -1,6 +1,12 @@
 import * as React from "react";
 import { useState } from "react";
-import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import ReactMapGL, {
+  FullscreenControl,
+  GeolocateControl,
+  Marker,
+  NavigationControl,
+  Popup,
+} from "react-map-gl";
 import * as senegal from "./sn.json";
 import PinDropIcon from "@material-ui/icons/PinDrop";
 
@@ -13,11 +19,11 @@ const { events, eventResponse } = require("../../store/utils/events");
 
 export default function Map2() {
   const [viewport, setViewport] = useState({
-    width: "100vw",
-    height: "100vh",
+    width: "80vw",
+    height: "80vh",
     latitude: 14.4750607,
     longitude: -14.4529612,
-    zoom: 7,
+    zoom: 6,
   });
 
   const [productionsByVariete, setProductionsByVariete] = useState([]);
@@ -34,6 +40,8 @@ export default function Map2() {
     getProductionsSumByVarietes();
   }, []);
 
+  const [selectedRegion, setSelectedRegion] = useState();
+
   return (
     <ReactMapGL
       {...viewport}
@@ -44,46 +52,72 @@ export default function Map2() {
       // mapStyle="mapbox://styles/lilcheikh/cknjmc4st1awe18mmh54cr29r" // Navigation
       mapStyle="mapbox://styles/lilcheikh/cknjmckc20jsl17npo19qnk83" // Satellite
     >
-      {productionsByVariete.map((production) => {
+      {/* {productionsByVariete.map((production) => {
         let region = production.Localisation.region;
 
-        let index = senegal.cities
-          .map((location) => location.city.toLowerCase())
-          .indexOf(region.toLowerCase());
+        let city = senegal.cities.find((c) => c.city.toLowerCase() === region);
 
-        if (index > -1) {
-          console.log(index);
-          console.log(parseFloat(senegal.cities[index].lat));
-          console.log(parseFloat(senegal.cities[index].lng));
+        if (city) {
           return (
             <>
               <Marker
-                key={production.VarieteInstitution.varieteId}
-                latitude={parseFloat(senegal.cities[index].lat)}
-                longitude={parseFloat(senegal.cities[index].lng)}
+                key={production.idProduction}
+                latitude={parseFloat(city.lat)}
+                longitude={parseFloat(city.lng)}
               >
                 <IconButton>
-                  <PinDropIcon fontSize="large" color="secondary" />
+                  <PinDropIcon
+                    fontSize="large"
+                    color="secondary"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedRegion(city)
+                    }}
+                  />
                 </IconButton>
               </Marker>
-              <Popup
-                key={production.VarieteInstitution.varieteId}
-                latitude={parseFloat(senegal.cities[index].lat)}
-                longitude={parseFloat(senegal.cities[index].lng)}
-              >
-                <div>
-                  {`Département: ${production.Localisation.departement}`}
-                </div>
-                <div>{`Localité: ${production.Localisation.village}`}</div>
-                <div>{`Varété: ${production.VarieteInstitution.Variete.nomVariete}`}</div>
-                <div>{`Total produit: ${production.totalQuantiteProduite} KG`}</div>
-              </Popup>
             </>
           );
         } else {
           return null;
         }
       })}
+
+      {selectedRegion && (
+        <Popup
+          key={production.VarieteInstitution.varieteId}
+          latitude={parseFloat(senegal.cities[index].lat)}
+          longitude={parseFloat(senegal.cities[index].lng)}
+        >
+          <div>{`Région: ${production.Localisation.region}`}</div>
+          <div>{`Département: ${production.Localisation.departement}`}</div>
+          <div>{`Localité: ${production.Localisation.village}`}</div>
+          <div>{`Varété: ${production.VarieteInstitution.Variete.nomVariete}`}</div>
+          <div>{`Total produit: ${production.totalQuantiteProduite} KG`}</div>
+        </Popup>
+      )} */}
+
+      <NavigationControl
+        style={{
+          top: 10,
+          left: 10,
+        }}
+      />
+      <GeolocateControl
+        style={{
+          bottom: 10,
+          right: 10,
+        }}
+        positionOptions={{ enableHighAccuracy: true }}
+        trackUserLocation={true}
+        auto
+      />
+      <FullscreenControl
+        style={{
+          top: 10,
+          right: 10,
+        }}
+      />
     </ReactMapGL>
   );
 }

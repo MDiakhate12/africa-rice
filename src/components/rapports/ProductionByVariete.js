@@ -63,24 +63,24 @@ export default function ProductionByVariete({ display}) {
       text: "Quantité produite par variété",
       // position: "bottom",
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            // count: 5,
-            stepSize: 1000,
-          },
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //         // count: 5,
+    //         stepSize: 1000,
+    //       },
+    //     },
+    //   ],
+    // },
   };
 
 //   return <Bar data={dataByVariete} options={optionsVariete} />;
 // }
 
 return display === "chart" ? (
-  <Bar data={dataByVariete} options={optionsVariete} />
+  <Pie data={dataByVariete} options={optionsVariete} />
 ) : (
   <>
     <DataTable

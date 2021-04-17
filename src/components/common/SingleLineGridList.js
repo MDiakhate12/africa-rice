@@ -59,17 +59,17 @@ export default function SingleLineGridList({ data }) {
               // subtitle={<span></span>}
               titlePosition="top"
               className={classes.tileBar}
-              actionIcon={
-                <Tooltip title={`Supprimer ${tile.title}`}>
-                  <IconButton
-                    aria-label={`info about ${tile.title}`}
-                    className={classes.icon}
-                    onClick={tile.onClick}
-                  >
-                    <DeleteIcon color="secondary" />
-                  </IconButton>
-                </Tooltip>
-              }
+              // actionIcon={
+              //   <Tooltip title={`Supprimer ${tile.title}`}>
+              //     <IconButton
+              //       aria-label={`info about ${tile.title}`}
+              //       className={classes.icon}
+              //       onClick={tile.onClick}
+              //     >
+              //       <DeleteIcon color="secondary" />
+              //     </IconButton>
+              //   </Tooltip>
+              // }
             />
           </GridListTile>
         ))}

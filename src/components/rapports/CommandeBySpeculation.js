@@ -49,16 +49,16 @@ export default function CommandesBySpeculation({ display }) {
       text: "Quantité commandée par spéculation",
       // position: "bottom",
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            stepSize: 200,
-          },
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //         stepSize: 200,
+    //       },
+    //     },
+    //   ],
+    // },
   };
 
   const dataBySpeculation = {
@@ -87,7 +87,7 @@ export default function CommandesBySpeculation({ display }) {
   }));
 
   return display === "chart" ? (
-    <Bar data={dataBySpeculation} options={optionsSpeculation} />
+    <Pie data={dataBySpeculation} options={optionsSpeculation} />
   ) : (
     <>
       <DataTable height={350} pageSize={4} columns={columns} rows={rows} />

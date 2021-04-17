@@ -58,7 +58,7 @@ export default function SpeculationInstitutionProvider({ children }) {
     ipcRenderer.once(eventResponse.speculationInstitution.deleted, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
-      dispatch({ type: actions.ON_DELETE, payload: data });
+      dispatch({ type: actions.ON_DELETE, payload: payload });
     });
   };
 

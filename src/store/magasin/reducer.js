@@ -21,8 +21,9 @@ export const reducer = (state, action) => {
         return value;
       });
 
-    case actions.ON_DELETE:
-      return state.filter((value) => value === action.payload);
+      case actions.ON_DELETE:
+        return state.filter((value) => value.idMagasin !== action.payload.idMagasin);
+  
 
     default:
       break;
