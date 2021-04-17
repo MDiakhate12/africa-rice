@@ -1,26 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { Pie, Line, Bar } from "react-chartjs-2";
+import DataTable from "../common/DataTable";
+import { Colors } from "./Colors";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
 
-const colors = [
-  "rgba(75, 192, 192, 0.2)",
-  "rgba(255, 159, 64, 0.2)",
-  "rgba(190, 255, 51, 0.2)",
-  "rgba(255, 51, 51, 0.2)",
-  "rgba(26, 173, 0, 0.2)",
-  "rgba(255, 99, 132, 0.2)",
-  "rgba(54, 162, 235, 0.2)",
-  "rgba(231, 51, 255, 0.2)",
-  "rgba(148, 0, 0, 0.5)",
-  "rgba(194, 204, 0, 0.2)",
-  "rgba(255, 244, 122, 0.2)",
-  "rgba(153, 102, 255, 0.2)",
-  "rgba(3, 179, 0, 0.2)",
-  "rgba(102, 26, 168, 0.2)",
+const getNomSpeculation = (params) =>
+  params.getValue("VarieteInstitution").SpeculationInstitution.Speculation
+    .nomSpeculation;
+
+const columns = [
+  { type: "string", field: "id", headerName: "idProduction", hide: true },
+  {
+    type: "string",
+    field: "production",
+    headerName: "Production",
+    width: 160,
+    renderCell: getNomSpeculation,
+    valueGetter: getNomSpeculation,
+  },
+  // { type: "string", field: "totalPrix", width: 130, headerName: "Prix total" },
+  // {
+  //   type: "string",
+  //   field: "totalQuantiteDisponible",
+  //   width: 130,
+  //   headerName: "Quantité disponible totale",
+  // },
+  {
+    type: "number",
+    field: "totalQuantiteProduite",
+    width: 150,
+    headerName: "Total produit",
+  },
+  // {
+  //   type: "string",
+  //   field: "totalStock",
+  //   width: 130,
+  //   headerName: "Stock de sécurité total",
+  // },
 ];
-export default function ProductionBySpeculation() {
+
+export default function ProductionBySpeculation({ display }) {
   const [productionsBySpeculation, setProductionsBySpeculation] = useState([]);
 
   const getProductionsSumBySpeculation = () => {
@@ -48,7 +69,7 @@ export default function ProductionBySpeculation() {
         data: productionsBySpeculation.map(
           (production) => production.totalQuantiteProduite
         ),
-        backgroundColor: colors.slice(0, productionsBySpeculation.length),
+        backgroundColor: Colors.slice(0, productionsBySpeculation.length),
       },
     ],
   };
@@ -71,5 +92,24 @@ export default function ProductionBySpeculation() {
     },
   };
 
-  return <Bar data={dataBySpeculations} options={optionsSpeculation} />;
+  const rows = productionsBySpeculation.map((v) => ({
+    id: v.VarieteInstitution.SpeculationInstitution.speculationId,
+    ...v,
+  }));
+
+  return display === "chart" ? (
+    <Bar data={dataBySpeculations} options={optionsSpeculation} />
+  ) : (
+    <>
+      <DataTable
+        height={350}
+        pageSize={4}
+        columns={columns}
+        rows={productionsBySpeculation.map((v) => ({
+          id: v.VarieteInstitution.SpeculationInstitution.speculationId,
+          ...v,
+        }))}
+      />
+    </>
+  );
 }

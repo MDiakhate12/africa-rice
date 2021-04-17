@@ -1,26 +1,40 @@
 import React, { useEffect, useState } from "react";
+import { Colors } from "./Colors";
 import { Pie, Line, Bar } from "react-chartjs-2";
+import DataTable from "../common/DataTable";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
-const colors = [
-  "rgba(255, 99, 132, 0.2)",
-  "rgba(54, 162, 235, 0.2)",
-  "rgba(148, 0, 0, 0.5)",
-  "rgba(75, 192, 192, 0.2)",
-  "rgba(26, 173, 0, 0.2)",
-  "rgba(194, 204, 0, 0.2)",
-  "rgba(255, 244, 122, 0.2)",
-  "rgba(3, 179, 0, 0.2)",
-  "rgba(102, 26, 168, 0.2)",
-  "rgba(153, 102, 255, 0.2)",
-  "rgba(255, 159, 64, 0.2)",
-  "rgba(231, 51, 255, 0.2)",
-  "rgba(190, 255, 51, 0.2)",
-  "rgba(255, 51, 51, 0.2)",
+
+const getNomSpeculation = (params) =>
+  params.getValue("Production").VarieteInstitution.SpeculationInstitution
+    .Speculation.nomSpeculation;
+
+const columns = [
+  { type: "string", field: "id", headerName: "idCommande", hide: true },
+  {
+    type: "string",
+    field: "commande",
+    headerName: "Commande",
+    width: 170,
+    renderCell: getNomSpeculation,
+    valueGetter: getNomSpeculation,
+  },
+  {
+    type: "number",
+    field: "totalQuantiteCommandee",
+    headerName: "Total commandé",
+    width: 150,
+  },
+  {
+    type: "number",
+    field: "totalQuantiteEnleve",
+    headerName: "Total livré",
+    width: 150,
+  },
 ];
 
-export default function CommandeLivraisonBySpeculation() {
+export default function CommandeLivraisonBySpeculation({ display }) {
   const [commandesBySpeculation, setCommandesBySpeculation] = useState([]);
   const [
     commandeBySpeculationByState,
@@ -83,7 +97,20 @@ export default function CommandeLivraisonBySpeculation() {
           .Speculation.nomSpeculation
     );
 
+  const commandesEnlevees = commandeBySpeculationByState.filter(
+    (commande) => commande.etatId === 5
+  );
+
   console.log(commandeBySpeculationByStateLabels);
+
+  const totalEnleve = labels.map((label) => {
+    let index = commandeBySpeculationByStateLabels.indexOf(label);
+    if (index > -1) {
+      return commandesEnlevees[index].totalQuantiteCommandee;
+    }
+    return 0;
+  });
+
   const dataBySpeculationByState = {
     labels,
     datasets: [
@@ -92,27 +119,37 @@ export default function CommandeLivraisonBySpeculation() {
         data: commandesBySpeculation.map(
           (commande) => commande.totalQuantiteCommandee
         ),
-        backgroundColor: colors.slice(3, commandesBySpeculation.length + 3),
+        // backgroundColor: colors.slice(3, commandesBySpeculation.length + 3),
+        backgroundColor: Colors[4],
       },
       {
         label: "Enlèvement",
-        data: labels.map((label) => {
-          if (commandeBySpeculationByStateLabels.includes(label)) {
-            return commandeBySpeculationByState.find(
-              (commande) =>
-                commande.Production.VarieteInstitution.SpeculationInstitution
-                  .Speculation.nomSpeculation === label
-            ).totalQuantiteCommandee;
-          }
-          return 0;
-        }),
+        data: totalEnleve,
         // commande.etatId === 5 ? commande.totalQuantiteCommandee : 0
-        backgroundColor: colors.slice(5, commandesBySpeculation.length + 5),
+        backgroundColor: Colors[5],
       },
     ],
   };
 
-  return (
+  //   return (
+  //     <Bar data={dataBySpeculationByState} options={optionsSpeculationByState} />
+  //   ); //
+  // }
+
+
+  const rows = commandesBySpeculation.map((v, i) => {
+    return {
+      id: `${v.Production.VarieteInstitution.SpeculationInstitution.speculationId}${v.etatId}`,
+      ...v,
+      totalQuantiteEnleve: totalEnleve[i],
+    };
+  });
+
+  return display === "chart" ? (
     <Bar data={dataBySpeculationByState} options={optionsSpeculationByState} />
-  ); //
+  ) : (
+    <>
+      <DataTable height={350} pageSize={4} columns={columns} rows={rows} />
+    </>
+  );
 }

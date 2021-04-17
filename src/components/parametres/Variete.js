@@ -59,6 +59,7 @@ export default function Variete() {
       headerName: "Variété",
       width: 170,
       renderCell: (params) => params.getValue("Variete").nomVariete,
+      valueGetter: (params) => params.getValue("Variete").nomVariete,
     },
     {
       type: "string",
@@ -67,6 +68,8 @@ export default function Variete() {
       width: 130,
       renderCell: (params) =>
         params.getValue("Variete").Speculation.nomSpeculation,
+      valueGetter: (params) =>
+        params.getValue("Variete").Speculation.nomSpeculation,
     },
     {
       type: "number",
@@ -74,13 +77,16 @@ export default function Variete() {
       headerName: "Cycle",
       width: 100,
       renderCell: (params) => params.getValue("Variete").longueurCycle,
+      valueGetter: (params) => params.getValue("Variete").longueurCycle,
     },
     {
       type: "string",
       field: "zone",
       headerName: "Zone",
-      width: 100,
+      width: 180,
       renderCell: (params) =>
+        params.getValue("Variete").ZoneAgroEcologique.nomZone,
+      valueGetter: (params) =>
         params.getValue("Variete").ZoneAgroEcologique.nomZone,
     },
     {
@@ -88,6 +94,8 @@ export default function Variete() {
       field: "delete",
       headerName: "Action",
       width: 120,
+      sortable: false,
+      
 
       renderCell: (params) => (
         <Tooltip
@@ -145,7 +153,7 @@ export default function Variete() {
                   removeIdAndAssociations("id", row)
                 );
               } else {
-                title = "Suppression"
+                title = "Suppression";
                 data = removeIdAndAssociations("id", params.row);
 
                 content = `Souhaitez vous réellement supprimer la variété ${params?.row?.Variete?.nomVariete} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`;
@@ -275,9 +283,7 @@ export default function Variete() {
         <Grid>
           <Grid item className={classes.gridContainer}>
             <FormControl variant="filled" className={classes.formControl}>
-              <InputLabel id="speculation-label">
-                Spéculation
-              </InputLabel>
+              <InputLabel id="speculation-label">Spéculation</InputLabel>
               <Select
                 labelId="speculation-label"
                 id="speculation-select"
@@ -295,9 +301,7 @@ export default function Variete() {
           </Grid>
           <Grid item className={classes.gridContainer}>
             <FormControl variant="filled" className={classes.formControl}>
-              <InputLabel id="variete-label">
-                Variétés
-              </InputLabel>
+              <InputLabel id="variete-label">Variétés</InputLabel>
               <Select
                 labelId="variete-label"
                 id="variete-select"

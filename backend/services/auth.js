@@ -19,7 +19,7 @@ const registerInstitution = async (data) => {
     return response
   }
 
-  if (data.password != data.password2) {
+  if (data.password != data.confirmPassword) {
     response.status = 'error'
     response.message =
       'Le mot de passe et la confirmation ne sont pas conformes'
