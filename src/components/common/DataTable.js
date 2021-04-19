@@ -3,8 +3,8 @@ import {
   DataGrid,
   GridToolbarContainer,
   GridToolbarExport,
-  GridToolbar,
   GridColumnsToolbarButton,
+  GridFilterToolbarButton,
 } from "@material-ui/data-grid";
 import { makeStyles } from "@material-ui/core";
 
@@ -21,6 +21,7 @@ function CustomToolbar() {
     <GridToolbarContainer>
       <GridColumnsToolbarButton />
       <GridToolbarExport />
+      <GridFilterToolbarButton />
     </GridToolbarContainer>
   );
 }

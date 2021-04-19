@@ -58,7 +58,7 @@ export default function MagasinProvider({ children }) {
     ipcRenderer.once(eventResponse.magasin.deleted, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
-      dispatch({ type: actions.ON_DELETE, payload: data });
+      dispatch({ type: actions.ON_DELETE, payload: payload });
     });
   };
 

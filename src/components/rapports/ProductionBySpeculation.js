@@ -79,17 +79,17 @@ export default function ProductionBySpeculation({ display }) {
       text: "Quantité produite par spéculation",
       // position: "bottom",
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            // count: 5,
-            stepSize: 2000,
-          },
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //         // count: 5,
+    //         stepSize: 2000,
+    //       },
+    //     },
+    //   ],
+    // },
   };
 
   const rows = productionsBySpeculation.map((v) => ({
@@ -98,7 +98,7 @@ export default function ProductionBySpeculation({ display }) {
   }));
 
   return display === "chart" ? (
-    <Bar data={dataBySpeculations} options={optionsSpeculation} />
+    <Pie data={dataBySpeculations} options={optionsSpeculation} />
   ) : (
     <>
       <DataTable

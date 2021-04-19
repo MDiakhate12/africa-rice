@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -14,6 +14,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import HomeIcon from "@material-ui/icons/Home";
 import PrintIcon from "@material-ui/icons/Print";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import StoreIcon from "@material-ui/icons/Store";
@@ -25,14 +26,17 @@ import Parametres from "../parametres/Parametres";
 import Rapports from "../rapports/Rapports";
 import Impressions from "../impressions/Impressions";
 import {
+  Box,
   Button,
   ListItemIcon,
   ListItemText,
   MenuItem,
   MenuList,
+  Tooltip,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { LocationOnSharp } from "@material-ui/icons";
+import Home from "../home/Home";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -109,7 +113,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   selected: {
-    backgroundColor: "rgba(0, 150, 136, 0.3)"
+    backgroundColor: "rgba(0, 150, 136, 0.3)",
   },
 }));
 
@@ -128,6 +132,12 @@ export default function MiniDrawer() {
   };
 
   const items = [
+    {
+      isActive: false,
+      to: "/home",
+      icon: <HomeIcon color="primary" />,
+      text: "Accueil",
+    },
     {
       isActive: false,
       to: "/productions",
@@ -161,13 +171,13 @@ export default function MiniDrawer() {
   ];
 
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [title, setTitle] = useState(items[0].text);
+  const [currentItem, setCurrentItem] = useState(items[0]);
 
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
     console.log(location);
     console.log(items[index].text);
-    setTitle(items[index].text);
+    setCurrentItem(items[index]);
   };
 
   return (
@@ -195,7 +205,7 @@ export default function MiniDrawer() {
             Gestion des semences
           </Typography>
 
-          <Typography variant="button">{title}</Typography>
+          <Typography variant="button">{currentItem.text}</Typography>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -242,11 +252,13 @@ export default function MiniDrawer() {
                   selected: classes.selected,
                 }}
               >
+                {/* <Tooltip title={text}> */}
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText
                   primary={text}
                   className={classes.itemText}
                 />{" "}
+                {/* </Tooltip> */}
               </MenuItem>
             </Link>
           ))}
@@ -255,7 +267,8 @@ export default function MiniDrawer() {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Switch>
-          <Route path="/" exact component={Productions} />
+          <Route path="/" exact component={Home} />
+          <Route path="/home" component={Home} />
           <Route path="/productions" component={Productions} />
           <Route path="/commandes" component={Commandes} />
           <Route path="/parametres" component={Parametres} />
@@ -263,6 +276,23 @@ export default function MiniDrawer() {
           <Route path="/impressions" component={Impressions} />
         </Switch>
       </main>
+      <footer
+        style={{
+          backgroundColor: "inherit",
+          color: "gray",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          position="relative"
+        >
+          <Typography variant="body2">
+            2021 &copy; Africa Rice | Mouhammad DIAKHATE & Mor KAIRE
+          </Typography>
+        </Box>
+      </footer>
     </div>
   );
 }

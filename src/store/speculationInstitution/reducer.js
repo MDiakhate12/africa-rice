@@ -8,21 +8,31 @@ export const reducer = (state, action) => {
       return [action.payload, ...state];
 
     case actions.ON_GET_ONE:
-      return state.find((value) => value.idSpeculationInstitution === action.payload);
+      return state.find(
+        (value) => value.idSpeculationInstitution === action.payload
+      );
 
     case actions.ON_GET_ALL:
       return action.payload;
 
     case actions.ON_UPDATE:
       return state.map((value) => {
-        if (value.idSpeculationInstitution === action.payload.idSpeculationInstitution) {
-          value = { idSpeculationInstitution: value.idSpeculationInstitution, ...action.payload };
+        if (
+          value.idSpeculationInstitution ===
+          action.payload.idSpeculationInstitution
+        ) {
+          value = {
+            idSpeculationInstitution: value.idSpeculationInstitution,
+            ...action.payload,
+          };
         }
         return value;
       });
 
     case actions.ON_DELETE:
-      return state.filter((value) => value === action.payload);
+      return state.filter(
+        (value) => value.idSpeculationInstitution !== action.payload.idSpeculationInstitution
+      );
 
     default:
       break;

@@ -62,16 +62,16 @@ export default function CommandeByVariete({ display }) {
       text: "Quantité commandée par variété",
       // position: "bottom",
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            stepSize: 200,
-          },
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         beginAtZero: true,
+    //         stepSize: 200,
+    //       },
+    //     },
+    //   ],
+    // },
   };
 
 //   return <Bar data={dataByVariete} options={optionsVariete} />;
@@ -83,7 +83,7 @@ const rows = commandesByVariete.map((v) => ({
 }));
 
 return display === "chart" ? (
-  <Bar data={dataByVariete} options={optionsVariete} />
+  <Pie data={dataByVariete} options={optionsVariete} />
 ) : (
   <>
     <DataTable height={350} pageSize={4} columns={columns} rows={rows} />

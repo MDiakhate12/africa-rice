@@ -176,7 +176,7 @@ function CommandeFormDialog({ handleClose }) {
                   onChange={handleChange}
                 >
                   {clients.map((client) => (
-                    <MenuItem key={client.idCommande} value={client.idClient}>
+                    <MenuItem key={client.idClient} value={client.idClient}>
                       {client.nomCompletStructure || client.prenom}
                     </MenuItem>
                   ))}

@@ -62,6 +62,7 @@ const columns = [
     headerName: "Quantite Produite",
     width: 160,
     renderCell: (params) => `${params.getValue("quantiteProduite")} KG`,
+    valueGetter: (params) => params.getValue("quantiteProduite"),
   },
   {
     type: "number",
@@ -69,6 +70,7 @@ const columns = [
     headerName: "Prix Unitaire",
     width: 100,
     renderCell: (params) => `${params.getValue("prixUnitaire")} FCFA`,
+    valueGetter: (params) => params.getValue("prixUnitaire"),
   },
   {
     type: "number",
@@ -76,6 +78,7 @@ const columns = [
     headerName: "Quantite Disponible",
     width: 100,
     renderCell: (params) => `${params.getValue("quantiteDisponible")} KG`,
+    valueGetter: (params) => params.getValue("quantiteDisponible"),
   },
   {
     type: "number",
@@ -83,6 +86,7 @@ const columns = [
     headerName: "Stock De Securite",
     width: 100,
     renderCell: (params) => `${params.getValue("stockDeSecurite")} KG`,
+    valueGetter: (params) => params.getValue("stockDeSecurite"),
   },
   {
     type: "date",

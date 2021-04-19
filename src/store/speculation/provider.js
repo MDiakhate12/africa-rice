@@ -55,16 +55,6 @@ export default function Provider() {
       console.log("DATA SPECULATION:", data);
     });
   };
-  useEffect(() => {
-    getAll();
-
-    return () => {
-      ipcRenderer.removeAllListeners([
-        eventResponse.speculation.gotAll,
-        events.speculation.getAll,
-      ]);
-    };
-  }, []);
 
   return [state, add, getOne, getAll, update, deleteById];
 }

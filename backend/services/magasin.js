@@ -29,11 +29,12 @@ const updateMagasin = async (id, data) => {
   return updated.toJSON();
 };
 
+
 const deleteMagasin = async (id) => {
-  const deleted = service.deleteByPk(Magasin, id);
-  console.log(deleted.toJSON());
-  return deleted.toJSON();
-};
+  const deleted = await service.deleteByPk(Magasin, id)
+  console.log(deleted)
+  return deleted
+}
 
 module.exports = {
   createMagasin,

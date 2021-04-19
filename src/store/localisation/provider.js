@@ -58,16 +58,6 @@ export default function Provider() {
       dispatch({ type: actions.ON_DELETE, payload: data });
     });
   };
-  useEffect(() => {
-    getAll();
-
-    return () => {
-      ipcRenderer.removeAllListeners([
-        eventResponse.localisation.gotAll,
-        events.localisation.getAll,
-      ]);
-    };
-  }, []);
 
   return [state, add, getOne, getAll, update, deleteById];
 }
