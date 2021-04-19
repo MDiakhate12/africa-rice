@@ -14,55 +14,55 @@ const path = window.require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
   },
   margin: {
     marginBottom: theme.spacing(1),
   },
   addButton: {
-    width: "100%",
+    width: '100%',
   },
   gridContainer: {
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   fab: {
-    position: "sticky",
+    position: 'sticky',
   },
   formDialog: {
-    maxWidth: "30%",
+    maxWidth: '30%',
   },
-}));
+}))
 
 export default function Institution() {
-  const classes = useStyles();
+  const classes = useStyles()
 
   const { institution, updateInstitution } = useContext(GlobalContext);
 
-  const [formState, setFormState] = useState({});
+  const [formState, setFormState] = useState({})
 
   useEffect(() => {
-    console.log("INSTITUTION", institution);
-    setFormState(institution);
-  }, []);
+    console.log('INSTITUTION', institution)
+    setFormState(institution)
+  }, [])
 
   const handleChange = (e) => {
-    console.log(e.target.value);
-    let { name, value } = e.target;
+    console.log(e.target.value)
+    let { name, value } = e.target
     setFormState((state) => {
       return {
         ...state,
         [name]: value,
-      };
-    });
-  };
+      }
+    })
+  }
 
   const handleSubmit = (e) => {
-    console.log(formState);
-    console.log(institution);
-    updateInstitution({ id: formState.idInstitution, data: formState });
-  };
+    console.log(formState)
+    console.log(institution)
+    updateInstitution({ id: formState.idInstitution, data: formState })
+  }
 
   const showDialog = (e) => {
     ipcRenderer.send(events.imageDialog.open);
@@ -91,7 +91,7 @@ export default function Institution() {
     });
   };
 
-  const onSubmitChecklist = (e) => {};
+  const onSubmitChecklist = (e) => {}
 
   // const handleContactFormDialogClose = (res, data) => {
   //   if (res === "yes") {
@@ -125,7 +125,7 @@ export default function Institution() {
                   fullWidth
                   label="Nom complet"
                   name="nomComplet"
-                  value={formState?.nomComplet || ""}
+                  value={formState?.nomComplet || ''}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -136,7 +136,7 @@ export default function Institution() {
                   fullWidth
                   label="Sigle"
                   name="sigle"
-                  value={formState?.sigle || ""}
+                  value={formState?.sigle || ''}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -147,7 +147,7 @@ export default function Institution() {
                   fullWidth
                   label="Addresse"
                   name="addresse"
-                  value={formState?.addresse || ""}
+                  value={formState?.addresse || ''}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -159,7 +159,7 @@ export default function Institution() {
                   fullWidth
                   label="Téléphone"
                   name="telephone"
-                  value={formState?.telephone || ""}
+                  value={formState?.telephone || ''}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -171,7 +171,7 @@ export default function Institution() {
                   fullWidth
                   label="Email"
                   name="email"
-                  value={formState?.email || ""}
+                  value={formState?.email || ''}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -229,5 +229,5 @@ export default function Institution() {
         ]}
       /> */}
     </div>
-  );
+  )
 }
