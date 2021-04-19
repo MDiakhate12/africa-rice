@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -59,7 +59,7 @@ const { events, eventResponse } = require("../../store/utils/events");
 
 export default function ProductionFormDialog({ handleClose }) {
   const {
-    productionFormDialog: { open },
+    productionFormDialog: { open, title, data },
     closeProductionFormDialog,
   } = useContext(GlobalContext);
 
@@ -85,18 +85,19 @@ export default function ProductionFormDialog({ handleClose }) {
     });
   };
 
-  const getVarietesInstitution = () => {
+  const getVarietesInstitution = useCallback(() => {
     ipcRenderer.send(events.varieteInstitution.getAll, { institutionId: 1 });
-    ipcRenderer.on(eventResponse.varieteInstitution.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.varieteInstitution.gotAll, (event, data) => {
       setVarietes(data);
       console.log(data);
     });
-  };
+  }, []);
+
   const getSpeculationsInstitution = () => {
     ipcRenderer.send(events.speculationInstitution.getAll, {
       institutionId: 1,
     });
-    ipcRenderer.on(
+    ipcRenderer.once(
       eventResponse.speculationInstitution.gotAll,
       (event, data) => {
         setSpeculation(data);
@@ -104,21 +105,24 @@ export default function ProductionFormDialog({ handleClose }) {
       }
     );
   };
+
   const getMagasins = () => {
     ipcRenderer.send(events.magasin.getAll);
-    ipcRenderer.on(eventResponse.magasin.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.magasin.gotAll, (event, data) => {
       setMagasin(data);
     });
   };
-  const getLocalisations = () => {
+
+  const getLocalisations = useCallback(() => {
     ipcRenderer.send(events.localisation.getAll);
-    ipcRenderer.on(eventResponse.localisation.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.localisation.gotAll, (event, data) => {
       setLocalisation(data);
     });
-  };
+  }, []);
+
   const getNiveau = () => {
     ipcRenderer.send(events.niveauInstitution.getAll, { institutionId: 1 });
-    ipcRenderer.on(eventResponse.niveauInstitution.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.niveauInstitution.gotAll, (event, data) => {
       setNiveau(data);
     });
   };
@@ -129,6 +133,27 @@ export default function ProductionFormDialog({ handleClose }) {
     getMagasins();
     getLocalisations();
     getNiveau();
+
+    console.log(data);
+
+    if (data) {
+      console.log(data);
+      setFormData({
+        speculationInstitutionId:
+          data.VarieteInstitution.speculationInstitutionId,
+        varieteInstitutionId: data.varieteInstitutionId,
+        quantiteProduite: data.quantiteProduite,
+        quantiteDisponible: data.quantiteDisponible,
+        prixUnitaire: data.prixUnitaire,
+        stockDeSecurite: data.stockDeSecurite,
+        region: data.Localisation.region,
+        departement: data.Localisation.departement,
+        commune: data.Localisation.commune,
+        localisationId: data.localisationId,
+        magasinId: data.magasinId,
+        niveauInstitutionId: data.niveauInstitutionId,
+      });
+    }
   }, []);
 
   return (
@@ -140,18 +165,12 @@ export default function ProductionFormDialog({ handleClose }) {
         maxWidth="xs"
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Nouvelle Production</DialogTitle>
+        <DialogTitle id="form-dialog-title">
+          {" "}
+          <Typography variant="button">{title}</Typography>
+        </DialogTitle>
         <DialogContent>
           <div className={classes.modal}>
-            <Box
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Typography variant="button">Ajouter Une Production</Typography>
-            </Box>
-            {/* <Grid container spacing={1} direction="column" alignItems="center"> */}
             <Grid container spacing={1}>
               <Grid item sm={12}>
                 <FormControl variant="filled" fullWidth>
@@ -162,7 +181,11 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.speculationInstitutionId}
+                    value={
+                      formData.speculationInstitutionId ||
+                      data?.VarieteInstitution.speculationInstitutionId ||
+                      ""
+                    }
                     name="speculationInstitutionId"
                     onChange={handleChange}
                   >
@@ -186,7 +209,11 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.varieteInstitutionId}
+                    value={
+                      formData.varieteInstitutionId ||
+                      data?.varieteInstitutionId ||
+                      ""
+                    }
                     name="varieteInstitutionId"
                     onChange={handleChange}
                   >
@@ -194,7 +221,10 @@ export default function ProductionFormDialog({ handleClose }) {
                       .filter(
                         (variete) =>
                           variete.speculationInstitutionId ===
-                          formData.speculationInstitutionId
+                            formData.speculationInstitutionId ||
+                          (data &&
+                            variete.speculationInstitutionId ===
+                              data.VarieteInstitution.speculationInstitutionId)
                       )
                       .map((variete) => (
                         <MenuItem
@@ -214,7 +244,9 @@ export default function ProductionFormDialog({ handleClose }) {
                   margin="dense"
                   id="state.filstockDeSecurite-star || ''t -adornment"
                   name="quantiteProduite"
-                  value={formData.quantiteProduite || ""}
+                  value={
+                    formData.quantiteProduite || data?.quantiteProduite || ""
+                  }
                   type="number"
                   className={classes.marginDense}
                   variant="filled"
@@ -234,7 +266,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     margin="dense"
                     id="state.filstockDeSecurite-star || ''t -adornment"
                     name="quantiteDisponible"
-                    value={formData.quantiteDisponible || ''}
+                    value={formData.quantiteDisponible || data?.quantiteDisponible || "" || ''}
                     type="number"
                     className={classes.marginDense}
                     variant="filled"
@@ -254,7 +286,7 @@ export default function ProductionFormDialog({ handleClose }) {
                   margin="dense"
                   id="state.filstockDeSecurite-star || ''t -adornment"
                   name="prixUnitaire"
-                  value={formData.prixUnitaire}
+                  value={formData.prixUnitaire || data?.prixUnitaire || ""}
                   type="number"
                   className={classes.marginDense}
                   variant="filled"
@@ -273,7 +305,9 @@ export default function ProductionFormDialog({ handleClose }) {
                   margin="dense"
                   id="state.fillongueurCycle-star || ''t -adornment"
                   name="stockDeSecurite"
-                  value={formData.stockDeSecurite}
+                  value={
+                    formData.stockDeSecurite || data?.stockDeSecurite || ""
+                  }
                   className={classes.marginDense}
                   variant="filled"
                   onChange={handleChange}
@@ -292,7 +326,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.region || ""}
+                    value={formData.region || data?.Localisation.region || ""}
                     name="region"
                     color="secondary"
                     onChange={handleChange}
@@ -317,7 +351,11 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.departement || ""}
+                    value={
+                      formData.departement ||
+                      data?.Localisation.departement ||
+                      ""
+                    }
                     name="departement"
                     color="secondary"
                     onChange={handleChange}
@@ -326,7 +364,10 @@ export default function ProductionFormDialog({ handleClose }) {
                       .map((l) => {
                         if (
                           l.region.toLowerCase() ===
-                          formData.region?.toLowerCase()
+                            formData.region?.toLowerCase() ||
+                          (data &&
+                            l.region.toLowerCase() ===
+                              data.Localisation.region?.toLowerCase())
                         )
                           return l.departement;
                         return null;
@@ -349,7 +390,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.commune || ""}
+                    value={formData.commune || data?.Localisation.commune || ""}
                     name="commune"
                     color="secondary"
                     onChange={handleChange}
@@ -358,10 +399,13 @@ export default function ProductionFormDialog({ handleClose }) {
                       .map((l) => {
                         if (
                           l?.departement?.toLowerCase() ===
-                          formData?.departement?.toLowerCase()
+                            formData?.departement?.toLowerCase() ||
+                          (data &&
+                            l?.departement?.toLowerCase() ===
+                              data.Localisation.departement.toLowerCase())
                         )
                           return l.commune;
-                        return null
+                        return null;
                       })
                       .map((c, i, s) => {
                         if (c !== null && s.indexOf(c) === i)
@@ -381,7 +425,12 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.localisationId || ""}
+                    value={
+                      formData.localisationId ||
+                      data?.localisationId ||
+                      "" ||
+                      ""
+                    }
                     name="localisationId"
                     color="secondary"
                     onChange={handleChange}
@@ -389,7 +438,10 @@ export default function ProductionFormDialog({ handleClose }) {
                     {localisations.map((l) => {
                       if (
                         l?.commune?.toLowerCase() ===
-                        formData?.commune?.toLowerCase()
+                          formData?.commune?.toLowerCase() ||
+                        (data &&
+                          l?.commune?.toLowerCase() ===
+                            data.Localisation?.commune?.toLowerCase())
                       ) {
                         return (
                           <MenuItem key={l.village} value={l.idLocalisation}>
@@ -410,7 +462,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.magasinId}
+                    value={formData.magasinId || data?.magasinId || ""}
                     name="magasinId"
                     onChange={handleChange}
                   >
@@ -434,7 +486,11 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.niveauInstitutionId}
+                    value={
+                      formData.niveauInstitutionId ||
+                      data?.niveauInstitutionId ||
+                      ""
+                    }
                     name="niveauInstitutionId"
                     onChange={handleChange}
                   >
@@ -463,6 +519,7 @@ export default function ProductionFormDialog({ handleClose }) {
                   }}
                 />
               </Grid> */}
+              {data?.dateDeProduction.toISOString()}
               <Grid item sm={12}>
                 <DatePicker
                   id="dateDeProduction"
@@ -470,7 +527,10 @@ export default function ProductionFormDialog({ handleClose }) {
                   label="Date de production"
                   disableFuture={true}
                   fullWidth={true}
-                  selectedDate={formData.dateDeProduction}
+                  selectedDate={
+                    formData?.dateDeProduction ||
+                    data?.dateDeProduction.toISOString()
+                  }
                   handleChange={handleChange}
                   format="d MMMM yyyy"
                   name="dateDeProduction"

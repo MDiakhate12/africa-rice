@@ -49,6 +49,7 @@ export default function DataTable({
           Toolbar: CustomToolbar,
           // Toolbar: GridToolbar,
         }}
+        selecte
       />
     </div>
   );

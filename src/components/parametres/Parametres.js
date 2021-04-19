@@ -12,7 +12,7 @@ import SpeculationVariete from "./SpeculationVariete";
 import MagasinProvider from "../../store/magasin/provider";
 import VarieteInstitutionProvider from "../../store/varieteInstitution/provider";
 import SpeculationInstitutionProvider from "../../store/speculationInstitution/provider";
-
+import { useLocation } from "react-router";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -48,12 +48,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Parametres() {
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+
+  const tab = parseInt(useQuery().get("tab"));
+
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  React.useEffect(() => {
+    tab && setValue(tab);
+  }, [tab]);
 
   return (
     <div className={classes.root}>

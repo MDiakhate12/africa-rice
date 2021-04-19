@@ -77,7 +77,7 @@ function Stock() {
 
   const getAllProductions = () => {
     ipcRenderer.send("getByVarietes");
-    ipcRenderer.on("gotByVarietes", (event, data) => {
+    ipcRenderer.once("gotByVarietes", (event, data) => {
       console.log(data);
       let sommeStock = 0;
       let sommeQDispo = 0;

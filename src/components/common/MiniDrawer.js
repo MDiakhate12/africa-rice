@@ -30,12 +30,13 @@ import {
   Button,
   ListItemIcon,
   ListItemText,
+  Menu,
   MenuItem,
   MenuList,
   Tooltip,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { LocationOnSharp } from "@material-ui/icons";
+import { AccountCircle, LocationOnSharp } from "@material-ui/icons";
 import Home from "../home/Home";
 const drawerWidth = 240;
 
@@ -180,6 +181,22 @@ export default function MiniDrawer() {
     setCurrentItem(items[index]);
   };
 
+  const [auth, setAuth] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const shown = Boolean(anchorEl);
+
+  const handleChange = (event) => {
+    setAuth(event.target.checked);
+  };
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -206,6 +223,49 @@ export default function MiniDrawer() {
           </Typography>
 
           <Typography variant="button">{currentItem.text}</Typography>
+
+          {auth && (
+            <div>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={shown}
+                onClose={handleClose}
+              >
+                <Link to="/parametres?tab=2" className={classes.default}>
+                  <MenuItem
+                    onClick={() => {
+                      setSelectedIndex(
+                        items.findIndex((item) => item.to === location.pathname)
+                      );
+                      handleClose();
+                    }}
+                  >
+                    Profil
+                  </MenuItem>
+                </Link>
+                <MenuItem onClick={handleClose}>Déconnexion</MenuItem>
+              </Menu>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
       <Drawer

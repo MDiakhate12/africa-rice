@@ -23,6 +23,7 @@ const createWindow = async () => {
   let win = new BrowserWindow({
     width: 1200,
     height: 800,
+    backgroundColor: "#009688",
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -30,6 +31,7 @@ const createWindow = async () => {
     },
   })
 
+  win.maximize()
   // win.removeMenu()
 
   models.sequelize

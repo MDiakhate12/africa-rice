@@ -1,6 +1,7 @@
 export const initialState = {
   open: false,
-  data: null
+  title: '',
+  data: null,
 };
 
 export const reducer = (state, action) => {

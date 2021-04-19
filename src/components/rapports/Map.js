@@ -26,18 +26,18 @@ export default function Map2() {
     zoom: 6,
   });
 
-  const [productionsByVariete, setProductionsByVariete] = useState([]);
+  const [productionsByRegion, setProductionsByRegion] = useState([]);
 
-  const getProductionsSumByVarietes = () => {
-    ipcRenderer.send("getByVarietes");
-    ipcRenderer.once("gotByVarietes", (event, data) => {
-      console.log(data);
-      setProductionsByVariete(data);
+  const getProductionsSumByRegion = () => {
+    ipcRenderer.send("getProductionsSumByRegion");
+    ipcRenderer.once("gotProductionsSumByRegion", (event, data) => {
+      console.log("getProductionsSumByRegion", data);
+      setProductionsByRegion(data);
     });
   };
 
   React.useEffect(() => {
-    getProductionsSumByVarietes();
+    getProductionsSumByRegion();
   }, []);
 
   const [selectedRegion, setSelectedRegion] = useState();
@@ -47,11 +47,33 @@ export default function Map2() {
       {...viewport}
       onViewportChange={(nextViewport) => setViewport(nextViewport)}
       mapboxApiAccessToken="pk.eyJ1IjoibGlsY2hlaWtoIiwiYSI6ImNrODU5cm93bjA0MjQzZ3BqbWJtZDRkcG4ifQ.TrPm96_JjZB-0OogoZJp5A"
-      // scrollZoom={false}
+      scrollZoom={false}
       // mapStyle="mapbox://styles/lilcheikh/cknjlxaqt03p417oannirmtxm" // Dark
       // mapStyle="mapbox://styles/lilcheikh/cknjmc4st1awe18mmh54cr29r" // Navigation
       mapStyle="mapbox://styles/lilcheikh/cknjmckc20jsl17npo19qnk83" // Satellite
     >
+      {productionsByRegion.map((production) => {
+        let region = senegal.cities.find(
+          (c) => c.city.toLowerCase() === production.Localisation.region
+        );
+
+        if (region)
+          return (
+            <Popup
+              key={production.Localisation.region}
+              latitude={parseFloat(region.lat)}
+              longitude={parseFloat(region.lng)}
+            >
+              <div>{production.Localisation.region.toUpperCase()}</div>
+              {/* <div>{`Département: ${production.Localisation.departement}`}</div>
+              <div>{`Localité: ${production.Localisation.village}`}</div>
+              <div>{`Varété: ${production.VarieteInstitution.Variete.nomVariete}`}</div> */}
+              <div>{`Tot. disponible: ${production.totalQuantiteDisponible} KG`}</div>
+              <div>{`Tot. produit: ${production.totalQuantiteProduite} KG`}</div>
+            </Popup>
+          );
+        return null;
+      })}
       {/* {productionsByVariete.map((production) => {
         let region = production.Localisation.region;
 

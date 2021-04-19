@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Box, Button } from "@material-ui/core";
 import DataTable from "../common/DataTable";
 import AddProduction from "./AddProduction";
+import ContextMenu from "../common/ContextMenu";
 import { GlobalContext } from "../../store/GlobalProvider";
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -47,6 +48,14 @@ const columns = [
     width: 100,
     renderCell: (params) => params.getValue("Magasin").nomMagasin,
     valueGetter: (params) => params.getValue("Magasin").nomMagasin,
+  },
+  {
+    type: "string",
+    field: "region",
+    headerName: "Région",
+    width: 170,
+    renderCell: (params) => params.getValue("Localisation").region,
+    valueGetter: (params) => params.getValue("Localisation").region,
   },
   {
     type: "string",
@@ -120,19 +129,86 @@ export default function Productions() {
 
   const getAllProductions = () => {
     ipcRenderer.send(events.production.getAll);
-    ipcRenderer.on(eventResponse.production.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.production.gotAll, (event, data) => {
       setProductions(data);
     });
   };
 
+  // const openContextMenu = useCallback((e) => {
+  //   e.preventDefault();
+  //   console.log(e);
+  //   console.log(productions[parseInt(e.target.getAttribute("data-rowindex"))]);
+  //   let targetRow = productions[parseInt(e.target.getAttribute("data-rowindex"))]
+  //   targetRow && handleRightClick(e)
+  //   e.target.click()
+
+  // }, []);
+
   useEffect(() => {
     getAllProductions();
+
+    // document.addEventListener("contextmenu", openContextMenu);
+
+    // return () => {
+    //   document.removeEventListener("contextmenu", openContextMenu);
+    // };
   }, [created]);
 
   const { openProductionFormDialog } = useContext(GlobalContext);
 
+  const [contextMenuState, setContextMenuState] = useState(initialState);
+
+  const [selectedRow, setSelectedRow] = useState();
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    
+    let targetRow =
+      productions[parseInt(event.target.getAttribute("data-rowindex"))];
+    if (!targetRow) return;
+
+    setContextMenuState({
+      mouseX: event.clientX - 2,
+      mouseY: event.clientY - 4,
+    });
+
+    setSelectedRow(targetRow);
+
+    console.log(event);
+  };
+
+  const handleClose = () => {
+    setContextMenuState(initialState);
+    setSelectedRow(null)
+  };
+
+  const handleUpdate = (e) => {
+
+    handleClose();
+
+    if (selectedRow) {
+
+      console.log(selectedRow)
+
+      openProductionFormDialog({
+        title: "Modifier Production",
+        data: selectedRow,
+      });
+      
+    }
+
+  };
+
+  const handleDelete = (e) => {};
+
   return (
     <div>
+      <ContextMenu
+        state={contextMenuState}
+        handleClose={handleClose}
+        handleUpdate={handleUpdate}
+        handleDelete={handleDelete}
+      />
       <Button color="primary" onClick={handleOpen}>
         Ajouter une Production
       </Button>
@@ -146,10 +222,17 @@ export default function Productions() {
         <AddProduction handleClose={handleClose} />
       </Modal> */}
       <AddProduction handleClose={handleDialogClose} />
-      <DataTable
-        columns={columns}
-        rows={productions.map((v) => ({ id: v.idProduction, ...v }))}
-      />
+      <div onContextMenu={handleClick} style={{ cursor: "context-menu" }}>
+        <DataTable
+          columns={columns}
+          rows={productions.map((v) => ({ id: v.idProduction, ...v }))}
+        />
+      </div>
     </div>
   );
 }
+
+const initialState = {
+  mouseX: null,
+  mouseY: null,
+};
