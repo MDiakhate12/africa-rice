@@ -20,6 +20,7 @@ export default function DatePicker({
   const [selectedDate, setSelectedDate] = React.useState();
 
   const handleDateChange = (date) => {
+    console.log(date);
     setSelectedDate(date);
     handleChange({ target: { name, value: date.toISOString() } });
   };
