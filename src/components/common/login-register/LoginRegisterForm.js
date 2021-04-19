@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import clsx from "clsx";
+import React, { useContext, useState } from 'react'
+import clsx from 'clsx'
 import {
   Button,
   FormControl,
@@ -10,62 +10,67 @@ import {
   InputAdornment,
   InputLabel,
   TextField,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { GlobalContext } from "../../../store/GlobalProvider";
-import "./LoginRegisterForm.css";
-import { validateEmail, validatePassword } from "../../../store/utils";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+} from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import { GlobalContext } from '../../../store/GlobalProvider'
+import './LoginRegisterForm.css'
+import { validateEmail, validatePassword } from '../../../store/utils'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+
+const { ipcRenderer } = window.require('electron')
+const { events, eventResponse } = require('../../../store/utils/events')
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
   },
   addButton: {
-    width: "100%",
+    width: '100%',
     background: theme.gradient.primary_reverse,
   },
   gridContainer: {
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   fab: {
-    position: "sticky",
+    position: 'sticky',
   },
   formDialog: {
-    maxWidth: "30%",
+    maxWidth: '30%',
   },
   textField: {
-    fontSize: "10px",
-    marginTop: "-4px",
+    fontSize: '10px',
+    marginTop: '-4px',
   },
-}));
+}))
 
 export default function LoginRegisterForm() {
-  const [active, setActive] = useState(true);
-  const [error, setError] = useState({});
+  const [active, setActive] = useState(true)
+  const [error, setError] = useState({})
+  const [responseError, setResponseError] = useState()
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   const [formState, setFormState] = useState({
-    nomComplet: "",
-    sigle: "",
-    addresse: "",
-    telephone: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+    nomComplet: '',
+    sigle: '',
+    addresse: '',
+    telephone: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  })
 
-  const { institution } = useContext(GlobalContext);
+  const [formStateLogin, setFormStateLogin] = useState({})
+  const { institution } = useContext(GlobalContext)
 
-  const timeout = null;
+  const timeout = null
 
   const handleChange = (e) => {
-    console.log(e.target.value);
-    let { name, value } = e.target;
+    console.log(e.target.value)
+    let { name, value } = e.target
 
     // name === "password" &&
     //   setError({ ...error, password: !validatePassword(value) });
@@ -79,107 +84,154 @@ export default function LoginRegisterForm() {
       return {
         ...state,
         [name]: value,
-      };
-    });
-  };
+      }
+    })
+  }
+
+  const handleChangeLogin = (e) => {
+    console.log(e.target.value)
+    let { name, value } = e.target
+
+    setFormStateLogin((state) => {
+      return {
+        ...state,
+        [name]: value,
+      }
+    })
+  }
 
   const handleSubmit = (e) => {
-    if (Object.keys(formState).length === 0) return;
+    if (Object.keys(formState).length === 0) return
 
     for (let [key, value] of Object.entries(error)) {
       if (value === true) {
-        check({ target: { name: key, value } });
-        return;
+        check({ target: { name: key, value } })
+        return
       }
     }
 
     for (let [key, value] of Object.entries(formState)) {
-      if (value === "") {
-        check({ target: { name: key, value } });
-        return;
+      if (value === '') {
+        check({ target: { name: key, value } })
+        return
       }
     }
 
-    console.log(formState);
+    setResponseError()
+    console.log(formState)
+    ipcRenderer.send(events.auth.register, formState)
+    ipcRenderer.once(eventResponse.auth.registered, (ev, data) => {
+      console.log(data)
+      if (data.status === 'error') {
+        setResponseError(data.message)
+      }
+    })
     // updateInstitution({ id: formState.idInstitution, data: formState });
-  };
+  }
 
   const handleClickShowPassword = () => {
-    setFormState({ ...formState, showPassword: !formState.showPassword });
-  };
+    setFormState({ ...formState, showPassword: !formState.showPassword })
+  }
 
   const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   const handleClickShowConfirmPassword = () => {
     setFormState({
       ...formState,
       showConfirmPassword: !formState.showConfirmPassword,
-    });
-  };
+    })
+  }
 
   const handleMouseDownConfirmPassword = (event) => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
-  const interval = 1300;
+  const interval = 1300
 
   const clearOrCheck = (e) => {
-    let { name, value } = e.target;
+    let { name, value } = e.target
 
-    if (name === "password" && formState.password?.length === 8)
-      return check(e);
+    if (name === 'password' && formState.password?.length === 8) return check(e)
 
     if (
-      name === "confirmPassword" &&
+      name === 'confirmPassword' &&
       formState.password === formState.confirmPassword
     )
-      return check(e);
+      return check(e)
 
-    clearTimeout(timeout);
-  };
+    clearTimeout(timeout)
+  }
 
   const check = (e) => {
-    let { name, value } = e.target;
+    let { name, value } = e.target
 
-    name === "password" &&
-      setError({ ...error, password: !validatePassword(value) });
+    name === 'password' &&
+      setError({ ...error, password: !validatePassword(value) })
 
-    name === "confirmPassword" &&
-      setError({ ...error, confirmPassword: formState.password !== value });
+    name === 'confirmPassword' &&
+      setError({ ...error, confirmPassword: formState.password !== value })
 
-    name === "email" && setError({ ...error, email: !validateEmail(value) });
+    name === 'email' && setError({ ...error, email: !validateEmail(value) })
 
-    name !== "email" &&
-      name !== "password" &&
-      name !== "confirmPassword" &&
-      setError({ ...error, [name]: value === "" });
-  };
+    name !== 'email' &&
+      name !== 'password' &&
+      name !== 'confirmPassword' &&
+      setError({ ...error, [name]: value === '' })
+  }
 
   const checkInterval = (e) => {
-    clearTimeout(timeout);
-    setTimeout(() => check(e), interval);
-  };
+    clearTimeout(timeout)
+    setTimeout(() => check(e), interval)
+  }
+
+  const handleSubmitLogin = (e) => {
+    if (Object.keys(formStateLogin).length === 0) return
+
+    for (let [key, value] of Object.entries(error)) {
+      if (value === true) {
+        check({ target: { name: key, value } })
+        return
+      }
+    }
+
+    for (let [key, value] of Object.entries(formStateLogin)) {
+      if (value === '') {
+        check({ target: { name: key, value } })
+        return
+      }
+    }
+
+    setResponseError()
+    console.log(formStateLogin)
+    ipcRenderer.send(events.auth.login, formStateLogin)
+    ipcRenderer.once(eventResponse.auth.logged, (ev, data) => {
+      console.log(data)
+      if (data.status === 'error') {
+        setResponseError(data.message)
+      }
+    })
+  }
 
   return (
-    <div class="body">
+    <div className="body">
       <div
-        class={`container ${active ? "right-panel-active" : ""}`}
+        className={`container ${active ? 'right-panel-active' : ''}`}
         id="container"
       >
-        <div class="form-container sign-up-container">
+        <div className="form-container sign-up-container">
           <form action="#">
             <h1>Enregistrement</h1>
-            {/* <div class="social-container">
-              <a href="#" class="social">
-                <i class="fab fa-facebook-f"></i>
+            {/* <div className="social-container">
+              <a href="#" className="social">
+                <i className="fab fa-facebook-f"></i>
               </a>
-              <a href="#" class="social">
-                <i class="fab fa-google-plus-g"></i>
+              <a href="#" className="social">
+                <i className="fab fa-google-plus-g"></i>
               </a>
-              <a href="#" class="social">
-                <i class="fab fa-linkedin-in"></i>
+              <a href="#" className="social">
+                <i className="fab fa-linkedin-in"></i>
               </a>
             </div> */}
             {/* <span>or use your email for registration</span> */}
@@ -191,7 +243,7 @@ export default function LoginRegisterForm() {
                   label="Nom complet"
                   name="nomComplet"
                   margin="dense"
-                  value={formState?.nomComplet || ""}
+                  value={formState?.nomComplet || ''}
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
@@ -199,7 +251,7 @@ export default function LoginRegisterForm() {
                   onKeyUp={checkInterval}
                   error={error.nomComplet}
                   helperText={
-                    error.nomComplet ? "Ce champ est obligatoire" : ""
+                    error.nomComplet ? 'Ce champ est obligatoire' : ''
                   }
                 />
               </Grid>
@@ -209,14 +261,14 @@ export default function LoginRegisterForm() {
                   label="Sigle"
                   name="sigle"
                   margin="dense"
-                  value={formState?.sigle || ""}
+                  value={formState?.sigle || ''}
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
                   onKeyDown={clearOrCheck}
                   onKeyUp={checkInterval}
                   error={error.sigle}
-                  helperText={error.sigle ? "Ce champ est obligatoire" : ""}
+                  helperText={error.sigle ? 'Ce champ est obligatoire' : ''}
                 />
               </Grid>
               <Grid item sm={12}>
@@ -225,14 +277,14 @@ export default function LoginRegisterForm() {
                   label="Addresse"
                   name="addresse"
                   margin="dense"
-                  value={formState?.addresse || ""}
+                  value={formState?.addresse || ''}
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
                   onKeyDown={clearOrCheck}
                   onKeyUp={checkInterval}
                   error={error.addresse}
-                  helperText={error.addresse ? "Ce champ est obligatoire" : ""}
+                  helperText={error.addresse ? 'Ce champ est obligatoire' : ''}
                 />
               </Grid>
 
@@ -242,14 +294,14 @@ export default function LoginRegisterForm() {
                   label="Téléphone"
                   name="telephone"
                   margin="dense"
-                  value={formState?.telephone || ""}
+                  value={formState?.telephone || ''}
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
                   onKeyDown={clearOrCheck}
                   onKeyUp={checkInterval}
                   error={error.telephone}
-                  helperText={error.telephone ? "Ce champ est obligatoire" : ""}
+                  helperText={error.telephone ? 'Ce champ est obligatoire' : ''}
                 />
               </Grid>
 
@@ -259,7 +311,7 @@ export default function LoginRegisterForm() {
                   label="Email"
                   name="email"
                   margin="dense"
-                  value={formState?.email || ""}
+                  value={formState?.email || ''}
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
                   onChange={handleChange}
@@ -267,7 +319,7 @@ export default function LoginRegisterForm() {
                   onKeyDown={clearOrCheck}
                   onKeyUp={checkInterval}
                   helperText={
-                    error.email ? "Le format de l'email est invalide" : ""
+                    error.email ? "Le format de l'email est invalide" : ''
                   }
                 />
               </Grid>
@@ -283,7 +335,7 @@ export default function LoginRegisterForm() {
                   </InputLabel>
                   <Input
                     id="standard-adornment-password"
-                    type={formState.showPassword ? "text" : "password"}
+                    type={formState.showPassword ? 'text' : 'password'}
                     value={formState.password}
                     name="password"
                     onChange={handleChange}
@@ -307,8 +359,8 @@ export default function LoginRegisterForm() {
                   />
                   <FormHelperText>
                     {error.password
-                      ? "Le mdp doit contenir au moins 8 caractères"
-                      : ""}
+                      ? 'Le mdp doit contenir au moins 8 caractères'
+                      : ''}
                   </FormHelperText>
                 </FormControl>
               </Grid>
@@ -324,7 +376,7 @@ export default function LoginRegisterForm() {
                   </InputLabel>
                   <Input
                     id="standard-adornment-password"
-                    type={formState.showConfirmPassword ? "text" : "password"}
+                    type={formState.showConfirmPassword ? 'text' : 'password'}
                     value={formState.confirmPassword}
                     name="confirmPassword"
                     onChange={handleChange}
@@ -348,8 +400,8 @@ export default function LoginRegisterForm() {
                   />
                   <FormHelperText>
                     {error.confirmPassword
-                      ? "Les mdp doivent être conformes"
-                      : ""}
+                      ? 'Les mdp doivent être conformes'
+                      : ''}
                   </FormHelperText>
                 </FormControl>
               </Grid>
@@ -391,6 +443,14 @@ export default function LoginRegisterForm() {
                 />
               </Grid>*/}
 
+              <Grid item sm={12}>
+                {responseError ? (
+                  <p style={{ color: 'red' }}>{responseError}</p>
+                ) : (
+                  ''
+                )}
+              </Grid>
+
               <Grid item sm={12} className={classes.gridContainer}>
                 <Button
                   color="primary"
@@ -410,7 +470,7 @@ export default function LoginRegisterForm() {
             {/* <button>Sign Up</button> */}
           </form>
         </div>
-        <div class="form-container sign-in-container">
+        <div className="form-container sign-in-container">
           <form action="#">
             <h1>Connexion</h1>
             <Grid container>
@@ -420,10 +480,10 @@ export default function LoginRegisterForm() {
                   label="Email"
                   name="email"
                   margin="dense"
-                  value={formState?.email || ""}
+                  value={formStateLogin?.email || ''}
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
-                  onChange={handleChange}
+                  onChange={handleChangeLogin}
                 />
               </Grid>
 
@@ -433,33 +493,42 @@ export default function LoginRegisterForm() {
                   label="Mot de passe"
                   name="password"
                   margin="dense"
-                  value={formState?.password || ""}
+                  value={formStateLogin?.password || ''}
                   className={clsx(classes.margin, classes.textField)}
                   // variant="filled"
-                  onChange={handleChange}
+                  onChange={handleChangeLogin}
                 />
               </Grid>
+
+              <Grid item sm={12}>
+                {responseError ? (
+                  <p style={{ color: 'red' }}>{responseError}</p>
+                ) : (
+                  ''
+                )}
+              </Grid>
+
               <Grid item sm={12} className={classes.gridContainer}>
                 <Button
                   color="primary"
                   variant="contained"
                   className={classes.addButton}
                   // size="large"
-                  onClick={handleSubmit}
+                  onClick={handleSubmitLogin}
                 >
                   Connexion
                 </Button>
               </Grid>
             </Grid>
-            {/* <div class="social-container">
-              <a href="#" class="social">
-                <i class="fab fa-facebook-f"></i>
+            {/* <div className="social-container">
+              <a href="#" className="social">
+                <i className="fab fa-facebook-f"></i>
               </a>
-              <a href="#" class="social">
-                <i class="fab fa-google-plus-g"></i>
+              <a href="#" className="social">
+                <i className="fab fa-google-plus-g"></i>
               </a>
-              <a href="#" class="social">
-                <i class="fab fa-linkedin-in"></i>
+              <a href="#" className="social">
+                <i className="fab fa-linkedin-in"></i>
               </a>
             </div>
             <span>or use your account</span> 
@@ -469,26 +538,30 @@ export default function LoginRegisterForm() {
             <button>Sign In</button> */}
           </form>
         </div>
-        <div class="overlay-container">
-          <div class="overlay">
-            <div class="overlay-panel overlay-left">
+        <div className="overlay-container">
+          <div className="overlay">
+            <div className="overlay-panel overlay-left">
               <h1>Déja enregistré ? </h1>
               <p>Connectez vous en cliquant sur le boutton ci-dessous.</p>
               <button
-                class="ghost"
+                className="ghost"
                 id="signIn"
                 onClick={() => setActive(false)}
               >
                 Connexion
               </button>
             </div>
-            <div class="overlay-panel overlay-right">
+            <div className="overlay-panel overlay-right">
               <h1>Premier pas !</h1>
               <p>
                 Enregistrez votre institution en cliquant sur le boutton
                 ci-dessous.
               </p>
-              <button class="ghost" id="signUp" onClick={() => setActive(true)}>
+              <button
+                className="ghost"
+                id="signUp"
+                onClick={() => setActive(true)}
+              >
                 Entregistrer l'institution
               </button>
             </div>
@@ -496,5 +569,5 @@ export default function LoginRegisterForm() {
         </div>
       </div>
     </div>
-  );
+  )
 }
