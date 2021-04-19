@@ -9,6 +9,8 @@ import { GlobalContext } from "../../store/GlobalProvider";
 import CheckboxList from "../common/CheckboxList";
 
 const { ipcRenderer } = window.require("electron");
+const fs = window.require("fs");
+const path = window.require("path");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,16 +38,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Institution() {
   const classes = useStyles();
 
-  const {
-    institutions,
-    institution,
-    getOneInstitution,
-    addInstitution,
-    updateInstitution,
-    niveauxInstitution,
-    niveaux,
-    openContactFormDialog,
-  } = useContext(GlobalContext);
+  const { institution, updateInstitution } = useContext(GlobalContext);
 
   const [formState, setFormState] = useState({});
 
@@ -72,10 +65,29 @@ export default function Institution() {
   };
 
   const showDialog = (e) => {
-    ipcRenderer.send(events.imageDialog.openImageDialog);
+    ipcRenderer.send(events.imageDialog.open);
 
-    ipcRenderer.on(eventResponse.imageDialog.openImageDialog, (event, path) => {
-      console.log(path);
+    ipcRenderer.once(eventResponse.imageDialog.closed, (event, data) => {
+      if (!data.cancelled) {
+        let file = data.filePaths[0];
+        let basename = path.basename(file);
+        // let filepath = path.join(__dirname, `../images/${basename}`)
+        let filepath = `../images/${basename}`;
+
+        console.log("file", file);
+        console.log("filepath", filepath);
+        fs.copyFile(file, `src/components/images/${basename}`, (err) => {
+          if (err) throw err;
+        });
+        setTimeout(() => {
+          setFormState({
+            ...formState,
+            logo: filepath,
+          });
+          console.log("File was copied to destination");
+          console.log("STATE", formState);
+        }, 2000);
+      }
     });
   };
 
@@ -96,7 +108,14 @@ export default function Institution() {
         handleClose={handleContactFormDialogClose}
       /> */}
       <Grid container spacing={0}>
-        <Grid item container justify="center" className={classes.root} sm={6}  spacing={2}>
+        <Grid
+          item
+          container
+          justify="center"
+          className={classes.root}
+          sm={6}
+          spacing={2}
+        >
           <Grid item sm={6}>
             <Grid>
               <Grid item sm={12}>
@@ -175,14 +194,12 @@ export default function Institution() {
           <Grid item sm={6}>
             <Typography variant="button">Ajouter un logo</Typography>
             <CustomButton
-              images={[
-                {
-                  url: photoImage,
-                  title: "Ajouter un logo",
-                  width: "65%",
-                  onClick: () => showDialog(),
-                },
-              ]}
+              image={{
+                url: formState?.logo || photoImage,
+                title: "Ajouter un logo",
+                width: "65%",
+              }}
+              onClick={showDialog}
             />
           </Grid>
         </Grid>
