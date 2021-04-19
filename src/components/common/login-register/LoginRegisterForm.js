@@ -17,6 +17,7 @@ import './LoginRegisterForm.css'
 import { validateEmail, validatePassword } from '../../../store/utils'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import { useHistory } from 'react-router-dom'
 
 const { ipcRenderer } = window.require('electron')
 const { events, eventResponse } = require('../../../store/utils/events')
@@ -64,7 +65,8 @@ export default function LoginRegisterForm() {
   })
 
   const [formStateLogin, setFormStateLogin] = useState({})
-  const { institution } = useContext(GlobalContext)
+  const { login } = useContext(GlobalContext)
+  const history = useHistory()
 
   const timeout = null
 
@@ -124,7 +126,10 @@ export default function LoginRegisterForm() {
       console.log(data)
       if (data.status === 'error') {
         setResponseError(data.message)
+        return
       }
+      login(data)
+      history.push('/')
     })
     // updateInstitution({ id: formState.idInstitution, data: formState });
   }
@@ -210,7 +215,10 @@ export default function LoginRegisterForm() {
       console.log(data)
       if (data.status === 'error') {
         setResponseError(data.message)
+        return
       }
+      login(data)
+      history.push('/')
     })
   }
 

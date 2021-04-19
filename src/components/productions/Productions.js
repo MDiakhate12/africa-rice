@@ -17,7 +17,7 @@ import Stock from './Stock'
 // import '../../store/niveau/niveau'
 // import '../../store/niveau/etatCommande'
 // import '../../store/niveauInstitution/niveauInstitution'
-import '../../store/magasin/magasin'
+// import '../../store/magasin/magasin'
 // import '../../store/varieteInstitution/varietes'
 
 function TabPanel(props) {

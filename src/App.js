@@ -1,22 +1,24 @@
-import "./App.css";
-import GlobalProvider from "./store/GlobalProvider";
-import MiniDrawer from "./components/common/MiniDrawer";
-import { ThemeProvider } from "@material-ui/styles";
-import { createMuiTheme } from "@material-ui/core";
-import { amber, teal } from "@material-ui/core/colors";
-import { BrowserRouter, Route } from "react-router-dom";
+import React, { useEffect, useContext, useState } from 'react'
+import './App.css'
+import GlobalProvider, { GlobalContext } from './store/GlobalProvider'
+import MiniDrawer from './components/common/MiniDrawer'
+import { ThemeProvider } from '@material-ui/styles'
+import { createMuiTheme } from '@material-ui/core'
+import { amber, teal } from '@material-ui/core/colors'
+import { BrowserRouter, Route } from 'react-router-dom'
+import Auth from './components/auth/Auth'
 
 const theme = createMuiTheme({
   gradient: {
     primary:
-      "linear-gradient(to right, var(--primary-main), var(--primary-light));",
+      'linear-gradient(to right, var(--primary-main), var(--primary-light));',
     primary_reverse:
-      "linear-gradient(to right, var(--primary-main), var(--secondary-main));",
+      'linear-gradient(to right, var(--primary-main), var(--secondary-main));',
     secondary:
-      "linear-gradient(to right, var(--secondary-light), var(--secondary-main));",
+      'linear-gradient(to right, var(--secondary-light), var(--secondary-main));',
   },
   palette: {
-    type: "light",
+    type: 'light',
     primary: {
       // light: will be calculated from palette.primary.main,
       main: teal[500],
@@ -36,26 +38,31 @@ const theme = createMuiTheme({
   },
   typography: {
     allVariants: {
-      fontSize: "0.8rem"
+      fontSize: '0.8rem',
     },
     // button: { fontSize: "0.8rem" },
-    h1: { fontSize: "1.3rem" },
-    h2: { fontSize: "0.9rem" },
+    h1: { fontSize: '1.3rem' },
+    h2: { fontSize: '0.9rem' },
     // body1: { fontSize: "0.8rem" },
     // body2: { fontSize: "0.8rem" },
   },
-});
+})
 
 function App() {
+  const [isAuth, setIsAuth] = useState(false)
+  const { institution, checkAuth } = useContext(GlobalContext)
+
+  useEffect(() => {
+    console.log(institution)
+    setIsAuth(checkAuth())
+    console.log(isAuth)
+  }, [institution])
+
   return (
     <ThemeProvider theme={theme}>
-      <GlobalProvider>
-        <BrowserRouter>
-          <MiniDrawer />
-        </BrowserRouter>
-      </GlobalProvider>
+      <BrowserRouter>{isAuth ? <MiniDrawer /> : <Auth />}</BrowserRouter>
     </ThemeProvider>
-  );
+  )
 }
 
-export default App;
+export default App

@@ -1,40 +1,40 @@
-import React, { useContext, useEffect, useState } from "react";
-import clsx from "clsx";
-import { Button, Grid, TextField, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import CustomButton from "../common/CustomButton";
-import photoImage from "../images/photo.svg";
-import { eventResponse, events } from "../../store/utils/events";
-import { GlobalContext } from "../../store/GlobalProvider";
-import CheckboxList from "../common/CheckboxList";
+import React, { useContext, useEffect, useState } from 'react'
+import clsx from 'clsx'
+import { Button, Grid, TextField, Typography } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import CustomButton from '../common/CustomButton'
+import photoImage from '../images/photo.svg'
+import { eventResponse, events } from '../../store/utils/events'
+import { GlobalContext } from '../../store/GlobalProvider'
+import CheckboxList from '../common/CheckboxList'
 
-const { ipcRenderer } = window.require("electron");
+const { ipcRenderer } = window.require('electron')
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
   },
   margin: {
     marginBottom: theme.spacing(1),
   },
   addButton: {
-    width: "100%",
+    width: '100%',
   },
   gridContainer: {
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   fab: {
-    position: "sticky",
+    position: 'sticky',
   },
   formDialog: {
-    maxWidth: "30%",
+    maxWidth: '30%',
   },
-}));
+}))
 
 export default function Institution() {
-  const classes = useStyles();
+  const classes = useStyles()
 
   const {
     institutions,
@@ -45,41 +45,41 @@ export default function Institution() {
     niveauxInstitution,
     niveaux,
     openContactFormDialog,
-  } = useContext(GlobalContext);
+  } = useContext(GlobalContext)
 
-  const [formState, setFormState] = useState({});
+  const [formState, setFormState] = useState({})
 
   useEffect(() => {
-    console.log("INSTITUTION", institution);
-    setFormState(institution);
-  }, []);
+    console.log('INSTITUTION', institution)
+    setFormState(institution)
+  }, [])
 
   const handleChange = (e) => {
-    console.log(e.target.value);
-    let { name, value } = e.target;
+    console.log(e.target.value)
+    let { name, value } = e.target
     setFormState((state) => {
       return {
         ...state,
         [name]: value,
-      };
-    });
-  };
+      }
+    })
+  }
 
   const handleSubmit = (e) => {
-    console.log(formState);
-    console.log(institution);
-    updateInstitution({ id: formState.idInstitution, data: formState });
-  };
+    console.log(formState)
+    console.log(institution)
+    updateInstitution({ id: formState.idInstitution, data: formState })
+  }
 
   const showDialog = (e) => {
-    ipcRenderer.send(events.imageDialog.openImageDialog);
+    ipcRenderer.send(events.imageDialog.openImageDialog)
 
     ipcRenderer.on(eventResponse.imageDialog.openImageDialog, (event, path) => {
-      console.log(path);
-    });
-  };
+      console.log(path)
+    })
+  }
 
-  const onSubmitChecklist = (e) => {};
+  const onSubmitChecklist = (e) => {}
 
   // const handleContactFormDialogClose = (res, data) => {
   //   if (res === "yes") {
@@ -96,7 +96,14 @@ export default function Institution() {
         handleClose={handleContactFormDialogClose}
       /> */}
       <Grid container spacing={0}>
-        <Grid item container justify="center" className={classes.root} sm={6}  spacing={2}>
+        <Grid
+          item
+          container
+          justify="center"
+          className={classes.root}
+          sm={6}
+          spacing={2}
+        >
           <Grid item sm={6}>
             <Grid>
               <Grid item sm={12}>
@@ -106,7 +113,7 @@ export default function Institution() {
                   fullWidth
                   label="Nom complet"
                   name="nomComplet"
-                  value={formState?.nomComplet || ""}
+                  value={formState?.nomComplet || ''}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -117,7 +124,7 @@ export default function Institution() {
                   fullWidth
                   label="Sigle"
                   name="sigle"
-                  value={formState?.sigle || ""}
+                  value={formState?.sigle || ''}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -128,7 +135,7 @@ export default function Institution() {
                   fullWidth
                   label="Addresse"
                   name="addresse"
-                  value={formState?.addresse || ""}
+                  value={formState?.addresse || ''}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -140,7 +147,7 @@ export default function Institution() {
                   fullWidth
                   label="Téléphone"
                   name="telephone"
-                  value={formState?.telephone || ""}
+                  value={formState?.telephone || ''}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -152,7 +159,7 @@ export default function Institution() {
                   fullWidth
                   label="Email"
                   name="email"
-                  value={formState?.email || ""}
+                  value={formState?.email || ''}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -178,8 +185,8 @@ export default function Institution() {
               images={[
                 {
                   url: photoImage,
-                  title: "Ajouter un logo",
-                  width: "65%",
+                  title: 'Ajouter un logo',
+                  width: '65%',
                   onClick: () => showDialog(),
                 },
               ]}
@@ -212,5 +219,5 @@ export default function Institution() {
         ]}
       /> */}
     </div>
-  );
+  )
 }

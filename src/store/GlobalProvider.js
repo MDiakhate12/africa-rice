@@ -1,32 +1,32 @@
-import InstitutionProvider from "./institution/provider";
-import { createContext } from "react";
-import SpeculationProvider from "./speculation/provider";
-import VarieteProvider from "./variete/provider";
-import ZoneProvider from "./zone/provider";
-import ConfirmDialogProvider from "./confirmDialog/provider";
-import ContactFormDialogProvider from "./contactFormDialog/provider";
-import ClientFormDialogProvider from "./clientFormDialog/provider";
-import CommandeFormDialogProvider from "./commandeFormDialog/provider";
-import LocalisationProvider from "./localisation/provider";
-import NiveauProvider from "./niveau/provider";
-import NiveauInstitutionProvider from "./niveauInstitution/provider";
-import CommonDialogProvider from "./commonDialog/provider";
-import ProductionFormDialogProvider from "./productionFormDialog/provider";
+import InstitutionProvider from './institution/provider'
+import { createContext } from 'react'
+import SpeculationProvider from './speculation/provider'
+import VarieteProvider from './variete/provider'
+import ZoneProvider from './zone/provider'
+import ConfirmDialogProvider from './confirmDialog/provider'
+import ContactFormDialogProvider from './contactFormDialog/provider'
+import ClientFormDialogProvider from './clientFormDialog/provider'
+import CommandeFormDialogProvider from './commandeFormDialog/provider'
+import LocalisationProvider from './localisation/provider'
+import NiveauProvider from './niveau/provider'
+import NiveauInstitutionProvider from './niveauInstitution/provider'
+import CommonDialogProvider from './commonDialog/provider'
+import ProductionFormDialogProvider from './productionFormDialog/provider'
 
-import riz from "../components/images/riz.jpg";
-import sorgho from "../components/images/sorgho.jpg";
-import mil from "../components/images/mil.jpg";
-import mais from "../components/images/mais.jpg";
-import arachide from "../components/images/arachide.jpg";
-import niebe from "../components/images/niebe.jpg";
-import oignon from "../components/images/oignon.jpg";
-import tomate from "../components/images/tomate.jpg";
-import piment from "../components/images/piment.jpg";
-import jaxatu from "../components/images/jaxatu.jpg";
-import pomme_de_terre from "../components/images/pomme_de_terre.jpg";
-import patate_douce from "../components/images/patate_douce.jpg";
-import gombo from "../components/images/gombo.jpg";
-import aubergine from "../components/images/aubergine.jpg";
+import riz from '../components/images/riz.jpg'
+import sorgho from '../components/images/sorgho.jpg'
+import mil from '../components/images/mil.jpg'
+import mais from '../components/images/mais.jpg'
+import arachide from '../components/images/arachide.jpg'
+import niebe from '../components/images/niebe.jpg'
+import oignon from '../components/images/oignon.jpg'
+import tomate from '../components/images/tomate.jpg'
+import piment from '../components/images/piment.jpg'
+import jaxatu from '../components/images/jaxatu.jpg'
+import pomme_de_terre from '../components/images/pomme_de_terre.jpg'
+import patate_douce from '../components/images/patate_douce.jpg'
+import gombo from '../components/images/gombo.jpg'
+import aubergine from '../components/images/aubergine.jpg'
 
 // import './institution/institution'
 // import './speculation/speculation'
@@ -35,7 +35,7 @@ import aubergine from "../components/images/aubergine.jpg";
 // import './niveau/niveau'
 // import './niveau/etatCommande'
 
-export const GlobalContext = createContext();
+export const GlobalContext = createContext()
 
 export default function GlobalProvider({ children }) {
   const [
@@ -46,7 +46,10 @@ export default function GlobalProvider({ children }) {
     getAllInstitution,
     updateInstitution,
     deleteByIdInstitution,
-  ] = InstitutionProvider();
+    login,
+    logout,
+    checkAuth,
+  ] = InstitutionProvider()
 
   const [
     speculations,
@@ -55,7 +58,7 @@ export default function GlobalProvider({ children }) {
     getAllSpeculation,
     updateSpeculation,
     deleteByIdSpeculation,
-  ] = SpeculationProvider();
+  ] = SpeculationProvider()
 
   const [
     varietes,
@@ -64,7 +67,7 @@ export default function GlobalProvider({ children }) {
     getAllVariete,
     updateVariete,
     deleteByIdVariete,
-  ] = VarieteProvider();
+  ] = VarieteProvider()
 
   const [
     zones,
@@ -73,7 +76,7 @@ export default function GlobalProvider({ children }) {
     getAllZone,
     updateZone,
     deleteByIdZone,
-  ] = ZoneProvider();
+  ] = ZoneProvider()
 
   const [
     localisations,
@@ -82,7 +85,7 @@ export default function GlobalProvider({ children }) {
     getAllLocalisation,
     updateLocalisation,
     deleteByIdLocalisation,
-  ] = LocalisationProvider();
+  ] = LocalisationProvider()
 
   const [
     niveaux,
@@ -91,7 +94,7 @@ export default function GlobalProvider({ children }) {
     getAllNiveau,
     updateNiveau,
     deleteByIdNiveau,
-  ] = NiveauProvider();
+  ] = NiveauProvider()
 
   const [
     niveauxInstitution,
@@ -100,39 +103,39 @@ export default function GlobalProvider({ children }) {
     getAllNiveauInstitution,
     updateNiveauInstitution,
     deleteByIdNiveauInstitution,
-  ] = NiveauInstitutionProvider();
+  ] = NiveauInstitutionProvider()
 
   const [
     confirmDialog,
     openConfirmDialog,
     closeConfirmDialog,
-  ] = ConfirmDialogProvider();
+  ] = ConfirmDialogProvider()
 
   const [
     productionFormDialog,
     openProductionFormDialog,
     closeProductionFormDialog,
-  ] = ProductionFormDialogProvider();
+  ] = ProductionFormDialogProvider()
 
   const [
     contactFormDialog,
     openContactFormDialog,
     closeContactFormDialog,
-  ] = ContactFormDialogProvider();
+  ] = ContactFormDialogProvider()
 
   const [
     clientFormDialog,
     openClientFormDialog,
     closeClientFormDialog,
-  ] = ClientFormDialogProvider();
+  ] = ClientFormDialogProvider()
 
   const [
     commandeFormDialog,
     openCommandeFormDialog,
     closeCommandeFormDialog,
-  ] = CommandeFormDialogProvider();
+  ] = CommandeFormDialogProvider()
 
-  const [dialog, openDialog, closeDialog] = CommonDialogProvider();
+  const [dialog, openDialog, closeDialog] = CommonDialogProvider()
 
   return (
     <GlobalContext.Provider
@@ -144,6 +147,9 @@ export default function GlobalProvider({ children }) {
         getAllInstitution,
         updateInstitution,
         deleteByIdInstitution,
+        login,
+        logout,
+        checkAuth,
 
         speculations,
         addSpeculation,
@@ -214,5 +220,5 @@ export default function GlobalProvider({ children }) {
     >
       {children}
     </GlobalContext.Provider>
-  );
+  )
 }
