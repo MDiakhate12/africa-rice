@@ -1,11 +1,11 @@
-import React, { useContext, useState, useEffect } from "react";
-import DataTable from "../common/DataTable";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Badge from "@material-ui/core/Badge";
-import { Button } from "@material-ui/core";
-import CommandeFormDialog from "./CommandeFormDialog";
-import { GlobalContext } from "../../store/GlobalProvider";
-import ContextMenu from "../common/ContextMenu";
+import React, { useContext, useState, useEffect } from 'react'
+import DataTable from '../common/DataTable'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
+import Badge from '@material-ui/core/Badge'
+import { Button } from '@material-ui/core'
+import CommandeFormDialog from './CommandeFormDialog'
+import { GlobalContext } from '../../store/GlobalProvider'
+import ContextMenu from '../common/ContextMenu'
 
 const { ipcRenderer } = window.require('electron')
 const { events, eventResponse } = require('../../store/utils/events')
@@ -276,45 +276,42 @@ function Commandes() {
 
   // FORMDATA FOR MOR KAIRE
 
-<<<<<<< HEAD
   const { openCommandeFormDialog } = useContext(GlobalContext)
-=======
-  const { openCommandeFormDialog } = useContext(GlobalContext);
 
-  const [contextMenuState, setContextMenuState] = useState(initialState);
+  const [contextMenuState, setContextMenuState] = useState(initialState)
 
-  const [selectedRow, setSelectedRow] = useState();
+  const [selectedRow, setSelectedRow] = useState()
 
   const handleClick = (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
     let targetRow =
-      commandes[parseInt(event.target.getAttribute("data-rowindex"))];
-    if (!targetRow) return;
+      commandes[parseInt(event.target.getAttribute('data-rowindex'))]
+    if (!targetRow) return
 
     setContextMenuState({
       mouseX: event.clientX - 2,
       mouseY: event.clientY - 4,
-    });
+    })
 
-    setSelectedRow(targetRow);
+    setSelectedRow(targetRow)
 
-    console.log(event);
-  };
+    console.log(event)
+  }
 
   const handleClose = () => {
-    setContextMenuState(initialState);
-    setSelectedRow(null);
-  };
+    setContextMenuState(initialState)
+    setSelectedRow(null)
+  }
 
   const handleUpdate = (e) => {
-    handleClose();
+    handleClose()
 
     if (selectedRow) {
-      console.log(selectedRow);
+      console.log(selectedRow)
 
       openCommandeFormDialog({
-        title: "Modifier Commande",
+        title: 'Modifier Commande',
         data: {
           idCommande: selectedRow.idCommande,
           Client: selectedRow.Client,
@@ -333,13 +330,12 @@ function Commandes() {
             },
           ],
         },
-      });
+      })
     }
-  };
+  }
 
-  const handleDelete = (e) => {};
+  const handleDelete = (e) => {}
 
->>>>>>> c8d10005be3208bb5c633b19ab5a78999b667d04
   return (
     <div>
       <ContextMenu
@@ -356,29 +352,25 @@ function Commandes() {
         color="primary"
         onClick={() =>
           openCommandeFormDialog({
-            title: "Nouvelle Commande",
+            title: 'Nouvelle Commande',
           })
         }
       >
         Ajouter une commande
       </Button>
       {/* <div onContextMenu={handleClick} style={{ cursor: "context-menu" }}> */}
-        <DataTable
-          columns={columns}
-          rows={commandes?.map((m) => ({ id: m.idCommande, ...m }))}
-        />
+      <DataTable
+        columns={columns}
+        rows={commandes?.map((m) => ({ id: m.idCommande, ...m }))}
+      />
       {/* </div> */}
     </div>
   )
 }
 
-<<<<<<< HEAD
 export default Commandes
-=======
-export default Commandes;
 
 const initialState = {
   mouseX: null,
   mouseY: null,
-};
->>>>>>> c8d10005be3208bb5c633b19ab5a78999b667d04
+}
