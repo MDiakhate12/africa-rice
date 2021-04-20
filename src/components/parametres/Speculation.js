@@ -10,41 +10,41 @@ import SingleLineGridList from "../common/SingleLineGridList";
 import ConfirmDialog from "../common/ConfirmDialog";
 import { SpeculationInstitutionContext } from "../../store/speculationInstitution/provider";
 
-const { events, eventResponse } = require("../../store/utils/events");
-const { ipcRenderer } = window.require("electron");
+const { events, eventResponse } = require('../../store/utils/events')
+const { ipcRenderer } = window.require('electron')
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     marginBottom: theme.spacing(1),
-    width: "25ch",
+    width: '25ch',
   },
   addButton: {
-    width: "25ch",
+    width: '25ch',
   },
   gridContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignContent: "flex-start",
-    alignItems: "end",
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'flex-start',
+    alignItems: 'end',
   },
   secondaryScroll: {
-    "*::-webkit-scrollbar-thumb": {
+    '*::-webkit-scrollbar-thumb': {
       background: theme.palette.primary.secondary,
     },
-    "*::-webkit-scrollbar-thumb:hover": {
+    '*::-webkit-scrollbar-thumb:hover': {
       background: theme.palette.primary.main,
     },
   },
-}));
+}))
 
 export default function Speculation() {
-  const classes = useStyles();
-
+  const classes = useStyles()
   const {
     speculationsInstitution,
+    getAllSpeculationInstitution,
     addSpeculationInstitution,
     deleteByIdSpeculationInstitution,
-  } = useContext(SpeculationInstitutionContext);
+  } = useContext(SpeculationInstitutionContext)
 
   const {
     speculations,
@@ -52,11 +52,12 @@ export default function Speculation() {
     institution,
     getAllSpeculation,
     getAllLocalisation,
-  } = useContext(GlobalContext);
+  } = useContext(GlobalContext)
 
   useEffect(() => {
-    getAllSpeculation();
-    getAllLocalisation();
+    getAllSpeculation()
+    getAllLocalisation()
+    getAllSpeculationInstitution({ institutionId: institution?.institutionId })
 
     return () => {
       ipcRenderer.removeAllListeners([
@@ -64,37 +65,41 @@ export default function Speculation() {
         events.speculation.getAll,
         eventResponse.localisation.gotAll,
         events.localisation.getAll,
-      ]);
-    };
-  }, []);
+      ])
+    }
+  }, [institution])
 
-  const [state, setState] = useState("");
+  const [state, setState] = useState('')
 
   const handleChange = (e) => {
-    let { name, value } = e.target;
-    setState(value);
-    console.log("SPECULATION", { name, value });
-  };
+    let { name, value } = e.target
+    setState(value)
+    console.log('SPECULATION', { name, value })
+  }
 
   const handleSubmit = (e) => {
-    console.log("NEW SPECULATION", state);
+    console.log('NEW SPECULATION', {
+      speculationId: state.idSpeculation,
+      institutionId: institution?.idInstitution,
+      ...state,
+    })
     addSpeculationInstitution({
       speculationId: state.idSpeculation,
-      institutionId: institution.idInstitution,
+      institutionId: institution?.idInstitution,
       ...state,
-    });
-  };
+    })
+  }
 
   const handleDialogClose = (res, data) => {
-    if (res === "yes") {
+    if (res === 'yes') {
       try {
-        return deleteByIdSpeculationInstitution(data);
+        return deleteByIdSpeculationInstitution(data)
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
     }
-    return;
-  };
+    return
+  }
 
   return (
     <>
@@ -107,21 +112,21 @@ export default function Speculation() {
               title: speculation.Speculation.nomSpeculation,
               onClick: () => {
                 const removeAssociations = (obj) => {
-                  let result = {};
+                  let result = {}
                   for (let [key, value] of Object.entries(obj)) {
-                    if (typeof value !== "object") {
-                      result[key] = value;
+                    if (typeof value !== 'object') {
+                      result[key] = value
                     }
                   }
-                  return result;
-                };
+                  return result
+                }
 
                 console.log(removeAssociations(speculation))
                 openConfirmDialog({
-                  title: "Suppression",
+                  title: 'Suppression',
                   content: `Souhaitez vous réellement supprimer la spéculation ${speculation.Speculation.nomSpeculation} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`,
                   data: removeAssociations(speculation),
-                });
+                })
               },
             }))}
           />
@@ -138,7 +143,7 @@ export default function Speculation() {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={state || ""}
+              value={state || ''}
               name="ALL_SPECULATION"
               color="secondary"
               onChange={handleChange}
@@ -148,7 +153,7 @@ export default function Speculation() {
                   (s) =>
                     !speculationsInstitution
                       .map((si) => si.speculationId)
-                      .includes(s.idSpeculation)
+                      .includes(s.idSpeculation),
                 )
                 .map((speculation) => (
                   <MenuItem key={speculation.idSpeculation} value={speculation}>
@@ -168,5 +173,5 @@ export default function Speculation() {
         </Grid>
       </Grid>
     </>
-  );
+  )
 }

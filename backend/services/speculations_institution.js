@@ -11,10 +11,12 @@ const createSpeculationInstitution = async (data) => {
   return speculationInstitution.toJSON()
 }
 
-const getAllSpeculationInstitution = async () => {
-  const speculations = await service.findAll(SpeculationInstitution, {
+const getAllSpeculationInstitution = async (arg = {}) => {
+  let option = {
     include: [Speculation, Institution],
-  })
+  }
+  if (Object.keys(arg)) option = { ...option, where: { ...arg } }
+  const speculations = await service.findAll(SpeculationInstitution, option)
 
   const speculationsData = speculations.map((speculationInstitution) =>
     speculationInstitution.toJSON(),
