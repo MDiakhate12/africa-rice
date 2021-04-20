@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Commandes() {
   const classes = useStyles()
-
+  const { openCommandeFormDialog, institution } = useContext(GlobalContext)
   const getEtat = (params) => {
     const etat = params.getValue('EtatCommande').etat
     return (
@@ -189,11 +189,11 @@ function Commandes() {
     },
   ]
   const [commandes, setCommandes] = useState([])
-  // const [created, setCreated] = useState(false)
-  // const [updated, setUpdated] = useState(false)
 
   const getAllCommandes = () => {
-    ipcRenderer.send(events.commande.getAll)
+    ipcRenderer.send(events.commande.getAll, {
+      institutionId: institution?.idInstitution,
+    })
     ipcRenderer.once(eventResponse.commande.gotAll, (ev, data) => {
       console.log(data)
       setCommandes(data)
@@ -231,7 +231,7 @@ function Commandes() {
 
   useEffect(() => {
     getAllCommandes()
-  }, [])
+  }, [institution])
 
   const createCommande = (data) => {
     ipcRenderer.send(events.commande.create, data)
@@ -245,6 +245,7 @@ function Commandes() {
       const { clientId } = data
       data.articles.map((article) => {
         const commande = {}
+        commande.institutionId = institution.idInstitution
         commande.clientId = clientId
         commande.productionId = article.production.idProduction
         commande.quantite = article.quantite
@@ -275,8 +276,6 @@ function Commandes() {
   }
 
   // FORMDATA FOR MOR KAIRE
-
-  const { openCommandeFormDialog } = useContext(GlobalContext)
 
   const [contextMenuState, setContextMenuState] = useState(initialState)
 

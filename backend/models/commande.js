@@ -32,7 +32,7 @@ module.exports = (sequelize) => {
     dateEnlevementSouhaitee: {
       type: DataTypes.DATE,
       allowNull: true,
-      defaultValue: null,   
+      defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
@@ -86,6 +86,14 @@ module.exports = (sequelize) => {
       onDelete: 'CASCADE',
       foreignKey: {
         name: 'productionId',
+        allowNull: false,
+      },
+    })
+
+    CommandeModel.belongsTo(models.Institution, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'institutionId',
         allowNull: false,
       },
     })
