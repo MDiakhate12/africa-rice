@@ -44,12 +44,12 @@ const registerInstitution = async (data) => {
 
   if (!created) {
     response.status = 'error'
-    response.message = 'Un institution avec cet email existe deja'
+    response.message = 'Une institution avec cet email éxiste déjà'
     return data
   }
 
   response.status = 'success'
-  response.message = 'institution creer avec succes '
+  response.message = "Institution crée avec succés!"
   response.payload = _.omit(institution.toJSON(), ['password'])
   return response
 }
@@ -62,13 +62,13 @@ const loginInstitution = async (data) => {
 
   if (!institution) {
     response.status = 'error'
-    response.message = "Email n'est pas bon"
+    response.message = "Veuillez vérifier si l'email et le mot de passe sont corrects"
     return response
   }
 
   if (!(await comparePassword(password, institution.password))) {
     response.status = 'error'
-    response.message = 'Mot de passe incorrect'
+    response.message = "Veuillez vérifier si l'email et le mot de passe sont corrects"
     return response
   }
 

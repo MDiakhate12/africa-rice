@@ -31,8 +31,8 @@ export default function MagasinProvider({ children }) {
     });
   };
 
-  const getAllMagasin = () => {
-    ipcRenderer.send(events.magasin.getAll);
+  const getAllMagasin = (params) => {
+    ipcRenderer.send(events.magasin.getAll, params);
 
     ipcRenderer.once(eventResponse.magasin.gotAll, (event, data) => {
       console.log("EVENT:", event);
@@ -61,10 +61,6 @@ export default function MagasinProvider({ children }) {
       dispatch({ type: actions.ON_DELETE, payload: payload });
     });
   };
-
-  useEffect(() => {
-    getAllMagasin();
-  }, []);
 
   // return [magasin, add, getOne, getAll, update, deleteById];
 

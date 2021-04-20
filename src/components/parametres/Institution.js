@@ -14,62 +14,63 @@ const path = window.require('path')
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
   },
   margin: {
     marginBottom: theme.spacing(1),
   },
   addButton: {
-    width: '100%',
+    width: "100%",
   },
   gridContainer: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   fab: {
-    position: 'sticky',
+    position: "sticky",
   },
   formDialog: {
-    maxWidth: '30%',
+    maxWidth: "30%",
   },
-}))
+}));
 
 export default function Institution() {
-  const classes = useStyles()
+  const classes = useStyles();
 
   const { institution, updateInstitution } = useContext(GlobalContext)
 
-  const [formState, setFormState] = useState({})
+  const [formState, setFormState] = useState({});
 
   useEffect(() => {
-    console.log('INSTITUTION', institution)
-    setFormState(institution)
-  }, [institution])
+    console.log("INSTITUTION", institution);
+    setFormState(institution);
+  }, [institution]);
 
   const handleChange = (e) => {
-    let { name, value } = e.target
+    console.log(e.target.value);
+    let { name, value } = e.target;
     setFormState((state) => {
       return {
         ...state,
         [name]: value,
-      }
-    })
-  }
+      };
+    });
+  };
 
   const handleSubmit = (e) => {
-    console.log(formState)
-    console.log(institution)
-    updateInstitution({ id: formState.idInstitution, data: formState })
-  }
+    console.log(formState);
+    console.log(institution);
+    updateInstitution({ id: formState.idInstitution, data: formState });
+  };
 
   const showDialog = (e) => {
     ipcRenderer.send(events.imageDialog.open)
 
     ipcRenderer.once(eventResponse.imageDialog.closed, (event, data) => {
-      if (!data.cancelled) {
-        let file = data.filePaths[0]
-        let basename = path.basename(file)
+      if (!data.canceled) {
+        let file = data.filePaths[0];
+        let basename = path.basename(file);
         // let filepath = path.join(__dirname, `../images/${basename}`)
         let filepath = `../images/${basename}`
 
@@ -82,15 +83,15 @@ export default function Institution() {
           setFormState({
             ...formState,
             logo: filepath,
-          })
-          console.log('File was copied to destination')
-          console.log('STATE', formState)
-        }, 2000)
+          });
+          console.log("File was copied to destination");
+          console.log("STATE", formState);
+        }, 3000);
       }
     })
   }
 
-  const onSubmitChecklist = (e) => {}
+  const onSubmitChecklist = (e) => {};
 
   // const handleContactFormDialogClose = (res, data) => {
   //   if (res === "yes") {
@@ -124,7 +125,7 @@ export default function Institution() {
                   fullWidth
                   label="Nom complet"
                   name="nomComplet"
-                  value={formState?.nomComplet || ''}
+                  value={formState?.nomComplet || ""}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -135,7 +136,7 @@ export default function Institution() {
                   fullWidth
                   label="Sigle"
                   name="sigle"
-                  value={formState?.sigle || ''}
+                  value={formState?.sigle || ""}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -146,7 +147,7 @@ export default function Institution() {
                   fullWidth
                   label="Addresse"
                   name="addresse"
-                  value={formState?.addresse || ''}
+                  value={formState?.addresse || ""}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -158,7 +159,7 @@ export default function Institution() {
                   fullWidth
                   label="Téléphone"
                   name="telephone"
-                  value={formState?.telephone || ''}
+                  value={formState?.telephone || ""}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -170,7 +171,7 @@ export default function Institution() {
                   fullWidth
                   label="Email"
                   name="email"
-                  value={formState?.email || ''}
+                  value={formState?.email || ""}
                   className={clsx(classes.margin, classes.textField)}
                   variant="filled"
                   onChange={handleChange}
@@ -184,6 +185,17 @@ export default function Institution() {
                   className={classes.addButton}
                   size="large"
                   onClick={handleSubmit}
+                >
+                  Enregistrer
+                </Button>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  className={classes.addButton}
+                  size="large"
+                  onClick={() => {
+                    console.log(formState);
+                  }}
                 >
                   Enregistrer
                 </Button>
@@ -228,5 +240,5 @@ export default function Institution() {
         ]}
       /> */}
     </div>
-  )
+  );
 }

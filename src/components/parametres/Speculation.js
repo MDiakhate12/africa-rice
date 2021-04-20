@@ -1,14 +1,14 @@
-import React, { createRef, useContext, useEffect, useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import { Button, Grid } from '@material-ui/core'
-import { GlobalContext } from '../../store/GlobalProvider'
-import SingleLineGridList from '../common/SingleLineGridList'
-import ConfirmDialog from '../common/ConfirmDialog'
-import { SpeculationInstitutionContext } from '../../store/speculationInstitution/provider'
+import React, { useContext, useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import { Button, Grid } from "@material-ui/core";
+import { GlobalContext } from "../../store/GlobalProvider";
+import SingleLineGridList from "../common/SingleLineGridList";
+import ConfirmDialog from "../common/ConfirmDialog";
+import { SpeculationInstitutionContext } from "../../store/speculationInstitution/provider";
 
 const { events, eventResponse } = require('../../store/utils/events')
 const { ipcRenderer } = window.require('electron')

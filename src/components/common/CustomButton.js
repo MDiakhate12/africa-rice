@@ -113,7 +113,6 @@ export default function CustomButton({ image, onClick }) {
           </Typography>
         </span>
       </ButtonBase>
-      ))
     </div>
   );
 }

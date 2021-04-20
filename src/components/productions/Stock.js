@@ -1,15 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
-import DataTable from '../common/DataTable'
-import StockCard from './StockCard'
-import riz from '../../components/images/riz.jpg'
-import mil from '../../components/images/mil.jpg'
-import defaultImage from '../../components/images/default.jpg'
-import { Grid } from '@material-ui/core'
-import { GlobalContext } from '../../store/GlobalProvider'
-import CommonDialog from '../common/CommonDialog'
+import React, { useContext, useEffect, useState } from "react";
+import DataTable from "../common/DataTable";
+import StockCard from "./StockCard";
+import defaultImage from "../../components/images/default.jpg";
+import { Grid } from "@material-ui/core";
+import { GlobalContext } from "../../store/GlobalProvider";
+import CommonDialog from "../common/CommonDialog";
 
-const { ipcRenderer } = window.require('electron')
-const { events, eventResponse } = require('../../store/utils/events')
+const { ipcRenderer } = window.require("electron");
 
 const columns = [
   { type: 'string', field: 'id', headerName: 'idProduction', hide: true },

@@ -1,4 +1,4 @@
-import React, { useContext, useReducer } from 'react'
+import React, { useContext, useEffect, useReducer } from 'react'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -112,11 +112,18 @@ export default function Magasin() {
 
   const classes = useStyles()
 
-  const { magasins, addMagasin, deleteByIdMagasin } = useContext(MagasinContext)
+  const { magasins, addMagasin, deleteByIdMagasin, getAllMagasin } = useContext(MagasinContext)
 
   const { localisations, openConfirmDialog, institution } = useContext(
     GlobalContext,
   )
+
+  
+  useEffect(() => {
+    getAllMagasin({ institutionId: institution?.institutionId });
+  }, []);
+
+
 
   let initialState = {
     nomMagasin: '',

@@ -99,6 +99,7 @@ const getProductionsSumByVarietes = async (arg = {}) => {
       [sequelize.fn('sum', sequelize.col('stock_de_securite')), 'totalStock'],
     ],
   }
+  
   if (Object.keys(arg)) option = { ...option, where: { ...arg } }
   const productions = await service.findAll(Production, option)
   const productionsData = productions.map((production) => production.toJSON())
@@ -132,6 +133,7 @@ const getProductionsSumByRegion = async (arg = {}) => {
       [sequelize.fn('sum', sequelize.col('stock_de_securite')), 'totalStock'],
     ],
   }
+
   if (Object.keys(arg)) option = { ...option, where: { ...arg } }
   const productions = await service.findAll(Production, option)
   const productionsData = productions.map((production) => production.toJSON())

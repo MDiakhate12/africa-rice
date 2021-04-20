@@ -1,6 +1,4 @@
 const { dialog } = require("electron");
-const fs = require("fs");
-const path = require("path");
 
 module.exports = (ipcMain, events, eventResponse) => {
   ipcMain.on(events.imageDialog.open, (event, arg) => {

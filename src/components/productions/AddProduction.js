@@ -1,12 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
-import clsx from 'clsx'
-import { makeStyles } from '@material-ui/core/styles'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import {
-  Box,
   Button,
   Grid,
   InputAdornment,
@@ -110,7 +108,7 @@ export default function ProductionFormDialog({ handleClose }) {
   }
 
   const getMagasins = () => {
-    ipcRenderer.send(events.magasin.getAll)
+    ipcRenderer.send(events.magasin.getAll, { institutionId: institution?.institutionId })
     ipcRenderer.once(eventResponse.magasin.gotAll, (event, data) => {
       setMagasin(data)
     })

@@ -52,6 +52,7 @@ export default function CommandeLivraisonByVariete({ display }) {
   const [commandesByVariete, setCommandeByVariete] = useState([])
   const [commandeByVarieteByState, setCommandeByVarieteByState] = useState([])
 
+
   const getCommandeSumByVariete = () => {
     ipcRenderer.send('getCommandeSumByVarietes', {
       institutionId: institution?.idInstitution,

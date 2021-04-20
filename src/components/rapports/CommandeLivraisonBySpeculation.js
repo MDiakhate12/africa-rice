@@ -43,6 +43,7 @@ export default function CommandeLivraisonBySpeculation({ display }) {
     setCommandeBySpeculationByState,
   ] = useState([])
 
+
   const getCommandeSumBySpeculation = () => {
     ipcRenderer.send('getCommandeSumBySpeculation', {
       institutionId: institution?.idInstitution,

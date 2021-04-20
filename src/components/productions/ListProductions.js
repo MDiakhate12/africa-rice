@@ -1,11 +1,11 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Box, Button } from '@material-ui/core'
-import DataTable from '../common/DataTable'
-import AddProduction from './AddProduction'
-import ContextMenu from '../common/ContextMenu'
-import { GlobalContext } from '../../store/GlobalProvider'
-const { ipcRenderer } = window.require('electron')
-const { events, eventResponse } = require('../../store/utils/events')
+import React, { useContext, useEffect, useState } from "react";
+import { Box, Button } from "@material-ui/core";
+import DataTable from "../common/DataTable";
+import AddProduction from "./AddProduction";
+import ContextMenu from "../common/ContextMenu";
+import { GlobalContext } from "../../store/GlobalProvider";
+const { ipcRenderer } = window.require("electron");
+const { events, eventResponse } = require("../../store/utils/events");
 
 const columns = [
   { type: 'string', field: 'id', headerName: 'idProduction', hide: true },

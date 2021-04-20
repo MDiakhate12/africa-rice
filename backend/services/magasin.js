@@ -8,10 +8,16 @@ const createMagasin = async (data) => {
   return magasin.toJSON();
 };
 
-const getAllMagasins = async () => {
-  const magasins = await service.findAll(Magasin, {
+const getAllMagasins = async (arg = {}) => {
+
+  const option = {
     include: [Institution, Localisation],
-  });
+  }
+
+  if (Object.keys(arg)) option = { ...option, where: { ...arg } }
+
+  const magasins = await service.findAll(Magasin, option);
+
   const magasinsData = magasins.map((magasin) => magasin.toJSON());
   console.log(magasinsData);
   return magasinsData;
