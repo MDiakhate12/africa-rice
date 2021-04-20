@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
+import React, { useContext, useEffect, useReducer, useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
 import {
   Box,
   Button,
@@ -11,21 +11,21 @@ import {
   IconButton,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import DataTable from "../common/DataTable";
-import { GlobalContext } from "../../store/GlobalProvider";
-import DeleteIcon from "@material-ui/icons/Delete";
-import ConfirmDialog from "../common/ConfirmDialog";
-import { VarieteInstitutionContext } from "../../store/varieteInstitution/provider";
-import { SpeculationInstitutionContext } from "../../store/speculationInstitution/provider";
+} from '@material-ui/core'
+import DataTable from '../common/DataTable'
+import { GlobalContext } from '../../store/GlobalProvider'
+import DeleteIcon from '@material-ui/icons/Delete'
+import ConfirmDialog from '../common/ConfirmDialog'
+import { VarieteInstitutionContext } from '../../store/varieteInstitution/provider'
+import { SpeculationInstitutionContext } from '../../store/speculationInstitution/provider'
 
-const { events, eventResponse } = require("../../store/utils/events");
-const { ipcRenderer } = window.require("electron");
+const { events, eventResponse } = require('../../store/utils/events')
+const { ipcRenderer } = window.require('electron')
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     marginBottom: theme.spacing(1),
-    width: "25ch",
+    width: '25ch',
   },
   margin: {
     marginBottom: theme.spacing(1),
@@ -34,82 +34,90 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   textField: {
-    width: "25ch",
+    width: '25ch',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   addButton: {
-    width: "25ch",
+    width: '25ch',
   },
   gridContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-}));
+}))
 
 export default function Variete() {
-  useEffect(() => {
-    getAllVariete();
-
-    return () => {
-      ipcRenderer.removeAllListeners([
-        eventResponse.variete.gotAll,
-        events.variete.getAll,
-      ]);
-    };
-  }, []);
+  const {
+    varietesInstitution,
+    getAllVarieteInstitution,
+    addVarieteInstitution,
+    deleteByIdVarieteInstitution: deleteVarieteInstitution,
+  } = useContext(VarieteInstitutionContext)
 
   const {
     varietes,
     institution,
     openConfirmDialog,
     getAllVariete,
-  } = useContext(GlobalContext);
+  } = useContext(GlobalContext)
+
+  useEffect(() => {
+    getAllVariete()
+    getAllVarieteInstitution({ institutionId: institution?.idInstitution })
+
+    return () => {
+      ipcRenderer.removeAllListeners([
+        eventResponse.variete.gotAll,
+        events.variete.getAll,
+      ])
+    }
+  }, [institution])
 
   const columns = [
-    { type: "string", field: "id", headerName: "idVariete", hide: true },
+    { type: 'string', field: 'id', headerName: 'idVariete', hide: true },
     {
-      type: "string",
-      field: "variete",
-      headerName: "Variété",
+      type: 'string',
+      field: 'variete',
+      headerName: 'Variété',
       width: 170,
-      renderCell: (params) => params.getValue("Variete").nomVariete,
-      valueGetter: (params) => params.getValue("Variete").nomVariete,
+      renderCell: (params) => params.getValue('Variete').nomVariete,
+      valueGetter: (params) => params.getValue('Variete').nomVariete,
     },
     {
-      type: "string",
-      field: "speculation",
-      headerName: "Spéculation",
+      type: 'string',
+      field: 'speculation',
+      headerName: 'Spéculation',
       width: 130,
       renderCell: (params) =>
-        params.getValue("Variete").Speculation.nomSpeculation,
+        params.getValue('Variete').Speculation.nomSpeculation,
       valueGetter: (params) =>
-        params.getValue("Variete").Speculation.nomSpeculation,
+        params.getValue('Variete').Speculation.nomSpeculation,
     },
     {
-      type: "number",
-      field: "longueurCycle",
-      headerName: "Cycle",
+      type: 'number',
+      field: 'longueurCycle',
+      headerName: 'Cycle',
       width: 100,
-      renderCell: (params) => params.getValue("Variete").longueurCycle,
-      valueGetter: (params) => params.getValue("Variete").longueurCycle,
+      renderCell: (params) => params.getValue('Variete').longueurCycle,
+      valueGetter: (params) => params.getValue('Variete').longueurCycle,
     },
     {
-      type: "string",
-      field: "zone",
-      headerName: "Zone",
+      type: 'string',
+      field: 'zone',
+      headerName: 'Zone',
       width: 180,
       renderCell: (params) =>
-        params.getValue("Variete").ZoneAgroEcologique.nomZone,
+        params.getValue('Variete').ZoneAgroEcologique.nomZone,
       valueGetter: (params) =>
-        params.getValue("Variete").ZoneAgroEcologique.nomZone,
+        params.getValue('Variete').ZoneAgroEcologique.nomZone,
     },
     {
-      type: "string",
-      field: "delete",
-      headerName: "Action",
+      type: 'string',
+      field: 'delete',
+      headerName: 'Action',
       width: 120,
       sortable: false,
       hide: true,
@@ -118,68 +126,68 @@ export default function Variete() {
           title={
             params.api.getSelectedRows().length > 1
               ? `Supprimer les variétés sélectionnées`
-              : `Supprimer ${params.getValue("Variete").nomVariete}`
+              : `Supprimer ${params.getValue('Variete').nomVariete}`
           }
         >
           <IconButton
             onClick={(e) => {
               const removeIdAndAssociations = (idName, obj) => {
-                let result = {};
+                let result = {}
                 for (let [key, value] of Object.entries(obj)) {
-                  if (key !== idName && typeof value !== "object") {
-                    result[key] = value;
+                  if (key !== idName && typeof value !== 'object') {
+                    result[key] = value
                   }
                 }
-                return result;
-              };
+                return result
+              }
 
-              let selectedRows = params.api.getSelectedRows();
-              let content = "";
-              let data = "";
-              let title = "";
+              let selectedRows = params.api.getSelectedRows()
+              let content = ''
+              let data = ''
+              let title = ''
 
-              console.log(selectedRows);
+              console.log(selectedRows)
               if (selectedRows.length > 1) {
-                title = "Suppression multiple";
+                title = 'Suppression multiple'
 
-                data = selectedRows;
+                data = selectedRows
 
                 if (!selectedRows.includes(params.row)) {
-                  data.push(params.row);
+                  data.push(params.row)
                 }
 
                 content = `Souhaitez vous réellement toutes ces variétés:\n
                 ${data.reduce((result, row, index) => {
                   if (index === 1) {
-                    console.log("result:", result);
-                    console.log("row:", row);
-                    console.log("DIAAAAAF:", index);
+                    console.log('result:', result)
+                    console.log('row:', row)
+                    console.log('DIAAAAAF:', index)
 
-                    return `${result?.Variete?.nomVariete}, ${row?.Variete?.nomVariete}`;
+                    return `${result?.Variete?.nomVariete}, ${row?.Variete?.nomVariete}`
                   } else {
-                    console.log("result:", result);
-                    console.log("row:", row);
-                    console.log("index:", index);
-                    return `${result}, ${row?.Variete?.nomVariete}`;
+                    console.log('result:', result)
+                    console.log('row:', row)
+                    console.log('index:', index)
+                    return `${result}, ${row?.Variete?.nomVariete}`
                   }
                 })} ?
-                \nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`;
+                \nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`
 
                 data = selectedRows.map((row) =>
-                  removeIdAndAssociations("id", row)
-                );
+                  removeIdAndAssociations('id', row),
+                )
               } else {
-                title = "Suppression";
-                data = removeIdAndAssociations("id", params.row);
+                title = 'Suppression'
+                data = removeIdAndAssociations('id', params.row)
 
-                content = `Souhaitez vous réellement supprimer la variété ${params?.row?.Variete?.nomVariete} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`;
+                content = `Souhaitez vous réellement supprimer la variété ${params?.row?.Variete?.nomVariete} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`
               }
 
               openConfirmDialog({
                 title,
                 content,
                 data,
-              });
+              })
             }}
           >
             <DeleteIcon color="secondary" />
@@ -187,57 +195,51 @@ export default function Variete() {
         </Tooltip>
       ),
     },
-  ];
+  ]
 
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const {
-    varietesInstitution,
-    addVarieteInstitution,
-    deleteByIdVarieteInstitution: deleteVarieteInstitution,
-  } = useContext(VarieteInstitutionContext);
-
-  const { speculationsInstitution } = useContext(SpeculationInstitutionContext);
+  const { speculationsInstitution } = useContext(SpeculationInstitutionContext)
 
   const reducer = (state, action) => {
-    let { name, value } = action.payload;
-    let variete;
+    let { name, value } = action.payload
+    let variete
 
     switch (action.type) {
-      case "ON_SPECULATIONINSTITUTION_CHANGE":
+      case 'ON_SPECULATIONINSTITUTION_CHANGE':
         // console.log(value)
         variete = varietes.find(
-          (v) => v.speculationId === value.Speculation?.idSpeculation
-        );
-        console.log(variete?.ZoneAgroEcologique);
+          (v) => v.speculationId === value.Speculation?.idSpeculation,
+        )
+        console.log(variete?.ZoneAgroEcologique)
         return {
           ...state,
           [name]: value,
           variete,
-        };
-      case "ON_VARIETE_CHANGE":
+        }
+      case 'ON_VARIETE_CHANGE':
         return {
           ...state,
           [name]: value,
-        };
+        }
       default:
-        break;
+        break
     }
-  };
+  }
 
   const handleChange = (e) => {
-    let { name, value } = e.target;
+    let { name, value } = e.target
 
     // console.log(name, value);
     dispatch({
       type: `ON_${name.toUpperCase()}_CHANGE`,
       payload: { name, value },
-    });
-  };
+    })
+  }
 
   const handleSubmit = (e) => {
     if (!state.variete || !state.speculationInstitution) {
-      return;
+      return
     }
 
     let newVarieteInstitution = {
@@ -245,33 +247,35 @@ export default function Variete() {
         state.speculationInstitution.idSpeculationInstitution,
       varieteId: state.variete.idVariete,
       institutionId: state.idInstitution,
-    };
+    }
 
-    console.log(newVarieteInstitution);
-    addVarieteInstitution(newVarieteInstitution);
-  };
+    console.log(newVarieteInstitution)
+    addVarieteInstitution(newVarieteInstitution, {
+      institutionId: institution?.idInstitution,
+    })
+  }
 
   const handleDialogClose = (res, data) => {
-    if (res === "yes") {
+    if (res === 'yes') {
       try {
         if (data.length > 1) {
-          return data.map((d) => deleteVarieteInstitution(d));
+          return data.map((d) => deleteVarieteInstitution(d))
         }
-        return deleteVarieteInstitution(data);
+        return deleteVarieteInstitution(data)
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
     }
-    return;
-  };
+    return
+  }
 
   let initialState = {
-    speculationInstitution: "",
-    variete: "",
+    speculationInstitution: '',
+    variete: '',
     idInstitution: institution?.idInstitution,
-  };
+  }
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   return (
     <>
@@ -289,8 +293,8 @@ export default function Variete() {
       <Grid item sm={3}>
         <Box
           style={{
-            display: "flex",
-            justifyContent: "center",
+            display: 'flex',
+            justifyContent: 'center',
           }}
         >
           <Typography variant="button">Ajouter Une Variété</Typography>
@@ -303,7 +307,7 @@ export default function Variete() {
               <Select
                 labelId="speculation-label"
                 id="speculation-select"
-                value={state.speculationInstitution || ""}
+                value={state.speculationInstitution || ''}
                 name="speculationInstitution"
                 onChange={handleChange}
               >
@@ -321,7 +325,7 @@ export default function Variete() {
               <Select
                 labelId="variete-label"
                 id="variete-select"
-                value={state.variete || ""}
+                value={state.variete || ''}
                 name="variete"
                 onChange={handleChange}
               >
@@ -331,7 +335,7 @@ export default function Variete() {
                     (v) =>
                       !varietesInstitution
                         .map((vi) => vi.varieteId)
-                        .includes(v.idVariete)
+                        .includes(v.idVariete),
                   )
                   .filter(
                     // Only display varietes of the speculations of te institution
@@ -339,15 +343,15 @@ export default function Variete() {
                       speculationsInstitution.find(
                         (si) =>
                           si.idSpeculationInstitution ===
-                          state.speculationInstitution.idSpeculationInstitution
-                      )?.speculationId === v.speculationId
+                          state.speculationInstitution.idSpeculationInstitution,
+                      )?.speculationId === v.speculationId,
                   )
                   .map((variete) => {
                     return (
                       <MenuItem key={variete.idVariete} value={variete}>
                         {variete.nomVariete}
                       </MenuItem>
-                    );
+                    )
                   })}
               </Select>
             </FormControl>
@@ -418,5 +422,5 @@ export default function Variete() {
         </Grid>
       </Grid>
     </>
-  );
+  )
 }

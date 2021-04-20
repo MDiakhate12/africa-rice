@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react'
 import DataTable from '../common/DataTable'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Badge from '@material-ui/core/Badge'
 import { Button } from '@material-ui/core'
 import CommandeFormDialog from './CommandeFormDialog'
