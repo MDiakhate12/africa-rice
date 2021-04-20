@@ -55,7 +55,6 @@ function App() {
   useEffect(() => {
     console.log(institution)
     setIsAuth(checkAuth())
-    console.log(isAuth)
   }, [institution])
 
   return (

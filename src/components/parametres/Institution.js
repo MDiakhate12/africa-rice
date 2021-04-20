@@ -52,10 +52,9 @@ export default function Institution() {
   useEffect(() => {
     console.log('INSTITUTION', institution)
     setFormState(institution)
-  }, [])
+  }, [institution])
 
   const handleChange = (e) => {
-    console.log(e.target.value)
     let { name, value } = e.target
     setFormState((state) => {
       return {
