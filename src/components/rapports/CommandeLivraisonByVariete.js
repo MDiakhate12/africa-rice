@@ -1,16 +1,8 @@
-<<<<<<< HEAD
-import React, { useContext, useEffect, useState } from "react";
-import { Colors } from "./Colors";
-import { Bar } from "react-chartjs-2";
-import DataTable from "../common/DataTable";
-import {GlobalContext} from "../../store/GlobalProvider";
-=======
 import React, { useEffect, useState, useContext } from 'react'
 import { Colors } from './Colors'
 import { Bar } from 'react-chartjs-2'
 import DataTable from '../common/DataTable'
 import { GlobalContext } from '../../store/GlobalProvider'
->>>>>>> a8fd679ecb7adda37bc1d3a7fb9e68626b811297
 
 const { ipcRenderer } = window.require('electron')
 const { events, eventResponse } = require('../../store/utils/events')
@@ -60,16 +52,8 @@ export default function CommandeLivraisonByVariete({ display }) {
   const [commandesByVariete, setCommandeByVariete] = useState([])
   const [commandeByVarieteByState, setCommandeByVarieteByState] = useState([])
 
-  const {institution} = useContext(GlobalContext)
 
   const getCommandeSumByVariete = () => {
-<<<<<<< HEAD
-    ipcRenderer.send("getCommandeSumByVarietes", { institutionId: institution?.institutionId });
-    ipcRenderer.once("gotCommandeSumByVarietes", (event, data) => {
-      setCommandeByVariete(data);
-    });
-  };
-=======
     ipcRenderer.send('getCommandeSumByVarietes', {
       institutionId: institution?.idInstitution,
     })
@@ -77,7 +61,6 @@ export default function CommandeLivraisonByVariete({ display }) {
       setCommandeByVariete(data)
     })
   }
->>>>>>> a8fd679ecb7adda37bc1d3a7fb9e68626b811297
 
   useEffect(() => {
     getCommandeSumByVariete()
