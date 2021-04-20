@@ -1,110 +1,119 @@
+<<<<<<< HEAD
 import React, { useContext, useEffect, useState } from "react";
 import { Pie, Line, Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
 import { Colors } from "./Colors";
 import {GlobalContext} from "../../store/GlobalProvider";
 
+=======
+import React, { useEffect, useState, useContext } from 'react'
+import { Pie, Line, Bar } from 'react-chartjs-2'
+import DataTable from '../common/DataTable'
+import { Colors } from './Colors'
+import { GlobalContext } from '../../store/GlobalProvider'
+>>>>>>> a8fd679ecb7adda37bc1d3a7fb9e68626b811297
 
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
+const { ipcRenderer } = window.require('electron')
+const { events, eventResponse } = require('../../store/utils/events')
 
 const getNomVariete = (params) =>
-  params.getValue("Production").VarieteInstitution.Variete.nomVariete;
+  params.getValue('Production').VarieteInstitution.Variete.nomVariete
 
 const getNomSpeculation = (params) =>
-  params.getValue("Production").VarieteInstitution.SpeculationInstitution
-    .Speculation.nomSpeculation;
+  params.getValue('Production').VarieteInstitution.SpeculationInstitution
+    .Speculation.nomSpeculation
 
 const columns = [
-  { type: "string", field: "id", headerName: "idProduction", hide: true },
+  { type: 'string', field: 'id', headerName: 'idProduction', hide: true },
   {
-    type: "string",
-    field: "speculation",
-    headerName: "Speculation",
+    type: 'string',
+    field: 'speculation',
+    headerName: 'Speculation',
     width: 130,
     renderCell: getNomSpeculation,
     valueGetter: getNomSpeculation,
     hide: true,
   },
   {
-    type: "string",
-    field: "production",
-    headerName: "Production",
+    type: 'string',
+    field: 'production',
+    headerName: 'Production',
     width: 160,
     renderCell: getNomVariete,
     valueGetter: getNomVariete,
   },
   {
-    type: "number",
-    field: "totalQuantiteProduite",
+    type: 'number',
+    field: 'totalQuantiteProduite',
     width: 130,
-    headerName: "Total produit",
+    headerName: 'Total produit',
   },
   {
-    type: "number",
-    field: "totalQuantiteCommandee",
-    headerName: "Total commandé",
+    type: 'number',
+    field: 'totalQuantiteCommandee',
+    headerName: 'Total commandé',
     width: 150,
   },
-];
+]
 
 export default function ProductionCommandeByVariete({ display }) {
-  const [commandesByVariete, setCommandesByVariete] = useState([]);
-  const {institution} = useContext(GlobalContext)
-
+  const { institution } = useContext(GlobalContext)
+  const [commandesByVariete, setCommandesByVariete] = useState([])
 
   const getCommandeSumByVarietes = () => {
-    ipcRenderer.send("getCommandeSumByVarietes", { institutionId: institution?.institutionId });
-    ipcRenderer.once("gotCommandeSumByVarietes", (event, data) => {
-      setCommandesByVariete(data);
-      console.log("DIIAAAAF", data);
-    });
-  };
+    ipcRenderer.send('getCommandeSumByVarietes', {
+      institutionId: institution?.idInstitution,
+    })
+    ipcRenderer.once('gotCommandeSumByVarietes', (event, data) => {
+      setCommandesByVariete(data)
+      console.log('DIIAAAAF', data)
+    })
+  }
 
   useEffect(() => {
-    getCommandeSumByVarietes();
-  }, []);
+    getCommandeSumByVarietes()
+  }, [institution])
 
-  const [productionsByVariete, setProductionsByVariete] = useState([]);
+  const [productionsByVariete, setProductionsByVariete] = useState([])
 
   const getProductionsSumByVarietes = () => {
-    ipcRenderer.send("getByVarietes");
-    ipcRenderer.once("gotByVarietes", (event, data) => {
-      console.log(data);
-      setProductionsByVariete(data);
-    });
-  };
+    ipcRenderer.send('getByVarietes')
+    ipcRenderer.once('gotByVarietes', (event, data) => {
+      console.log(data)
+      setProductionsByVariete(data)
+    })
+  }
 
   useEffect(() => {
-    getProductionsSumByVarietes();
-  }, []);
+    getProductionsSumByVarietes()
+  }, [])
 
   const dataByVariete = {
     labels: productionsByVariete.map(
-      (production) => production.VarieteInstitution.Variete.nomVariete
+      (production) => production.VarieteInstitution.Variete.nomVariete,
     ),
     datasets: [
       {
-        label: "Production",
+        label: 'Production',
         data: productionsByVariete.map(
-          (production) => production.totalQuantiteProduite
+          (production) => production.totalQuantiteProduite,
         ),
         backgroundColor: Colors[0],
       },
       {
-        label: "Commande",
+        label: 'Commande',
         data: commandesByVariete.map(
-          (commande) => commande.totalQuantiteCommandee
+          (commande) => commande.totalQuantiteCommandee,
         ),
         backgroundColor: Colors[1],
       },
     ],
-  };
+  }
 
   const optionsVariete = {
     title: {
       display: true,
-      text: "Quantité produite VS Quantité commandée par variété",
+      text: 'Quantité produite VS Quantité commandée par variété',
       // position: "bottom",
     },
     scales: {
@@ -117,22 +126,22 @@ export default function ProductionCommandeByVariete({ display }) {
         },
       ],
     },
-  };
+  }
 
-//   return <Bar data={dataByVariete} options={optionsVariete} />;
-// }
+  //   return <Bar data={dataByVariete} options={optionsVariete} />;
+  // }
 
-const rows = commandesByVariete.map((v, i) => ({
-  id: v.Production.VarieteInstitution.SpeculationInstitution.speculationId,
-  ...v,
-  ...productionsByVariete[i],
-}));
+  const rows = commandesByVariete.map((v, i) => ({
+    id: v.Production.VarieteInstitution.SpeculationInstitution.speculationId,
+    ...v,
+    ...productionsByVariete[i],
+  }))
 
-return display === "chart" ? (
-  <Bar data={dataByVariete} options={optionsVariete} />
-) : (
-  <>
-    <DataTable height={350} pageSize={4} columns={columns} rows={rows} />
-  </>
-);
+  return display === 'chart' ? (
+    <Bar data={dataByVariete} options={optionsVariete} />
+  ) : (
+    <>
+      <DataTable height={350} pageSize={4} columns={columns} rows={rows} />
+    </>
+  )
 }

@@ -1,86 +1,105 @@
+<<<<<<< HEAD
 import React, { useContext, useEffect, useState } from "react";
 import { Colors } from "./Colors";
 import { Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
 import {GlobalContext} from "../../store/GlobalProvider";
+=======
+import React, { useEffect, useState, useContext } from 'react'
+import { Colors } from './Colors'
+import { Bar } from 'react-chartjs-2'
+import DataTable from '../common/DataTable'
+import { GlobalContext } from '../../store/GlobalProvider'
+>>>>>>> a8fd679ecb7adda37bc1d3a7fb9e68626b811297
 
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
+const { ipcRenderer } = window.require('electron')
+const { events, eventResponse } = require('../../store/utils/events')
 
 const getNomVariete = (params) =>
-  params.getValue("Production").VarieteInstitution.Variete.nomVariete;
+  params.getValue('Production').VarieteInstitution.Variete.nomVariete
 
 const getNomSpeculation = (params) =>
-  params.getValue("Production").VarieteInstitution.SpeculationInstitution
-    .Speculation.nomSpeculation;
+  params.getValue('Production').VarieteInstitution.SpeculationInstitution
+    .Speculation.nomSpeculation
 
 const columns = [
-  { type: "string", field: "id", headerName: "idCommande", hide: true },
+  { type: 'string', field: 'id', headerName: 'idCommande', hide: true },
   {
-    type: "string",
-    field: "speculation",
-    headerName: "Speculation",
+    type: 'string',
+    field: 'speculation',
+    headerName: 'Speculation',
     width: 130,
     renderCell: getNomSpeculation,
     valueGetter: getNomSpeculation,
     hide: true,
   },
   {
-    type: "string",
-    field: "commande",
-    headerName: "Commande",
+    type: 'string',
+    field: 'commande',
+    headerName: 'Commande',
     width: 170,
     renderCell: getNomVariete,
     valueGetter: getNomVariete,
   },
   {
-    type: "number",
-    field: "totalQuantiteCommandee",
-    headerName: "Total commandé",
+    type: 'number',
+    field: 'totalQuantiteCommandee',
+    headerName: 'Total commandé',
     width: 150,
   },
   {
-    type: "number",
-    field: "totalQuantiteEnleve",
-    headerName: "Total livré",
+    type: 'number',
+    field: 'totalQuantiteEnleve',
+    headerName: 'Total livré',
     width: 150,
   },
-];
+]
 
 export default function CommandeLivraisonByVariete({ display }) {
-  const [commandesByVariete, setCommandeByVariete] = useState([]);
-  const [commandeByVarieteByState, setCommandeByVarieteByState] = useState([]);
+  const { institution } = useContext(GlobalContext)
+  const [commandesByVariete, setCommandeByVariete] = useState([])
+  const [commandeByVarieteByState, setCommandeByVarieteByState] = useState([])
 
   const {institution} = useContext(GlobalContext)
 
   const getCommandeSumByVariete = () => {
+<<<<<<< HEAD
     ipcRenderer.send("getCommandeSumByVarietes", { institutionId: institution?.institutionId });
     ipcRenderer.once("gotCommandeSumByVarietes", (event, data) => {
       setCommandeByVariete(data);
     });
   };
+=======
+    ipcRenderer.send('getCommandeSumByVarietes', {
+      institutionId: institution?.idInstitution,
+    })
+    ipcRenderer.once('gotCommandeSumByVarietes', (event, data) => {
+      setCommandeByVariete(data)
+    })
+  }
+>>>>>>> a8fd679ecb7adda37bc1d3a7fb9e68626b811297
 
   useEffect(() => {
-    getCommandeSumByVariete();
-  }, []);
+    getCommandeSumByVariete()
+  }, [institution])
 
   const getCommandeSumByVarieteByState = () => {
-    ipcRenderer.send("getCommandeSumByVarieteByState");
-    ipcRenderer.once("gotCommandeSumByVarieteByState", (event, data) => {
-      setCommandeByVarieteByState(data);
-      console.log("BY STATE: ", data);
-    });
-  };
+    ipcRenderer.send('getCommandeSumByVarieteByState')
+    ipcRenderer.once('gotCommandeSumByVarieteByState', (event, data) => {
+      setCommandeByVarieteByState(data)
+      console.log('BY STATE: ', data)
+    })
+  }
 
   useEffect(() => {
-    getCommandeSumByVariete();
-    getCommandeSumByVarieteByState();
-  }, []);
+    getCommandeSumByVariete()
+    getCommandeSumByVarieteByState()
+  }, [])
 
   const optionsVarieteByState = {
     title: {
       display: true,
-      text: "Quantité commandée VS Quantité Livrée par variété",
+      text: 'Quantité commandée VS Quantité Livrée par variété',
       // position: "bottom",
     },
     scales: {
@@ -93,45 +112,45 @@ export default function CommandeLivraisonByVariete({ display }) {
         },
       ],
     },
-  };
+  }
 
   const labels = commandesByVariete.map(
-    (commande) => commande.Production.VarieteInstitution.Variete.nomVariete
-  );
+    (commande) => commande.Production.VarieteInstitution.Variete.nomVariete,
+  )
 
   const commandeByVarieteByStateLabels = commandeByVarieteByState
     .filter((commande) => commande.etatId === 5)
     .map(
-      (commande) => commande.Production.VarieteInstitution.Variete.nomVariete
-    );
+      (commande) => commande.Production.VarieteInstitution.Variete.nomVariete,
+    )
 
   const commandesEnlevees = commandeByVarieteByState.filter(
-    (commande) => commande.etatId === 5
-  );
+    (commande) => commande.etatId === 5,
+  )
 
-  console.log(commandeByVarieteByStateLabels);
+  console.log(commandeByVarieteByStateLabels)
 
   const totalEnleve = labels.map((label) => {
-    let index = commandeByVarieteByStateLabels.indexOf(label);
+    let index = commandeByVarieteByStateLabels.indexOf(label)
     if (index > -1) {
-      return commandesEnlevees[index].totalQuantiteCommandee;
+      return commandesEnlevees[index].totalQuantiteCommandee
     }
-    return 0;
-  });
+    return 0
+  })
 
   const dataByVarieteByState = {
     labels,
     datasets: [
       {
-        label: "Commande",
+        label: 'Commande',
         data: commandesByVariete.map(
-          (commande) => commande.totalQuantiteCommandee
+          (commande) => commande.totalQuantiteCommandee,
         ),
         // backgroundColor: colors.slice(3, commandesByVariete.length + 3),
         backgroundColor: Colors[4],
       },
       {
-        label: "Enlèvement",
+        label: 'Enlèvement',
         data: labels.map((label) => {
           // if (commandeByVarieteByStateLabels.includes(label)) {
           //   return commandeByVarieteByState.find(
@@ -141,17 +160,17 @@ export default function CommandeLivraisonByVariete({ display }) {
           //   ).totalQuantiteCommandee;
           // }
           // return 0;
-          let index = commandeByVarieteByStateLabels.indexOf(label);
+          let index = commandeByVarieteByStateLabels.indexOf(label)
           if (index > -1) {
-            return commandesEnlevees[index].totalQuantiteCommandee;
+            return commandesEnlevees[index].totalQuantiteCommandee
           }
-          return 0;
+          return 0
         }),
         // commande.etatId === 5 ? commande.totalQuantiteCommandee : 0
         backgroundColor: Colors[5],
       },
     ],
-  };
+  }
 
   //   return <Bar data={dataByVarieteByState} options={optionsVarieteByState} />; //
   // }
@@ -161,14 +180,14 @@ export default function CommandeLivraisonByVariete({ display }) {
       id: `${v.Production.VarieteInstitution.SpeculationInstitution.speculationId}${v.etatId}`,
       ...v,
       totalQuantiteEnleve: totalEnleve[i],
-    };
-  });
+    }
+  })
 
-  return display === "chart" ? (
+  return display === 'chart' ? (
     <Bar data={dataByVarieteByState} options={optionsVarieteByState} />
   ) : (
     <>
       <DataTable height={350} pageSize={4} columns={columns} rows={rows} />
     </>
-  );
+  )
 }

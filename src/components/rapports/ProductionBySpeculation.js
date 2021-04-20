@@ -1,23 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Pie, Line, Bar } from "react-chartjs-2";
-import DataTable from "../common/DataTable";
-import { Colors } from "./Colors";
+import React, { useEffect, useState, useContext } from 'react'
+import { Pie, Line, Bar } from 'react-chartjs-2'
+import { GlobalContext } from '../../store/GlobalProvider'
+import DataTable from '../common/DataTable'
+import { Colors } from './Colors'
 
-import { GlobalContext } from "../../store/GlobalProvider";
-
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
+const { ipcRenderer } = window.require('electron')
+const { events, eventResponse } = require('../../store/utils/events')
 
 const getNomSpeculation = (params) =>
-  params.getValue("VarieteInstitution").SpeculationInstitution.Speculation
-    .nomSpeculation;
+  params.getValue('VarieteInstitution').SpeculationInstitution.Speculation
+    .nomSpeculation
 
 const columns = [
-  { type: "string", field: "id", headerName: "idProduction", hide: true },
+  { type: 'string', field: 'id', headerName: 'idProduction', hide: true },
   {
-    type: "string",
-    field: "production",
-    headerName: "Production",
+    type: 'string',
+    field: 'production',
+    headerName: 'Production',
     width: 160,
     renderCell: getNomSpeculation,
     valueGetter: getNomSpeculation,
@@ -30,10 +29,10 @@ const columns = [
   //   headerName: "Quantité disponible totale",
   // },
   {
-    type: "number",
-    field: "totalQuantiteProduite",
+    type: 'number',
+    field: 'totalQuantiteProduite',
     width: 150,
-    headerName: "Total produit",
+    headerName: 'Total produit',
   },
   // {
   //   type: "string",
@@ -41,48 +40,47 @@ const columns = [
   //   width: 130,
   //   headerName: "Stock de sécurité total",
   // },
-];
+]
 
 export default function ProductionBySpeculation({ display }) {
-  const [productionsBySpeculation, setProductionsBySpeculation] = useState([]);
-
-  const { institution } = useContext(GlobalContext);
+  const { institution } = useContext(GlobalContext)
+  const [productionsBySpeculation, setProductionsBySpeculation] = useState([])
 
   const getProductionsSumBySpeculation = () => {
-    ipcRenderer.send("getProductionsSumBySpeculation", {
-      institutionId: institution?.institutionId,
-    });
-    ipcRenderer.once("gotProductionsSumBySpeculation", (event, data) => {
-      console.log(data);
-      setProductionsBySpeculation(data);
-    });
-  };
+    ipcRenderer.send('getProductionsSumBySpeculation', {
+      institutionId: institution?.idInstitution,
+    })
+    ipcRenderer.once('gotProductionsSumBySpeculation', (event, data) => {
+      console.log(data)
+      setProductionsBySpeculation(data)
+    })
+  }
 
   useEffect(() => {
-    getProductionsSumBySpeculation();
+    getProductionsSumBySpeculation()
     // console.log(productions)
-  }, []);
+  }, [institution])
 
   const dataBySpeculations = {
     labels: productionsBySpeculation.map(
       (production) =>
         production.VarieteInstitution.SpeculationInstitution.Speculation
-          .nomSpeculation
+          .nomSpeculation,
     ),
     datasets: [
       {
-        label: "Production",
+        label: 'Production',
         data: productionsBySpeculation.map(
-          (production) => production.totalQuantiteProduite
+          (production) => production.totalQuantiteProduite,
         ),
         backgroundColor: Colors.slice(0, productionsBySpeculation.length),
       },
     ],
-  };
+  }
   const optionsSpeculation = {
     title: {
       display: true,
-      text: "Quantité produite par spéculation",
+      text: 'Quantité produite par spéculation',
       // position: "bottom",
     },
     // scales: {
@@ -96,14 +94,14 @@ export default function ProductionBySpeculation({ display }) {
     //     },
     //   ],
     // },
-  };
+  }
 
   const rows = productionsBySpeculation.map((v) => ({
     id: v.VarieteInstitution.SpeculationInstitution.speculationId,
     ...v,
-  }));
+  }))
 
-  return display === "chart" ? (
+  return display === 'chart' ? (
     <Pie data={dataBySpeculations} options={optionsSpeculation} />
   ) : (
     <>
@@ -117,5 +115,5 @@ export default function ProductionBySpeculation({ display }) {
         }))}
       />
     </>
-  );
+  )
 }
