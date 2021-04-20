@@ -1,15 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import DataTable from "../common/DataTable";
 import StockCard from "./StockCard";
-import riz from "../../components/images/riz.jpg";
-import mil from "../../components/images/mil.jpg";
 import defaultImage from "../../components/images/default.jpg";
 import { Grid } from "@material-ui/core";
 import { GlobalContext } from "../../store/GlobalProvider";
 import CommonDialog from "../common/CommonDialog";
 
 const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
 
 const columns = [
   { type: "string", field: "id", headerName: "idProduction", hide: true },
@@ -51,7 +48,7 @@ function Stock() {
   // const [productions, setProductions] = useState([]);
   const [productionsBySpeculation, setProductionBySpec] = useState([]);
   const [productionsByVariete, setProductionByVariete] = useState([]);
-  const { openDialog, dialog } = useContext(GlobalContext);
+  const { openDialog } = useContext(GlobalContext);
 
   // PRODUCTIONS GROUPED BY SPECULATION
   // const [speculations, setSpeculations] = useState([

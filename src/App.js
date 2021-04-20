@@ -1,11 +1,11 @@
 import React, { useEffect, useContext, useState } from 'react'
 import './App.css'
-import GlobalProvider, { GlobalContext } from './store/GlobalProvider'
+import { GlobalContext } from './store/GlobalProvider'
 import MiniDrawer from './components/common/MiniDrawer'
 import { ThemeProvider } from '@material-ui/styles'
 import { createMuiTheme } from '@material-ui/core'
 import { amber, teal } from '@material-ui/core/colors'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import Auth from './components/auth/Auth'
 
 const theme = createMuiTheme({

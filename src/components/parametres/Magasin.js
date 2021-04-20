@@ -124,7 +124,6 @@ export default function Magasin() {
   const {
     localisations,
     openConfirmDialog,
-    institution
   } = useContext(GlobalContext);
 
   

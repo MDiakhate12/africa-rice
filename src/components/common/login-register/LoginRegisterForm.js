@@ -156,7 +156,7 @@ export default function LoginRegisterForm() {
   const interval = 1300
 
   const clearOrCheck = (e) => {
-    let { name, value } = e.target
+    let { name } = e.target
 
     if (name === 'password' && formState.password?.length === 8) return check(e)
 
@@ -496,17 +496,46 @@ export default function LoginRegisterForm() {
               </Grid>
 
               <Grid item sm={12}>
-                <TextField
-                  fullWidth
-                  label="Mot de passe"
-                  name="password"
-                  margin="dense"
-                  value={formStateLogin?.password || ''}
+                <FormControl
                   className={clsx(classes.margin, classes.textField)}
-                  // variant="filled"
-                  onChange={handleChangeLogin}
-                />
+                  fullWidth
+                  error={error.password}
+                >
+                  <InputLabel htmlFor="standard-adornment-password">
+                    Mot de passe
+                  </InputLabel>
+                  <Input
+                    id="standard-adornment-password"
+                    type={formState.showPassword ? 'text' : 'password'}
+                    name="password"
+                    onChange={handleChangeLogin}
+                    value={formStateLogin?.password || ''}
+                    className={clsx(classes.margin, classes.textField)}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {formState.showPassword ? (
+                            <Visibility />
+                          ) : (
+                            <VisibilityOff />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  <FormHelperText>
+                    {error.password
+                      ? 'Le mdp doit contenir au moins 8 caractères'
+                      : ''}
+                  </FormHelperText>
+                </FormControl>
               </Grid>
+
+
 
               <Grid item sm={12}>
                 {responseError ? (

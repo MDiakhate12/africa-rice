@@ -3,11 +3,8 @@ import DataTable from '../common/DataTable'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import { Box } from '@material-ui/core'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 const { ipcRenderer } = window.require('electron')
-const { events, eventResponse } = require('../../store/utils/events')
 
 const columns = [
   { type: 'string', field: 'id', headerName: 'idProduction', hide: true },
