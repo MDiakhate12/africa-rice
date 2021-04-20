@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Pie, Line, Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
 import { Colors } from "./Colors";
+import {GlobalContext} from "../../store/GlobalProvider";
+
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -31,8 +33,10 @@ const columns = [
 export default function ProductionByVariete({ display}) {
   const [productionsByVariete, setProductionsByVariete] = useState([]);
 
+  const {institution} = useContext(GlobalContext)
+
   const getProductionsSumByVarietes = () => {
-    ipcRenderer.send("getByVarietes");
+    ipcRenderer.send("getByVarietes", { institutionId: institution?.institutionId });
     ipcRenderer.once("gotByVarietes", (event, data) => {
       console.log(data);
       setProductionsByVariete(data);

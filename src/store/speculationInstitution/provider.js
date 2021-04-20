@@ -77,19 +77,6 @@ export default function SpeculationInstitutionProvider({ children }) {
     )
   }
 
-  // useEffect(() => {
-  //   getAllSpeculationInstitution();
-
-  //   return () => {
-  //     ipcRenderer.removeAllListeners([
-  //       eventResponse.speculationInstitution.gotAll,
-  //       events.speculationInstitution.getAll,
-  //     ]);
-  //   };
-  // }, []);
-
-  // return [speculationInstitution, add, getOne, getAll, update, deleteById];
-
   return (
     <SpeculationInstitutionContext.Provider
       value={{

@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-import clsx from "clsx";
-import { Button, Grid, TextField, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import CustomButton from "../common/CustomButton";
-import photoImage from "../images/photo.svg";
-import { eventResponse, events } from "../../store/utils/events";
-import { GlobalContext } from "../../store/GlobalProvider";
-import CheckboxList from "../common/CheckboxList";
+import React, { useContext, useEffect, useState } from 'react'
+import clsx from 'clsx'
+import { Button, Grid, TextField, Typography } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import CustomButton from '../common/CustomButton'
+import photoImage from '../images/photo.svg'
+import { eventResponse, events } from '../../store/utils/events'
+import { GlobalContext } from '../../store/GlobalProvider'
+import CheckboxList from '../common/CheckboxList'
 
-const { ipcRenderer } = window.require("electron");
-const fs = window.require("fs");
-const path = window.require("path");
+const { ipcRenderer } = window.require('electron')
+const fs = window.require('fs')
+const path = window.require('path')
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Institution() {
   const classes = useStyles();
 
-  const { institution, updateInstitution } = useContext(GlobalContext);
+  const { institution, updateInstitution } = useContext(GlobalContext)
 
   const [formState, setFormState] = useState({});
 
@@ -65,20 +65,20 @@ export default function Institution() {
   };
 
   const showDialog = (e) => {
-    ipcRenderer.send(events.imageDialog.open);
+    ipcRenderer.send(events.imageDialog.open)
 
     ipcRenderer.once(eventResponse.imageDialog.closed, (event, data) => {
       if (!data.canceled) {
         let file = data.filePaths[0];
         let basename = path.basename(file);
         // let filepath = path.join(__dirname, `../images/${basename}`)
-        let filepath = `../images/${basename}`;
+        let filepath = `../images/${basename}`
 
-        console.log("file", file);
-        console.log("filepath", filepath);
+        console.log('file', file)
+        console.log('filepath', filepath)
         fs.copyFile(file, `src/components/images/${basename}`, (err) => {
-          if (err) throw err;
-        });
+          if (err) throw err
+        })
         setTimeout(() => {
           setFormState({
             ...formState,
@@ -88,8 +88,8 @@ export default function Institution() {
           console.log("STATE", formState);
         }, 3000);
       }
-    });
-  };
+    })
+  }
 
   const onSubmitChecklist = (e) => {};
 
@@ -207,8 +207,8 @@ export default function Institution() {
             <CustomButton
               image={{
                 url: formState?.logo || photoImage,
-                title: "Ajouter un logo",
-                width: "65%",
+                title: 'Ajouter un logo',
+                width: '65%',
               }}
               onClick={showDialog}
             />

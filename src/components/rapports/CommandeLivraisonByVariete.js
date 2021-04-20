@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Colors } from "./Colors";
 import { Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
+import {GlobalContext} from "../../store/GlobalProvider";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -50,8 +51,10 @@ export default function CommandeLivraisonByVariete({ display }) {
   const [commandesByVariete, setCommandeByVariete] = useState([]);
   const [commandeByVarieteByState, setCommandeByVarieteByState] = useState([]);
 
+  const {institution} = useContext(GlobalContext)
+
   const getCommandeSumByVariete = () => {
-    ipcRenderer.send("getCommandeSumByVarietes");
+    ipcRenderer.send("getCommandeSumByVarietes", { institutionId: institution?.institutionId });
     ipcRenderer.once("gotCommandeSumByVarietes", (event, data) => {
       setCommandeByVariete(data);
     });

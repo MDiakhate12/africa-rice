@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Pie, Line, Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
 import { Colors } from "./Colors";
+import {GlobalContext} from "../../store/GlobalProvider";
+
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -48,9 +50,11 @@ const columns = [
 
 export default function ProductionCommandeByVariete({ display }) {
   const [commandesByVariete, setCommandesByVariete] = useState([]);
+  const {institution} = useContext(GlobalContext)
+
 
   const getCommandeSumByVarietes = () => {
-    ipcRenderer.send("getCommandeSumByVarietes");
+    ipcRenderer.send("getCommandeSumByVarietes", { institutionId: institution?.institutionId });
     ipcRenderer.once("gotCommandeSumByVarietes", (event, data) => {
       setCommandesByVariete(data);
       console.log("DIIAAAAF", data);

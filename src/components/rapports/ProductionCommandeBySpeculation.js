@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Pie, Line, Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
 import { Colors } from "./Colors";
+import {GlobalContext} from "../../store/GlobalProvider";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -37,8 +38,10 @@ const columns = [
 export default function ProductionCommandeBySpeculation({ display }) {
   const [commandesBySpeculation, setCommandesBySpeculation] = useState([]);
 
+  const {institution} = useContext(GlobalContext)
+
   const getCommandeSumBySpeculation = () => {
-    ipcRenderer.send("getCommandeSumBySpeculation");
+    ipcRenderer.send("getCommandeSumBySpeculation", { institutionId: institution?.institutionId });
     ipcRenderer.once("gotCommandeSumBySpeculation", (event, data) => {
       setCommandesBySpeculation(data);
       console.log("DIIAAAAF", data);

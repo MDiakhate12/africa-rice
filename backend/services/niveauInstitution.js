@@ -8,7 +8,7 @@ const createNiveauInstitution = async (data) => {
   return niveauInstitution.toJSON()
 }
 
-const getAllNiveauInstitutions = async () => {
+const getAllNiveauInstitutions = async (arg = {}) => {
   let option = {
     include: [NiveauDeProduction],
   }

@@ -11,7 +11,6 @@ export default function Provider() {
   )
 
   const login = (payload) => {
-    console.log('loginnnn')
     localStorage.setItem('institution', JSON.stringify(payload))
     dispatch({ type: actions.ON_GET_ONE, payload })
   }
@@ -24,12 +23,10 @@ export default function Provider() {
   const checkAuth = () => {
     const institution = localStorage.getItem('institution')
     if (institution) {
-      dispatch({ type: actions.ON_ADD, payload: institution })
-      console.log('true')
+      dispatch({ type: actions.ON_GET_ONE, payload: JSON.parse(institution) })
       return true
     } else {
-      dispatch({ type: actions.ON_ADD, payload: {} })
-      console.log('false')
+      dispatch({ type: actions.ON_GET_ONE, payload: {} })
       return false
     }
   }
@@ -43,6 +40,7 @@ export default function Provider() {
       dispatch({ type: actions.ON_ADD, payload: data })
     })
   }
+
   const getOne = (payload) => {
     console.log('GET ONE:', payload)
     ipcRenderer.send(events.institution.getOne, payload)

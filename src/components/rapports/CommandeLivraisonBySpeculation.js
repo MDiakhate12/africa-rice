@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Colors } from "./Colors";
 import { Pie, Line, Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
+import {GlobalContext} from "../../store/GlobalProvider";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -41,8 +42,11 @@ export default function CommandeLivraisonBySpeculation({ display }) {
     setCommandeBySpeculationByState,
   ] = useState([]);
 
+  const {institution} = useContext(GlobalContext)
+
+
   const getCommandeSumBySpeculation = () => {
-    ipcRenderer.send("getCommandeSumBySpeculation");
+    ipcRenderer.send("getCommandeSumBySpeculation", { institutionId: institution?.institutionId });
     ipcRenderer.once("gotCommandeSumBySpeculation", (event, data) => {
       setCommandesBySpeculation(data);
     });

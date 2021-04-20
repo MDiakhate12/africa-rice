@@ -50,12 +50,11 @@ const theme = createMuiTheme({
 
 function App() {
   const [isAuth, setIsAuth] = useState(false)
-  const { institution, checkAuth } = useContext(GlobalContext)
+  const { checkAuth } = useContext(GlobalContext)
 
   useEffect(() => {
-    console.log(institution)
     setIsAuth(checkAuth())
-  }, [institution])
+  }, [])
 
   return (
     <ThemeProvider theme={theme}>
