@@ -32,8 +32,6 @@ export default function ProductionByVariete({ display }) {
   const { institution } = useContext(GlobalContext)
   const [productionsByVariete, setProductionsByVariete] = useState([])
 
-  const {institution} = useContext(GlobalContext)
-
   const getProductionsSumByVarietes = () => {
     ipcRenderer.send('getByVarietes', {
       institutionId: institution?.idInstitution,

@@ -1,16 +1,8 @@
-<<<<<<< HEAD
-import React, { useContext, useEffect, useState } from "react";
-import { Pie, Line, Bar } from "react-chartjs-2";
-import DataTable from "../common/DataTable";
-import { Colors } from "./Colors";
-import {GlobalContext} from "../../store/GlobalProvider";
-=======
 import React, { useEffect, useState, useContext } from 'react'
 import { Pie, Line, Bar } from 'react-chartjs-2'
 import DataTable from '../common/DataTable'
 import { GlobalContext } from '../../store/GlobalProvider'
 import { Colors } from './Colors'
->>>>>>> a8fd679ecb7adda37bc1d3a7fb9e68626b811297
 
 const { ipcRenderer } = window.require('electron')
 const { events, eventResponse } = require('../../store/utils/events')
@@ -46,8 +38,6 @@ const columns = [
 export default function ProductionCommandeBySpeculation({ display }) {
   const { institution } = useContext(GlobalContext)
   const [commandesBySpeculation, setCommandesBySpeculation] = useState([])
-
-  const {institution} = useContext(GlobalContext)
 
   const getCommandeSumBySpeculation = () => {
     ipcRenderer.send('getCommandeSumBySpeculation', {
