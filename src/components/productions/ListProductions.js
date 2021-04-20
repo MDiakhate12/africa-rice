@@ -219,12 +219,12 @@ export default function Productions() {
         <AddProduction handleClose={handleClose} />
       </Modal> */}
       <AddProduction handleClose={handleDialogClose} />
-      <div onContextMenu={handleClick} style={{ cursor: 'context-menu' }}>
-        <DataTable
-          columns={columns}
-          rows={productions.map((v) => ({ id: v.idProduction, ...v }))}
-        />
-      </div>
+      {/* <div onContextMenu={handleClick} style={{ cursor: "context-menu" }}> */}
+      <DataTable
+        columns={columns}
+        rows={productions.map((v) => ({ id: v.idProduction, ...v }))}
+      />
+      {/* </div> */}
     </div>
   )
 }

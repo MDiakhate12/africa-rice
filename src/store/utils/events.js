@@ -118,7 +118,7 @@ const events = {
   },
 
   imageDialog: {
-    openImageDialog: 'openImageDialog',
+    open: 'openImageDialog',
   },
 }
 
@@ -242,7 +242,7 @@ const eventResponse = {
   },
 
   imageDialog: {
-    closedImageDialog: 'closedImageDialog',
+    closed: 'closedImageDialog',
   },
 }
 

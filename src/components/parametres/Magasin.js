@@ -81,6 +81,7 @@ export default function Magasin() {
       field: 'delete',
       headerName: 'Supprimer',
       width: 120,
+      hide: true,
       renderCell: (params) => (
         <IconButton
           onClick={() => {

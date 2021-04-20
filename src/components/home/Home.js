@@ -58,12 +58,92 @@ export default function Home() {
         <Carousel slides={slides} />
       </Box> */}
       {/* <Slider heading="Example Slider" slides={slideData} /> */}
-
+      {/* 
       <Box display="flex" justifyContent="center" alignItems="center">
         <img src={AfricaRiceImage} alt="" />
-      </Box>
+      </Box> */}
 
-      <Grid container spacing={3} justify="space-around">
+      <Grid container justify="space-between">
+        <Grid item>
+          <img src={AfricaRiceImage} alt="" />
+        </Grid>
+        <Grid item>
+          <Typography
+            variant="button"
+            style={{
+              fontSize: "2.1rem",
+            }}
+          >
+            Centre du riz <br />
+            pour l'Afrique
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid container alignItems="center" direction="column">
+        <Grid item>
+          <Typography
+            variant="button"
+            style={{
+              fontSize: "3.4rem",
+              fontWeight: "bold",
+              color: "darkgreen",
+            }}
+          >
+            SSU
+          </Typography>{" "}
+        </Grid>
+        <Grid item>
+          <Typography
+            variant="h1"
+            style={{
+              fontSize: "2.4rem",
+              fontWeight: "bold",
+            }}
+          >
+            Seed-Scaling Up
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography
+            variant="h1"
+            style={{
+              fontSize: "2.1rem",
+              marginTop: "2.5ch",
+            }}
+          >
+            Assistance technique pour le développement du secteur semencier
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography
+            variant="h1"
+            style={{
+              fontSize: "1.7rem",
+              marginTop: "2.5ch",
+            }}
+          >
+            Version 1.0{" "}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography
+            variant="h1"
+            color="textSecondary"
+            align="center"
+            style={{
+              fontSize: "1rem",
+              marginTop: "5ch",
+            }}
+          >
+            SSU a été développé au Sénégal par AfricaRice dans le cadre de la
+            mise en œuvre du projet Seed-Scaling Up. Financé par Feed The Future
+            / USAID. <br />
+            Avec le concours des développeurs : Mouhammad DIAKHATE & Mor KAIRE
+          </Typography>
+        </Grid>
+      </Grid>
+
+      {/* <Grid container spacing={3} justify="space-around">
         <Grid item>
           <Box width="500px" height="300px">
             <Carousel navButtonsAlwaysVisible={true}>
@@ -91,7 +171,7 @@ export default function Home() {
             </Carousel>
           </Box>
         </Grid>
-      </Grid>
+      </Grid> */}
     </div>
   );
 }
@@ -106,8 +186,8 @@ function Item({ description, title, image }) {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
 
-        width: "500px",
-        height: "300px",
+        width: "100%",
+        height: "100%",
         padding: "20px",
       }}
       elevation={10}

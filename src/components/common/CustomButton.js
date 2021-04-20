@@ -79,42 +79,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomButton({ images }) {
+export default function CustomButton({ image, onClick }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      {images.map((image) => (
-        <ButtonBase
-          focusRipple
-          key={image.title}
-          className={classes.image}
-          focusVisibleClassName={classes.focusVisible}
-          onClick={images.onClick}
+      <ButtonBase
+        focusRipple
+        key={image.title}
+        className={classes.image}
+        focusVisibleClassName={classes.focusVisible}
+        onClick={onClick}
+        style={{
+          width: image.width,
+        }}
+      >
+        <span
+          className={classes.imageSrc}
           style={{
-            width: image.width,
+            backgroundImage: `url(${image.url})`,
           }}
-        >
-          <span
-            className={classes.imageSrc}
-            style={{
-              backgroundImage: `url(${image.url})`,
-            }}
-          />
-          <span className={classes.imageBackdrop} />
-          <span className={classes.imageButton}>
-            <Typography
-              component="span"
-              variant="subtitle1"
-              color="inherit"
-              className={classes.imageTitle}
-            >
-              {image.title}
-              <span className={classes.imageMarked} />
-            </Typography>
-          </span>
-        </ButtonBase>
-      ))}
+        />
+        <span className={classes.imageBackdrop} />
+        <span className={classes.imageButton}>
+          <Typography
+            component="span"
+            variant="subtitle1"
+            color="inherit"
+            className={classes.imageTitle}
+          >
+            {image.title}
+            <span className={classes.imageMarked} />
+          </Typography>
+        </span>
+      </ButtonBase>
+      ))
     </div>
   );
 }

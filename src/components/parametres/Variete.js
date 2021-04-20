@@ -112,7 +112,7 @@ export default function Variete() {
       headerName: "Action",
       width: 120,
       sortable: false,
-
+      hide: true,
       renderCell: (params) => (
         <Tooltip
           title={
