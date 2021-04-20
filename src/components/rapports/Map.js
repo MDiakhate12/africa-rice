@@ -1,46 +1,50 @@
-import * as React from "react";
-import { useState } from "react";
+import * as React from 'react'
+import { useState } from 'react'
 import ReactMapGL, {
   FullscreenControl,
   GeolocateControl,
   Marker,
   NavigationControl,
   Popup,
-} from "react-map-gl";
-import * as senegal from "./sn.json";
-import PinDropIcon from "@material-ui/icons/PinDrop";
+} from 'react-map-gl'
+import { GlobalContext } from '../../store/GlobalProvider'
+import * as senegal from './sn.json'
+import PinDropIcon from '@material-ui/icons/PinDrop'
 
 // import "mapbox-gl/dist/mapbox-gl.css";
 
-import { IconButton } from "@material-ui/core";
+import { IconButton } from '@material-ui/core'
 
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
+const { ipcRenderer } = window.require('electron')
+const { events, eventResponse } = require('../../store/utils/events')
 
 export default function Map2() {
+  const { institution } = React.useContext(GlobalContext)
   const [viewport, setViewport] = useState({
-    width: "80vw",
-    height: "80vh",
+    width: '80vw',
+    height: '80vh',
     latitude: 14.4750607,
     longitude: -14.4529612,
     zoom: 6,
-  });
+  })
 
-  const [productionsByRegion, setProductionsByRegion] = useState([]);
+  const [productionsByRegion, setProductionsByRegion] = useState([])
 
   const getProductionsSumByRegion = () => {
-    ipcRenderer.send("getProductionsSumByRegion");
-    ipcRenderer.once("gotProductionsSumByRegion", (event, data) => {
-      console.log("getProductionsSumByRegion", data);
-      setProductionsByRegion(data);
-    });
-  };
+    ipcRenderer.send('getProductionsSumByRegion', {
+      institutionId: institution?.idInstitution,
+    })
+    ipcRenderer.once('gotProductionsSumByRegion', (event, data) => {
+      console.log('getProductionsSumByRegion', data)
+      setProductionsByRegion(data)
+    })
+  }
 
   React.useEffect(() => {
-    getProductionsSumByRegion();
-  }, []);
+    getProductionsSumByRegion()
+  }, [institution])
 
-  const [selectedRegion, setSelectedRegion] = useState();
+  const [selectedRegion, setSelectedRegion] = useState()
 
   return (
     <ReactMapGL
@@ -54,8 +58,8 @@ export default function Map2() {
     >
       {productionsByRegion.map((production) => {
         let region = senegal.cities.find(
-          (c) => c.city.toLowerCase() === production.Localisation.region
-        );
+          (c) => c.city.toLowerCase() === production.Localisation.region,
+        )
 
         if (region)
           return (
@@ -71,8 +75,8 @@ export default function Map2() {
               <div>{`Tot. disponible: ${production.totalQuantiteDisponible} KG`}</div>
               <div>{`Tot. produit: ${production.totalQuantiteProduite} KG`}</div>
             </Popup>
-          );
-        return null;
+          )
+        return null
       })}
       {/* {productionsByVariete.map((production) => {
         let region = production.Localisation.region;
@@ -141,5 +145,5 @@ export default function Map2() {
         }}
       />
     </ReactMapGL>
-  );
+  )
 }
