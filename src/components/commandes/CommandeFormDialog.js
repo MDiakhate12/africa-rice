@@ -42,6 +42,7 @@ function CommandeFormDialog({ handleClose }) {
     commandeFormDialog: { open },
     closeCommandeFormDialog,
     openClientFormDialog,
+    institution,
   } = useContext(GlobalContext);
   const [formState, setFormState] = useState({
     clientId: "",
@@ -51,7 +52,9 @@ function CommandeFormDialog({ handleClose }) {
   const [clients, setClients] = useState([]);
 
   const getClients = () => {
-    ipcRenderer.send(events.client.getAll);
+    ipcRenderer.send(events.client.getAll, {
+      institutionId: institution.idInstitution,
+    });
     ipcRenderer.on(eventResponse.client.gotAll, (ev, data) => {
       setClients(data);
     });
@@ -130,7 +133,7 @@ function CommandeFormDialog({ handleClose }) {
   };
 
   const setExpandedFromDialog = (idx) => {
-    console.log(idx)
+    console.log(idx);
     setFormState({
       ...formState,
       articles: formState.articles.map((article, index) => {
@@ -177,7 +180,7 @@ function CommandeFormDialog({ handleClose }) {
                 >
                   {clients.map((client) => (
                     <MenuItem key={client.idClient} value={client.idClient}>
-                      {client.nomCompletStructure || client.prenom}
+                      {client.nomCompletStructure || `${client.prenom} ${client.nom}`}
                     </MenuItem>
                   ))}
                 </Select>

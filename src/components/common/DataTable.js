@@ -6,7 +6,7 @@ import {
   GridColumnsToolbarButton,
   GridFilterToolbarButton,
 } from "@material-ui/data-grid";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Paper } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,10 +33,11 @@ export default function DataTable({
   pageSize,
   disableColumnSelector,
   checkboxSelection,
+  autoHeight,
 }) {
   const classes = useStyles();
   return (
-    <div style={{ height: height || 400, width: "100%" }}>
+    <div elevation={1} style={{ height: height || 420, width: "100%" }}>
       <DataGrid
         className={classes.root}
         rows={rows}
@@ -45,6 +46,7 @@ export default function DataTable({
         checkboxSelection={checkboxSelection || false}
         disableColumnSelector={disableColumnSelector || false}
         rowHeight={35}
+        autoHeight={autoHeight || false}
         components={{
           Toolbar: CustomToolbar,
           // Toolbar: GridToolbar,

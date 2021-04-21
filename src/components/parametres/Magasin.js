@@ -120,7 +120,7 @@ export default function Magasin() {
 
   
   useEffect(() => {
-    getAllMagasin({ institutionId: institution?.institutionId });
+    getAllMagasin({ institutionId: institution.idInstitution });
   }, []);
 
 

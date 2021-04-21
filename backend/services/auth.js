@@ -36,6 +36,7 @@ const registerInstitution = async (data) => {
     return response
   }
 
+  delete data.confirmPassword
   const [institution, created] = await service.findOrCreate(Institution, {
     ...data,
     password,
@@ -49,7 +50,7 @@ const registerInstitution = async (data) => {
   }
 
   response.status = 'success'
-  response.message = "Institution crée avec succés!"
+  response.message = 'Institution crée avec succés!'
   response.payload = _.omit(institution.toJSON(), ['password'])
   return response
 }
@@ -62,13 +63,15 @@ const loginInstitution = async (data) => {
 
   if (!institution) {
     response.status = 'error'
-    response.message = "Veuillez vérifier si l'email et le mot de passe sont corrects"
+    response.message =
+      "Veuillez vérifier si l'email et le mot de passe sont corrects"
     return response
   }
 
   if (!(await comparePassword(password, institution.password))) {
     response.status = 'error'
-    response.message = "Veuillez vérifier si l'email et le mot de passe sont corrects"
+    response.message =
+      "Veuillez vérifier si l'email et le mot de passe sont corrects"
     return response
   }
 

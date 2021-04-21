@@ -18,7 +18,7 @@ export default function SpeculationInstitutionProvider({ children }) {
       (event, data) => {
         console.log('EVENT:', event)
         console.log('DATA:', data)
-        getAllSpeculationInstitution()
+        // getAllSpeculationInstitution()
 
         // dispatch({ type: actions.ON_ADD, payload: data });
       },

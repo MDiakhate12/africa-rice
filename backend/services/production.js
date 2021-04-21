@@ -72,6 +72,37 @@ const getProductionsSumBySpeculation = async (arg = {}) => {
   return productionsData
 }
 
+const getProductionsSumBySpeculationTotal = async (arg = {}) => {
+  let option = {
+    include: [
+      {
+        model: VarieteInstitution,
+        include: [
+          Variete,
+          { model: SpeculationInstitution, include: Speculation },
+        ],
+      },
+    ],
+    attributes: [
+      'VarieteInstitution.speculationInstitutionId',
+      [
+        sequelize.fn('sum', sequelize.col('quantite_produite')),
+        'totalQuantiteProduite',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('quantite_disponible')),
+        'totalQuantiteDisponible',
+      ],
+      [sequelize.fn('sum', sequelize.col('prix_unitaire')), 'totalPrix'],
+      [sequelize.fn('sum', sequelize.col('stock_de_securite')), 'totalStock'],
+    ],
+  }
+  if (Object.keys(arg)) option = { ...option, where: { ...arg } }
+  const productions = await service.findAll(Production, option)
+  const productionsData = productions.map((production) => production.toJSON())[0]
+  return productionsData
+}
+
 const getProductionsSumByVarietes = async (arg = {}) => {
   let option = {
     include: [
@@ -162,6 +193,7 @@ module.exports = {
   createProduction,
   getAllProductions,
   getProductionsSumBySpeculation,
+  getProductionsSumBySpeculationTotal,
   getProductionsSumByVarietes,
   getProductionsSumByRegion,
   getProductionById,

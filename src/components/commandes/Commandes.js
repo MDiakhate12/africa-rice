@@ -101,8 +101,22 @@ function Commandes() {
       valueGetter: (params) =>
         `${params.getValue('Production')?.Localisation?.village}`,
     },
-    { type: 'string', field: 'quantite', headerName: 'quantite', width: 130 },
-    { type: 'string', field: 'montant', headerName: 'montant', width: 130 },
+    {
+      type: 'number',
+      field: 'quantite',
+      headerName: 'quantite',
+      width: 130,
+      renderCell: (params) => `${params.getValue('quantite')} KG`,
+      // valueGetter: (params) => params.getValue("quantite"),
+    },
+    {
+      type: 'number',
+      field: 'montant',
+      headerName: 'montant',
+      width: 130,
+      renderCell: (params) => `${params.getValue('montant')} FCFA`,
+      // valueGetter: (params) => params.getValue("montant"),
+    },
 
     {
       type: 'string',
@@ -245,7 +259,6 @@ function Commandes() {
       const { clientId } = data
       data.articles.map((article) => {
         const commande = {}
-        commande.institutionId = institution.idInstitution
         commande.clientId = clientId
         commande.productionId = article.production.idProduction
         commande.quantite = article.quantite
@@ -361,6 +374,9 @@ function Commandes() {
       <DataTable
         columns={columns}
         rows={commandes?.map((m) => ({ id: m.idCommande, ...m }))}
+        pageSize={12}
+        height="500px"
+        // autoHeight={true}
       />
       {/* </div> */}
     </div>

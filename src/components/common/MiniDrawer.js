@@ -21,6 +21,8 @@ import Productions from "../productions/Productions";
 import Commandes from "../commandes/Commandes";
 import Parametres from "../parametres/Parametres";
 import Rapports from "../rapports/Rapports";
+import LightIcon from "@material-ui/icons/Brightness7";
+import DarkIcon from "@material-ui/icons/Brightness4";
 import {
   Box,
   ListItemIcon,
@@ -28,9 +30,10 @@ import {
   Menu,
   MenuItem,
   MenuList,
+  Tooltip,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import AccountCircle  from "@material-ui/icons/AccountCircle";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 import Home from "../home/Home";
 import { GlobalContext } from "../../store/GlobalProvider";
 const drawerWidth = 240;
@@ -118,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MiniDrawer() {
+export default function MiniDrawer({ lightMode, toggleMode }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -221,55 +224,59 @@ export default function MiniDrawer() {
 
           <Typography variant="button">{currentItem.text}</Typography>
 
-    
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={shown}
-                onClose={handleClose}
-              >
-                <Link to="/parametres?tab=2" className={classes.default}>
-                  <MenuItem
-                    onClick={() => {
-                      setSelectedIndex(
-                        items.findIndex((item) => item.to === location.pathname)
-                      );
-                      handleClose();
-                    }}
-                  >
-                    Profil
-                  </MenuItem>
-                </Link>
+          <Tooltip title={`Basculer en mode ${lightMode ? "sombre" : "clair"}`}>
+            <IconButton onClick={toggleMode}>
+              {lightMode ? <DarkIcon /> : <LightIcon />}
+            </IconButton>
+          </Tooltip>
+
+          <div>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={shown}
+              onClose={handleClose}
+            >
+              <Link to="/parametres?tab=2" className={classes.default}>
                 <MenuItem
                   onClick={() => {
-                    logout();
+                    setSelectedIndex(
+                      items.findIndex((item) => item.to === location.pathname)
+                    );
                     handleClose();
                   }}
                 >
-                  Déconnexion
+                  Profil
                 </MenuItem>
-              </Menu>
-            </div>
-          
+              </Link>
+              <MenuItem
+                onClick={() => {
+                  logout();
+                  handleClose();
+                }}
+              >
+                Déconnexion
+              </MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -332,9 +339,14 @@ export default function MiniDrawer() {
           <div className={classes.infos}>
             <div>{institution?.logo}</div>
 
-            <Typography variant="body1" color="textSecondary" align="center" style={{
-              fontSize: "1rem"
-            }}>
+            <Typography
+              variant="body1"
+              color="textSecondary"
+              align="center"
+              style={{
+                fontSize: "1rem",
+              }}
+            >
               {" "}
               2021 &copy; {institution?.sigle}
             </Typography>

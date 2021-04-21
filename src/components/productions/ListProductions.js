@@ -123,7 +123,7 @@ export default function Productions() {
 
   const handleSubmitProduction = (formData) => {
     const data = { ...formData, institutionId: institution?.idInstitution }
-    data.quantiteDisponible = data.quantiteProduite
+    data.quantiteDisponible = data.quantiteProduite - data.stockDeSecurite
     console.log(data)
     ipcRenderer.send(events.production.create, data)
   }
@@ -209,7 +209,6 @@ export default function Productions() {
       <Button color="primary" onClick={handleOpen}>
         Ajouter une Production
       </Button>
-      <Box height={10}></Box>
       {/* <Modal
         open={open}
         onClose={handleClose}

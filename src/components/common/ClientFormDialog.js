@@ -17,6 +17,7 @@ export default function ClientFormDialog({ handleClose }) {
   const {
     clientFormDialog: { open },
     closeClientFormDialog,
+    institution,
   } = useContext(GlobalContext);
 
   const close = (response, dataFromOpen = null) => {
@@ -32,6 +33,7 @@ export default function ClientFormDialog({ handleClose }) {
     telephone: "",
     email: "",
     estParticulier: "false",
+    institutionId: institution.idInstitution,
   });
 
   const handleChange = (e) => {
@@ -40,7 +42,13 @@ export default function ClientFormDialog({ handleClose }) {
 
   return (
     <div>
-      <Dialog open={open} onClose={close} aria-labelledby="form-dialog-title" fullWidth maxWidth="xs">
+      <Dialog
+        open={open}
+        onClose={close}
+        aria-labelledby="form-dialog-title"
+        fullWidth
+        maxWidth="xs"
+      >
         <DialogTitle id="form-dialog-title">Nouveau client</DialogTitle>
         <DialogContent>
           <FormControl component="fieldset">
