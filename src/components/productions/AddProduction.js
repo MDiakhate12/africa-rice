@@ -108,7 +108,7 @@ export default function ProductionFormDialog({ handleClose }) {
   }
 
   const getMagasins = () => {
-    ipcRenderer.send(events.magasin.getAll, { institutionId: institution?.institutionId })
+    ipcRenderer.send(events.magasin.getAll, { institutionId: institution.idInstitution })
     ipcRenderer.once(eventResponse.magasin.gotAll, (event, data) => {
       setMagasin(data)
     })

@@ -10,7 +10,7 @@ const createMagasin = async (data) => {
 
 const getAllMagasins = async (arg = {}) => {
 
-  const option = {
+  let option = {
     include: [Institution, Localisation],
   }
 

@@ -9,6 +9,7 @@ import {
   Input,
   InputAdornment,
   InputLabel,
+  Box, Typography,
   TextField,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -18,6 +19,7 @@ import { validateEmail, validatePassword } from "../../../store/utils";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { useHistory } from "react-router-dom";
+import AfricaRiceImage from "../../images/africa-rice.webp";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../../store/utils/events");
@@ -227,6 +229,7 @@ export default function LoginRegisterForm() {
 
   return (
     <div className="body">
+
       <div
         className={`container ${active ? "right-panel-active" : ""}`}
         id="container"
@@ -606,6 +609,23 @@ export default function LoginRegisterForm() {
           </div>
         </div>
       </div>
+      {/* <footer
+        style={{
+          backgroundColor: "inherit",
+          color: "gray",
+        }}
+      >
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          position="relative"
+        >
+          <Typography variant="body2">
+            2021 &copy; Africa Rice | Mouhammad DIAKHATE & Mor KAIRE
+          </Typography>
+        </Box>
+      </footer> */}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize')
+const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
   const attributes = {
@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
       primaryKey: true,
       autoIncrement: true,
       comment: null,
-      field: 'id_client',
+      field: "id_client",
     },
     nomCompletStructure: {
       type: DataTypes.STRING(50),
@@ -18,7 +18,7 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: 'nom_complet_structure',
+      field: "nom_complet_structure",
     },
     acronyme: {
       type: DataTypes.STRING(50),
@@ -27,7 +27,7 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: 'acronyme',
+      field: "acronyme",
     },
     estParticulier: {
       type: DataTypes.INTEGER,
@@ -36,7 +36,7 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: 'est_particulier',
+      field: "est_particulier",
     },
     prenom: {
       type: DataTypes.STRING(45),
@@ -45,7 +45,7 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: 'prenom',
+      field: "prenom",
     },
     nom: {
       type: DataTypes.STRING(45),
@@ -54,7 +54,7 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: 'nom',
+      field: "nom",
     },
     telephone: {
       type: DataTypes.STRING(45),
@@ -63,7 +63,7 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: 'telephone',
+      field: "telephone",
     },
     email: {
       type: DataTypes.STRING(45),
@@ -72,14 +72,25 @@ module.exports = (sequelize) => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: 'email',
+      field: "email",
     },
-  }
+  };
   const options = {
-    tableName: 'client',
-    comment: '',
+    tableName: "client",
+    comment: "",
     indexes: [],
-  }
-  const ClientModel = sequelize.define('Client', attributes, options)
-  return ClientModel
-}
+  };
+  const ClientModel = sequelize.define("Client", attributes, options);
+
+  ClientModel.associate = function (models) {
+    // associations can be defined here
+    ClientModel.belongsTo(models.Institution, {
+      onDelete: "CASCADE",
+      foreignKey: {
+        name: "institutionId",
+        allowNull: false,
+      },
+    });
+  };
+  return ClientModel;
+};

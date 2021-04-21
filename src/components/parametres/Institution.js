@@ -188,17 +188,6 @@ export default function Institution() {
                 >
                   Enregistrer
                 </Button>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  className={classes.addButton}
-                  size="large"
-                  onClick={() => {
-                    console.log(formState);
-                  }}
-                >
-                  Enregistrer
-                </Button>
               </Grid>
             </Grid>
           </Grid>

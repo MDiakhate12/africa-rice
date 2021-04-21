@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useReducer } from 'react'
 import { actions } from '../actions'
 import { initialState, reducer } from './reducer'
 const { events, eventResponse } = require('../utils/events')

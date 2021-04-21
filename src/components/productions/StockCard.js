@@ -46,7 +46,6 @@ export default function StockCard({
     nomSpeculation,
     dateDerniereProduction,
     imageSpeculation,
-    totalStock,
     totalQuantiteDisponible,
   },
 }) {
@@ -83,7 +82,7 @@ export default function StockCard({
       />
       <CardContent>
         <Typography variant="h1" color="primary" component="p">
-          {totalQuantiteDisponible - totalStock} KG
+          {totalQuantiteDisponible} KG
         </Typography>
       </CardContent>
       <CardActions disableSpacing>

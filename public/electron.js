@@ -4,21 +4,6 @@ const isDev = require('electron-is-dev')
 const models = require('../backend/models').default
 require('../backend/main-process/')
 
-// const {
-//   createSpeculation,
-//   getAllSpeculations,
-// } = require("../backend/services/speculation");
-// const {
-//   createZone,
-//   getAllZones,
-// } = require("../backend/services/zoneAgroEcologique");
-// const {
-//   createVariete,
-//   getAllVarietes,
-// } = require("../backend/services/variete");
-
-const { deleteInstitution } = require('../backend/services/institution')
-
 const createWindow = async () => {
   let win = new BrowserWindow({
     width: 1200,
@@ -34,34 +19,14 @@ const createWindow = async () => {
   win.maximize()
   // win.removeMenu()
 
-  models.sequelize
+  win.on('closed', () => {
+    win = null
+    app.quit()
+  })
+
+  return models.sequelize
     .sync()
     .then(() => {
-      // deleteInstitution({ idInstitution: 2 }).then((data) => console.log(data))
-      // createSpeculation({
-      //   nomSpeculation: "Diaf",
-      //   imageSpeculation: "DiafR",
-      // })
-      //   .then((data) => {
-      //     createZone({ nomZone: "DakarDiaf" });
-      //   })
-      //   .then((dat) => {
-      //     createVariete({
-      //       nomVariete: "GuysdDiaf",
-      //       longueurCycle: 10,
-      //       speculationId: 1,
-      //       zoneId: 1,
-      //     });
-      //   })
-      //   .then((da) => {
-      //     getAllVarietes().then((d) => {});
-      //   })
-      //   .catch((err) => console.log(err));
-
-      // getAllSpeculations().then(() => {});
-      // getAllZones().then(() => {});
-      // getAllVarietes().then(() => {});
-
       win.loadURL(
         isDev
           ? 'http://localhost:3000'
@@ -70,18 +35,14 @@ const createWindow = async () => {
     })
     .catch((err) => console.log(err))
 
-  win.on('closed', () => {
-    win = null
-    app.quit()
-  })
 }
 
 app.whenReady().then(() => {
   createWindow()
 
-  app.on('activate', () => {
+  app.on('activate', async () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+      await createWindow()
     }
   })
 })

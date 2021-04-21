@@ -30,6 +30,7 @@ const getAllCommandes = async (arg = {}) => {
       Client,
       {
         model: Production,
+        where: { ...arg },
         include: [
           Localisation,
           {
@@ -44,7 +45,7 @@ const getAllCommandes = async (arg = {}) => {
       EtatCommande,
     ],
   }
-  if (Object.keys(arg)) option = { ...option, where: { ...arg } }
+  // if (Object.keys(arg)) option = { ...option, where: { ...arg } }
   const commandes = await service.findAll(Commande, option)
   const commandesData = commandes.map((commande) => commande.toJSON())
   console.log(commandesData)
@@ -74,7 +75,9 @@ const getCommandeSumBySpeculation = async (arg = {}) => {
     include: [
       {
         model: Production,
-        include: [
+        where: { ...arg },
+        include: [        
+
           {
             model: VarieteInstitution,
             include: [
@@ -94,7 +97,7 @@ const getCommandeSumBySpeculation = async (arg = {}) => {
       ],
     ],
   }
-  if (Object.keys(arg)) option = { ...option, where: { ...arg } }
+  // if (Object.keys(arg)) option = { ...option, where: { ...arg } }
   const commandes = await service.findAll(Commande, option)
   const commandesData = commandes.map((commande) => commande.toJSON())
   console.log(commandesData)
@@ -107,6 +110,7 @@ const getCommandeSumBySpeculationByState = async (arg = {}) => {
       EtatCommande,
       {
         model: Production,
+        where: { ...arg },
         include: [
           {
             model: VarieteInstitution,
@@ -131,7 +135,7 @@ const getCommandeSumBySpeculationByState = async (arg = {}) => {
       ],
     ],
   }
-  if (Object.keys(arg)) option = { ...option, where: { ...arg } }
+  // if (Object.keys(arg)) option = { ...option, where: { ...arg } }
   const commandes = await service.findAll(Commande, option)
   const commandesData = commandes.map((commande) => commande.toJSON())
   console.log(commandesData)
@@ -143,6 +147,7 @@ const getCommandeSumByVarietes = async (arg = {}) => {
     include: [
       {
         model: Production,
+        where: { ...arg },
         include: [
           {
             model: VarieteInstitution,
@@ -162,7 +167,7 @@ const getCommandeSumByVarietes = async (arg = {}) => {
       ],
     ],
   }
-  if (Object.keys(arg)) option = { ...option, where: { ...arg } }
+  // if (Object.keys(arg)) option = { ...option, where: { ...arg } }
   const commandes = await service.findAll(Commande, option)
   const commandesData = commandes.map((commande) => commande.toJSON())
   console.log(commandesData)
@@ -174,6 +179,7 @@ const getCommandeSumByVarieteByState = async (arg = {}) => {
     include: [
       {
         model: Production,
+        where: { ...arg },
         include: [
           {
             model: VarieteInstitution,
@@ -195,7 +201,7 @@ const getCommandeSumByVarieteByState = async (arg = {}) => {
       ],
     ],
   }
-  if (Object.keys(arg)) option = { ...option, where: { ...arg } }
+  // if (Object.keys(arg)) option = { ...option, where: { ...arg } }
   const commandes = await service.findAll(Commande, option)
   const commandesData = commandes.map((commande) => commande.toJSON())
   console.log(commandesData)
