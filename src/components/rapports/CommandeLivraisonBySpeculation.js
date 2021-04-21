@@ -43,6 +43,8 @@ export default function CommandeLivraisonBySpeculation({ display }) {
     setCommandeBySpeculationByState,
   ] = useState([])
 
+  const [max, setMax] = useState();
+  const [min, setMin] = useState();
 
   const getCommandeSumBySpeculation = () => {
     ipcRenderer.send('getCommandeSumBySpeculation', {
@@ -50,6 +52,8 @@ export default function CommandeLivraisonBySpeculation({ display }) {
     })
     ipcRenderer.once('gotCommandeSumBySpeculation', (event, data) => {
       setCommandesBySpeculation(data)
+      setMax(Math.max(...data.map((p) => p.totalQuantiteDisponible)));
+      setMax(Math.min(...data.map((p) => p.totalQuantiteDisponible)));
     })
   }
 
@@ -84,7 +88,7 @@ export default function CommandeLivraisonBySpeculation({ display }) {
         {
           ticks: {
             beginAtZero: true,
-            stepSize: 200,
+            stepSize: (max - min) / 10,
           },
         },
       ],
