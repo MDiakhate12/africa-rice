@@ -52,6 +52,8 @@ export default function CommandeLivraisonByVariete({ display }) {
   const [commandesByVariete, setCommandeByVariete] = useState([])
   const [commandeByVarieteByState, setCommandeByVarieteByState] = useState([])
 
+  const [max, setMax] = useState();
+  const [min, setMin] = useState();
 
   const getCommandeSumByVariete = () => {
     ipcRenderer.send('getCommandeSumByVarietes', {
@@ -59,6 +61,8 @@ export default function CommandeLivraisonByVariete({ display }) {
     })
     ipcRenderer.once('gotCommandeSumByVarietes', (event, data) => {
       setCommandeByVariete(data)
+      setMax(Math.max(...data.map((p) => p.totalQuantiteDisponible)));
+      setMax(Math.min(...data.map((p) => p.totalQuantiteDisponible)));
     })
   }
 
@@ -92,7 +96,7 @@ export default function CommandeLivraisonByVariete({ display }) {
         {
           ticks: {
             beginAtZero: true,
-            stepSize: 200,
+            stepSize: (max - min) / 10,
           },
         },
       ],

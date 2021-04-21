@@ -161,7 +161,7 @@ function Commandes() {
     {
       type: "string",
       field: "action",
-      headerName: "Action",
+      headerName: "Actions",
       width: 240,
       renderCell: (params) => {
         const etat = params.getValue("EtatCommande").etat;

@@ -33,6 +33,7 @@ export default function CommandesBySpeculation({ display }) {
   const { institution } = useContext(GlobalContext)
   const [commandesBySpeculation, setCommandesBySpeculation] = useState([])
 
+
   const getCommandeSumBySpeculation = () => {
     ipcRenderer.send('getCommandeSumBySpeculation', {
       institutionId: institution?.idInstitution,
@@ -53,16 +54,6 @@ export default function CommandesBySpeculation({ display }) {
       text: 'Quantité commandée par spéculation',
       // position: "bottom",
     },
-    // scales: {
-    //   yAxes: [
-    //     {
-    //       ticks: {
-    //         beginAtZero: true,
-    //         stepSize: 200,
-    //       },
-    //     },
-    //   ],
-    // },
   }
 
   const dataBySpeculation = {

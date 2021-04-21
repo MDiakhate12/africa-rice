@@ -23,7 +23,7 @@ const columns = [
   },
   {
     type: "number",
-    field: "totalQuantiteProduite",
+    field: "totalQuantiteDisponible",
     width: 130,
     headerName: "Total produit",
   },
@@ -38,6 +38,8 @@ const columns = [
 export default function ProductionCommandeBySpeculation({ display }) {
   const { institution } = useContext(GlobalContext);
   const [commandesBySpeculation, setCommandesBySpeculation] = useState([]);
+  const [max, setMax] = useState();
+  const [min, setMin] = useState();
 
   const getCommandeSumBySpeculation = () => {
     ipcRenderer.send("getCommandeSumBySpeculation", {
@@ -62,6 +64,8 @@ export default function ProductionCommandeBySpeculation({ display }) {
     ipcRenderer.once("gotProductionsSumBySpeculation", (event, data) => {
       console.log(data);
       setProductionsBySpeculation(data);
+      setMax(Math.max(...data.map((p) => p.totalQuantiteDisponible)));
+      setMax(Math.min(...data.map((p) => p.totalQuantiteDisponible)));
     });
   };
 
@@ -77,11 +81,20 @@ export default function ProductionCommandeBySpeculation({ display }) {
     ),
     datasets: [
       {
-        label: "Production",
+        label: "Quantité disponible",
         data: productionsBySpeculation.map(
-          (production) => production.totalQuantiteProduite
+          (production) => production.totalQuantiteDisponible
         ),
         backgroundColor: Colors[0],
+        stack: 0,
+      },
+      {
+        label: "Stock de sécurité",
+        data: productionsBySpeculation.map(
+          (production) => production.totalStock
+        ),
+        backgroundColor: Colors[3],
+        stack: 0,
       },
       {
         label: "Commande",
@@ -89,6 +102,7 @@ export default function ProductionCommandeBySpeculation({ display }) {
           (commande) => commande.totalQuantiteCommandee
         ),
         backgroundColor: Colors[1],
+        stack: 1,
       },
     ],
   };
@@ -104,7 +118,7 @@ export default function ProductionCommandeBySpeculation({ display }) {
         {
           ticks: {
             beginAtZero: true,
-            stepSize: 2000,
+            stepSize: (max - min) / 10,
           },
         },
       ],

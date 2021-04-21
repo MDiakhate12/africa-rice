@@ -35,7 +35,7 @@ const columns = [
   },
   {
     type: "number",
-    field: "totalQuantiteProduite",
+    field: "totalQuantiteDisponible",
     width: 130,
     headerName: "Total produit",
   },
@@ -50,6 +50,8 @@ const columns = [
 export default function ProductionCommandeByVariete({ display }) {
   const { institution } = useContext(GlobalContext);
   const [commandesByVariete, setCommandesByVariete] = useState([]);
+  const [max, setMax] = useState();
+  const [min, setMin] = useState();
 
   const getCommandeSumByVarietes = () => {
     ipcRenderer.send("getCommandeSumByVarietes", {
@@ -74,6 +76,8 @@ export default function ProductionCommandeByVariete({ display }) {
     ipcRenderer.once("gotByVarietes", (event, data) => {
       console.log(data);
       setProductionsByVariete(data);
+      setMax(Math.max(...data.map((p) => p.totalQuantiteDisponible)));
+      setMax(Math.min(...data.map((p) => p.totalQuantiteDisponible)));
     });
   };
 
@@ -87,11 +91,20 @@ export default function ProductionCommandeByVariete({ display }) {
     ),
     datasets: [
       {
-        label: "Production",
+        label: "Quantité disponible",
         data: productionsByVariete.map(
-          (production) => production.totalQuantiteProduite
+          (production) => production.totalQuantiteDisponible
         ),
         backgroundColor: Colors[0],
+        stack: 0,
+      },
+      {
+        label: "Stock de sécurité",
+        data: productionsByVariete.map(
+          (production) => production.totalStock
+        ),
+        backgroundColor: Colors[3],
+        stack: 0,
       },
       {
         label: "Commande",
@@ -99,6 +112,7 @@ export default function ProductionCommandeByVariete({ display }) {
           (commande) => commande.totalQuantiteCommandee
         ),
         backgroundColor: Colors[1],
+        stack: 1,
       },
     ],
   };
@@ -114,7 +128,7 @@ export default function ProductionCommandeByVariete({ display }) {
         {
           ticks: {
             beginAtZero: true,
-            stepSize: 1000,
+            stepSize: (max - min) / 10,
           },
         },
       ],
