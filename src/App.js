@@ -12,6 +12,25 @@ function App() {
   const [lightMode, setLightMode] = React.useState(true);
 
   const theme = createMuiTheme({
+    "@global": {
+      "*::-webkit-scrollbar": {
+        width: "7px",
+        height: "7px",
+      },
+      "*::-webkit-scrollbar-track": {
+        "-webkit-box-shadow": "inset 5px 2px 8px gray",
+        borderRadius: "10px",
+      },
+      "*::-webkit-scrollbar-thumb": {
+        background: "var(--primary-main)",
+        borderRadius: "10px",
+      },
+    },
+
+    // /* Handle on hover */
+    // ::-webkit-scrollbar-thumb:hover {
+    //   background: var(--secondary-main);
+    // }
     gradient: {
       primary:
         "linear-gradient(to right, var(--primary-main), var(--primary-light));",
@@ -54,7 +73,7 @@ function App() {
   const [isAuth, setIsAuth] = useState(false);
   const { checkAuth } = useContext(GlobalContext);
 
-  const toggleMode = () => setLightMode(!lightMode)
+  const toggleMode = () => setLightMode(!lightMode);
 
   useEffect(() => {
     setIsAuth(checkAuth());
@@ -63,7 +82,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        {isAuth ? <MiniDrawer lightMode={lightMode} toggleMode={toggleMode} /> : <Auth />}
+        {isAuth ? (
+          <MiniDrawer lightMode={lightMode} toggleMode={toggleMode} />
+        ) : (
+          <Auth />
+        )}
       </BrowserRouter>
     </ThemeProvider>
   );

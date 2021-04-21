@@ -6,7 +6,7 @@ import {
   GridColumnsToolbarButton,
   GridFilterToolbarButton,
 } from "@material-ui/data-grid";
-import { makeStyles, Paper } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +47,7 @@ export default function DataTable({
         disableColumnSelector={disableColumnSelector || false}
         rowHeight={35}
         autoHeight={autoHeight || false}
+        hideFooterSelectedRowCount
         components={{
           Toolbar: CustomToolbar,
           // Toolbar: GridToolbar,

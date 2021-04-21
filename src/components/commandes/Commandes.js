@@ -152,10 +152,10 @@ function Commandes() {
       headerName: "Client",
       renderCell: (params) =>
         params.getValue("Client").nomCompletStructure ||
-        params.getValue("Client").prenom,
+        `${params.getValue("Client").prenom} ${params.getValue("Client").nom}`,
       valueGetter: (params) =>
         params.getValue("Client").nomCompletStructure ||
-        params.getValue("Client").prenom,
+        `${params.getValue("Client").prenom} ${params.getValue("Client").nom}`,
       width: 130,
     },
     {
