@@ -71,7 +71,7 @@ export default function Speculation() {
   }, [institution]);
 
   useEffect(() => {
-    getAllSpeculationInstitution({ institutionId: institution.idInstitution });
+    getAllSpeculationInstitution({ institutionId: institution?.idInstitution });
   }, [institution, created]);
 
   const [state, setState] = useState("");

@@ -276,6 +276,10 @@ function SimpleAccordion({
                   name="quantite"
                   type="number"
                   color="secondary"
+                  inputProps={{
+                    min: 0,
+                    step: 100,
+                  }}
                   endAdornment={
                     <InputAdornment position="end">Kg</InputAdornment>
                   }

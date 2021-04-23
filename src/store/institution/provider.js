@@ -84,10 +84,6 @@ export default function Provider() {
     })
   }
 
-  // useEffect(() => {
-  //   getOne(1)
-  // }, [])
-
   return [
     institutions,
     institution,

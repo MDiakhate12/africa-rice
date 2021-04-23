@@ -33,7 +33,7 @@ export default function ClientFormDialog({ handleClose }) {
     telephone: "",
     email: "",
     estParticulier: "false",
-    institutionId: institution.idInstitution,
+    institutionId: institution?.idInstitution,
   });
 
   const handleChange = (e) => {

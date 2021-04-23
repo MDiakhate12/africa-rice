@@ -5,8 +5,9 @@ import MiniDrawer from "./components/common/MiniDrawer";
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core";
 import { amber, teal } from "@material-ui/core/colors";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Auth from "./components/auth/Auth";
+import PrivateRoute from "./components/common/PrivateRoute";
 
 function App() {
   const [lightMode, setLightMode] = React.useState(true);
@@ -82,11 +83,16 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        {isAuth ? (
-          <MiniDrawer lightMode={lightMode} toggleMode={toggleMode} />
-        ) : (
-          <Auth />
-        )}
+        {isAuth ? <Redirect to="/" /> : ""}
+        <Switch>
+          <Route path="/auth" exact={true} component={Auth} />
+          <PrivateRoute
+            path="/"
+            component={MiniDrawer}
+            lightMode={lightMode}
+            toggleMode={toggleMode}
+          />
+        </Switch>
       </BrowserRouter>
     </ThemeProvider>
   );

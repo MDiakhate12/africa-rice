@@ -9,7 +9,8 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-  Box, Typography,
+  Box,
+  Typography,
   TextField,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,6 +21,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { useHistory } from "react-router-dom";
 import AfricaRiceImage from "../../images/africa-rice.webp";
+import MuiPhoneInput from "material-ui-phone-number";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../../store/utils/events");
@@ -73,7 +75,7 @@ export default function LoginRegisterForm() {
   const timeout = null;
 
   const handleChange = (e) => {
-    console.log(e.target.value);
+    console.log(e);
     let { name, value } = e.target;
 
     // name === "password" &&
@@ -90,6 +92,20 @@ export default function LoginRegisterForm() {
         [name]: value,
       };
     });
+  };
+
+  const handlePhoneChange = (value) => {
+    console.log(value);
+    if (value.length < 9) {
+      setFormState((state) => {
+        return {
+          ...state,
+          telephone: value,
+        };
+      });
+    } else {
+      return
+    }
   };
 
   const handleChangeLogin = (e) => {
@@ -130,10 +146,9 @@ export default function LoginRegisterForm() {
         setResponseError(data.message);
         return;
       }
-      login(data);
+      login(data.payload);
       history.push("/");
     });
-    // updateInstitution({ id: formState.idInstitution, data: formState });
   };
 
   const handleClickShowPassword = () => {
@@ -216,8 +231,12 @@ export default function LoginRegisterForm() {
     ipcRenderer.send(events.auth.login, formStateLogin);
     ipcRenderer.once(eventResponse.auth.logged, (ev, data) => {
       console.log(data);
+      setResponseError(data.message);
+
       if (data.status === "error") {
-        setResponseError(data.message);
+        setTimeout(() => {
+          setResponseError();
+        }, 4000);
         console.log(data.status);
 
         return;
@@ -229,7 +248,6 @@ export default function LoginRegisterForm() {
 
   return (
     <div className="body">
-
       <div
         className={`container ${active ? "right-panel-active" : ""}`}
         id="container"
@@ -302,7 +320,7 @@ export default function LoginRegisterForm() {
                 />
               </Grid>
 
-              <Grid item sm={12}>
+              {/* <Grid item sm={12}>
                 <TextField
                   fullWidth
                   label="Téléphone"
@@ -314,6 +332,25 @@ export default function LoginRegisterForm() {
                   onChange={handleChange}
                   onKeyDown={clearOrCheck}
                   onKeyUp={checkInterval}
+                  error={error.telephone}
+                  helperText={error.telephone ? "Ce champ est obligatoire" : ""}
+                />
+              </Grid> */}
+
+              <Grid item sm={12}>
+                <MuiPhoneInput
+                  defaultCountry="sn"
+                  regions={"africa"}
+                  countryCodeEditable={false}
+                  fullWidth
+                  label="Téléphone"
+                  name="telephone"
+                  format='## ### ## ##'
+                  margin="dense"
+                  value={formState?.telephone || ""}
+                  className={clsx(classes.margin, classes.textField)}
+                  // variant="filled"
+                  onChange={handlePhoneChange}
                   error={error.telephone}
                   helperText={error.telephone ? "Ce champ est obligatoire" : ""}
                 />

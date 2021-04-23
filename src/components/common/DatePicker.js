@@ -17,7 +17,7 @@ export default function DatePicker({
   disablePast,
   variant,
 }) {
-  const [selectedDate, setSelectedDate] = React.useState();
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   const handleDateChange = (date) => {
     console.log(date);
@@ -37,6 +37,7 @@ export default function DatePicker({
         label={label}
         name={name}
         value={selectedDate}
+        defaultValue={new Date()}
         onChange={handleDateChange}
         fullWidth={fullWidth}
         KeyboardButtonProps={{

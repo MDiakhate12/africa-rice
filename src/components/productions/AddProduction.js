@@ -251,6 +251,10 @@ export default function ProductionFormDialog({ handleClose }) {
                     formData.quantiteProduite || data?.quantiteProduite || ''
                   }
                   type="number"
+                  inputProps={{
+                    min: 0,
+                    step: 100,
+                  }}
                   className={classes.marginDense}
                   variant="filled"
                   onChange={handleChange}
@@ -291,6 +295,10 @@ export default function ProductionFormDialog({ handleClose }) {
                   name="prixUnitaire"
                   value={formData.prixUnitaire || data?.prixUnitaire || ''}
                   type="number"
+                  inputProps={{
+                    min: 0,
+                    step: 25,
+                  }}
                   className={classes.marginDense}
                   variant="filled"
                   onChange={handleChange}

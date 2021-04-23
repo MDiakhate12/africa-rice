@@ -32,7 +32,7 @@ module.exports = (sequelize) => {
     dateEnlevementSouhaitee: {
       type: DataTypes.DATE,
       allowNull: true,
-      defaultValue: null,   
+      defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
