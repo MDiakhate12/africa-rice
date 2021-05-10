@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -44,6 +43,7 @@ function CommandeFormDialog({ handleClose }) {
     openClientFormDialog,
     institution,
   } = useContext(GlobalContext);
+
   const [formState, setFormState] = useState({
     clientId: "",
     articles: [
@@ -80,6 +80,15 @@ function CommandeFormDialog({ handleClose }) {
   const close = (response, dataFromOpen = null) => {
     closeCommandeFormDialog();
     handleClose(response, dataFromOpen);
+    setFormState({
+      clientId: "",
+      articles: [
+        {
+          dateExpressionBesoinClient: new Date(),
+          dateEnlevementSouhaitee: new Date(),
+        },
+      ],
+    });
   };
 
   const handleChange = (e) => {

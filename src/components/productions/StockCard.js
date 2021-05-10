@@ -1,20 +1,21 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import clsx from 'clsx'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardMedia from '@material-ui/core/CardMedia'
-import CardContent from '@material-ui/core/CardContent'
-import CardActions from '@material-ui/core/CardActions'
-import Collapse from '@material-ui/core/Collapse'
-import Avatar from '@material-ui/core/Avatar'
-import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
-import { red } from '@material-ui/core/colors'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser'
-import { Button, Tooltip } from '@material-ui/core'
+import React, { useContext } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Collapse from "@material-ui/core/Collapse";
+import Avatar from "@material-ui/core/Avatar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import { red } from "@material-ui/core/colors";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
+import { Button, Tooltip } from "@material-ui/core";
+import { GlobalContext } from "../../store/GlobalProvider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,22 +23,22 @@ const useStyles = makeStyles((theme) => ({
   },
   media: {
     height: 0,
-    paddingTop: '56.25%', // 16:9
+    paddingTop: "56.25%", // 16:9
   },
   expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
+    transform: "rotate(0deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest,
     }),
   },
   expandOpen: {
-    transform: 'rotate(180deg)',
+    transform: "rotate(180deg)",
   },
   avatar: {
     backgroundColor: red[500],
   },
-}))
+}));
 
 export default function StockCard({
   handleOpenDialog,
@@ -49,12 +50,14 @@ export default function StockCard({
     totalQuantiteDisponible,
   },
 }) {
-  const classes = useStyles()
-  const [expanded, setExpanded] = React.useState(false)
+  const classes = useStyles();
+  const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
-    setExpanded(!expanded)
-  }
+    setExpanded(!expanded);
+  };
+
+  const { isDev } = useContext(GlobalContext);
 
   return (
     <Card className={classes.root}>
@@ -75,11 +78,32 @@ export default function StockCard({
         }
         subheader={dateDerniereProduction}
       />
-      <CardMedia
-        className={classes.media}
-        image={imageSpeculation}
-        title={`Stock de ${nomSpeculation}`}
-      />
+      {isDev ? (
+        <CardMedia
+          className={classes.media}
+          image={imageSpeculation}
+          title={`Stock de ${nomSpeculation}`}
+        />
+      ) : (
+        <CardMedia
+          className={classes.media}
+          component={() => (
+            <img
+              src={imageSpeculation}
+              alt=""
+              style={{
+                display: "block",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                width: "250px",
+                height: "140.63px",
+              }}
+            />
+          )}
+          title={`Stock de ${nomSpeculation}`}
+        />
+      )}
       <CardContent>
         <Typography variant="h1" color="primary" component="p">
           {totalQuantiteDisponible} KG
@@ -104,7 +128,7 @@ export default function StockCard({
         </IconButton> */}
         <Tooltip
           title={`${
-            expanded ? 'Cacher' : 'Montrer'
+            expanded ? "Cacher" : "Montrer"
           }  les stock des variétés correpondantes`}
         >
           <IconButton
@@ -123,5 +147,5 @@ export default function StockCard({
         <CardContent>{children}</CardContent>
       </Collapse>
     </Card>
-  )
+  );
 }

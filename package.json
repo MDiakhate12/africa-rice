@@ -1,5 +1,6 @@
 {
-  "name": "africa-rice",
+  "name": "ssu",
+  "description": "Seed-Scaling Up Project.\nApplication de gestion des semences.",
   "version": "0.1.0",
   "private": true,
   "main": "./public/electron.js",
@@ -20,23 +21,20 @@
     "date-fns": "^2.20.1",
     "electron-is-dev": "^2.0.0",
     "electron-reload": "^1.5.0",
-    "glob": "^7.1.6",
-    "leaflet": "^1.7.1",
     "lodash": "^4.17.21",
+    "mapbox-gl": "^2.2.0",
     "material-ui-phone-number": "^2.2.6",
     "mysql2": "^2.2.5",
     "react": "^17.0.2",
     "react-chartjs-2": "^2.11.1",
     "react-dom": "^17.0.2",
-    "react-leaflet": "^3.1.0",
     "react-map-gl": "^6.1.12",
-    "react-material-ui-carousel": "^2.2.4",
-    "react-moment": "^1.1.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "sequelize": "^6.6.2",
     "sqlite3": "^5.0.2",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "worker-loader": "^3.0.8"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -78,18 +76,17 @@
     "url": "https://github.com/MDiakhate12"
   },
   "build": {
-    "appId": "ml.mouhammad.africa-rice",
-    "productName": "Africa Rice",
+    "appId": "ml.mouhammad.ssu",
+    "productName": "SSU - Seed-Scaling Up",
+    "win": {
+      "icon": "build/favicon.ico"
+    },
     "copyright": "Copyright © 2021 ${author}",
     "mac": {
       "category": "public.app-category.utilities"
     },
     "files": [
-      "dist/**/*",
-      "node_modules/**/*"
-    ],
-    "directories": {
-      "buildResources": "assets"
-    }
+      "dist/**/*"
+    ]
   }
 }

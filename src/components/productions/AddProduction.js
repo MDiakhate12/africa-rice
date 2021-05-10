@@ -10,14 +10,14 @@ import {
   InputAdornment,
   TextField,
   Typography,
-} from '@material-ui/core'
+} from "@material-ui/core";
 
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import { GlobalContext } from '../../store/GlobalProvider'
-import DatePicker from '../common/DatePicker'
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { GlobalContext } from "../../store/GlobalProvider";
+import DatePicker from "../common/DatePicker";
 
 const useStyles = makeStyles((theme) => ({
   marginDense: {
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     // marginTop: theme.spacing(2),
   },
   addButton: {
-    width: '20ch',
+    width: "20ch",
     // margin: theme.spacing(2),
   },
   // gridContainer: {
@@ -40,8 +40,8 @@ const useStyles = makeStyles((theme) => ({
   //   alignItems: "center",
   // },
   modal: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     // backgroundColor: theme.palette.background.paper,
     // boxShadow: theme.shadows[4],
     paddingLeft: theme.spacing(3),
@@ -50,98 +50,107 @@ const useStyles = makeStyles((theme) => ({
     // marginRight: theme.spacing('50'),
     // marginBottom: theme.spacing('7'),
   },
-}))
+}));
 
-const { ipcRenderer } = window.require('electron')
-const { events, eventResponse } = require('../../store/utils/events')
+const { ipcRenderer } = window.require("electron");
+const { events, eventResponse } = require("../../store/utils/events");
 
 export default function ProductionFormDialog({ handleClose }) {
   const {
     institution,
     productionFormDialog: { open, title, data },
     closeProductionFormDialog,
-  } = useContext(GlobalContext)
+  } = useContext(GlobalContext);
 
-  const close = (response, dataFromOpen = null) => {
-    closeProductionFormDialog()
-    handleClose(response, dataFromOpen)
-  }
+  const close = (response, dataFromOpen = null, title) => {
+    closeProductionFormDialog();
+    handleClose(response, dataFromOpen, title);
+  };
 
-  const classes = useStyles()
-  const [formData, setFormData] = useState({})
-  const [speculations, setSpeculation] = useState([])
-  const [varietes, setVarietes] = useState([])
-  const [magasins, setMagasin] = useState([])
-  const [localisations, setLocalisation] = useState([])
-  const [niveau, setNiveau] = useState([])
+  const classes = useStyles();
+  const [formData, setFormData] = useState({
+    dateDeProduction: new Date().toISOString(),
+  });
+  const [speculations, setSpeculation] = useState([]);
+  const [varietes, setVarietes] = useState([]);
+  const [magasins, setMagasin] = useState([]);
+  const [localisations, setLocalisation] = useState([]);
+  const [niveau, setNiveau] = useState([]);
 
   const handleChange = (evt) => {
-    const { name, value } = evt.target
-    console.log(value)
+    const { name, value } = evt.target;
+    console.log(value);
     setFormData({
       ...formData,
       [name]: value,
-    })
-  }
+    });
+  };
 
   const getVarietesInstitution = useCallback(() => {
     ipcRenderer.send(events.varieteInstitution.getAll, {
       institutionId: institution?.idInstitution,
-    })
+    });
     ipcRenderer.once(eventResponse.varieteInstitution.gotAll, (event, data) => {
-      setVarietes(data)
-      console.log(data)
-    })
-  }, [])
+      setVarietes(data);
+      console.log(data);
+    });
+  }, []);
 
   const getSpeculationsInstitution = () => {
     ipcRenderer.send(events.speculationInstitution.getAll, {
       institutionId: institution?.idInstitution,
-    })
+    });
     ipcRenderer.once(
       eventResponse.speculationInstitution.gotAll,
       (event, data) => {
-        setSpeculation(data)
-        console.log(data)
-      },
-    )
-  }
+        setSpeculation(data);
+        console.log(data);
+      }
+    );
+  };
 
   const getMagasins = () => {
-    ipcRenderer.send(events.magasin.getAll, { institutionId: institution.idInstitution })
+    ipcRenderer.send(events.magasin.getAll, {
+      institutionId: institution?.idInstitution,
+    });
     ipcRenderer.once(eventResponse.magasin.gotAll, (event, data) => {
-      setMagasin(data)
-    })
-  }
+      setMagasin(data);
+    });
+  };
 
   const getLocalisations = useCallback(() => {
-    ipcRenderer.send(events.localisation.getAll)
+    ipcRenderer.send(events.localisation.getAll);
     ipcRenderer.once(eventResponse.localisation.gotAll, (event, data) => {
-      setLocalisation(data)
-    })
-  }, [])
+      setLocalisation(data);
+    });
+  }, []);
 
   const getNiveau = () => {
     ipcRenderer.send(events.niveauInstitution.getAll, {
       institutionId: institution?.idInstitution,
-    })
+    });
     ipcRenderer.once(eventResponse.niveauInstitution.gotAll, (event, data) => {
-      setNiveau(data)
-    })
-  }
+      setNiveau(data);
+    });
+  };
 
   useEffect(() => {
-    getSpeculationsInstitution()
-    getVarietesInstitution()
-    getMagasins()
-    getLocalisations()
-    getNiveau()
+    getSpeculationsInstitution();
+    getVarietesInstitution();
+    getMagasins();
+    getLocalisations();
+    getNiveau();
+  }, [institution]);
 
-    console.log(data)
+  useEffect(() => {
+    console.log(data);
 
-    if (data) {
-      console.log(data)
+    console.log(formData)
+
+    if (data && open) {
+      console.log(data);
       setFormData({
+        idProduction: data.idProduction,
         speculationInstitutionId:
           data.VarieteInstitution.speculationInstitutionId,
         varieteInstitutionId: data.varieteInstitutionId,
@@ -155,9 +164,9 @@ export default function ProductionFormDialog({ handleClose }) {
         localisationId: data.localisationId,
         magasinId: data.magasinId,
         niveauInstitutionId: data.niveauInstitutionId,
-      })
+      });
     }
-  }, [institution])
+  }, [open, data]);
 
   return (
     <div>
@@ -169,7 +178,7 @@ export default function ProductionFormDialog({ handleClose }) {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">
-          {' '}
+          {" "}
           <Typography variant="button">{title}</Typography>
         </DialogTitle>
         <DialogContent>
@@ -187,7 +196,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     value={
                       formData.speculationInstitutionId ||
                       data?.VarieteInstitution.speculationInstitutionId ||
-                      ''
+                      ""
                     }
                     name="speculationInstitutionId"
                     onChange={handleChange}
@@ -215,7 +224,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     value={
                       formData.varieteInstitutionId ||
                       data?.varieteInstitutionId ||
-                      ''
+                      ""
                     }
                     name="varieteInstitutionId"
                     onChange={handleChange}
@@ -227,7 +236,7 @@ export default function ProductionFormDialog({ handleClose }) {
                             formData.speculationInstitutionId ||
                           (data &&
                             variete.speculationInstitutionId ===
-                              data.VarieteInstitution.speculationInstitutionId),
+                              data.VarieteInstitution.speculationInstitutionId)
                       )
                       .map((variete) => (
                         <MenuItem
@@ -248,7 +257,7 @@ export default function ProductionFormDialog({ handleClose }) {
                   id="state.filstockDeSecurite-star || ''t -adornment"
                   name="quantiteProduite"
                   value={
-                    formData.quantiteProduite || data?.quantiteProduite || ''
+                    formData.quantiteProduite || data?.quantiteProduite || ""
                   }
                   type="number"
                   inputProps={{
@@ -293,7 +302,7 @@ export default function ProductionFormDialog({ handleClose }) {
                   margin="dense"
                   id="state.filstockDeSecurite-star || ''t -adornment"
                   name="prixUnitaire"
-                  value={formData.prixUnitaire || data?.prixUnitaire || ''}
+                  value={formData.prixUnitaire || data?.prixUnitaire || ""}
                   type="number"
                   inputProps={{
                     min: 0,
@@ -317,11 +326,16 @@ export default function ProductionFormDialog({ handleClose }) {
                   id="state.fillongueurCycle-star || ''t -adornment"
                   name="stockDeSecurite"
                   value={
-                    formData.stockDeSecurite || data?.stockDeSecurite || ''
+                    formData.stockDeSecurite || data?.stockDeSecurite || ""
                   }
                   className={classes.marginDense}
                   variant="filled"
                   onChange={handleChange}
+                  type="number"
+                  inputProps={{
+                    min: 0,
+                    step: 10,
+                  }}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">Kg</InputAdornment>
@@ -330,14 +344,14 @@ export default function ProductionFormDialog({ handleClose }) {
                 />
               </Grid>
               <Grid item sm={6}>
-                {' '}
+                {" "}
                 <FormControl variant="filled" fullWidth>
                   <InputLabel color="secondary">Région</InputLabel>
                   <Select
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.region || data?.Localisation.region || ''}
+                    value={formData.region || data?.Localisation.region || ""}
                     name="region"
                     color="secondary"
                     onChange={handleChange}
@@ -350,7 +364,7 @@ export default function ProductionFormDialog({ handleClose }) {
                             <MenuItem key={r} value={r}>
                               {r}
                             </MenuItem>
-                          )
+                          );
                       })}
                   </Select>
                 </FormControl>
@@ -365,7 +379,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     value={
                       formData.departement ||
                       data?.Localisation.departement ||
-                      ''
+                      ""
                     }
                     name="departement"
                     color="secondary"
@@ -375,13 +389,10 @@ export default function ProductionFormDialog({ handleClose }) {
                       .map((l) => {
                         if (
                           l.region.toLowerCase() ===
-                            formData.region?.toLowerCase() ||
-                          (data &&
-                            l.region.toLowerCase() ===
-                              data.Localisation.region?.toLowerCase())
+                          formData.region?.toLowerCase()
                         )
-                          return l.departement
-                        return null
+                          return l.departement;
+                        return null;
                       })
                       .map((d, i, s) => {
                         if (d !== null && s.indexOf(d) === i)
@@ -389,10 +400,10 @@ export default function ProductionFormDialog({ handleClose }) {
                             <MenuItem key={d} value={d}>
                               {d}
                             </MenuItem>
-                          )
+                          );
                       })}
                   </Select>
-                </FormControl>{' '}
+                </FormControl>{" "}
               </Grid>
               <Grid item sm={6}>
                 <FormControl variant="filled" fullWidth>
@@ -401,7 +412,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.commune || data?.Localisation.commune || ''}
+                    value={formData.commune || data?.Localisation.commune || ""}
                     name="commune"
                     color="secondary"
                     onChange={handleChange}
@@ -415,8 +426,8 @@ export default function ProductionFormDialog({ handleClose }) {
                             l?.departement?.toLowerCase() ===
                               data.Localisation.departement.toLowerCase())
                         )
-                          return l.commune
-                        return null
+                          return l.commune;
+                        return null;
                       })
                       .map((c, i, s) => {
                         if (c !== null && s.indexOf(c) === i)
@@ -424,7 +435,7 @@ export default function ProductionFormDialog({ handleClose }) {
                             <MenuItem key={c} value={c}>
                               {c}
                             </MenuItem>
-                          )
+                          );
                       })}
                   </Select>
                 </FormControl>
@@ -439,8 +450,8 @@ export default function ProductionFormDialog({ handleClose }) {
                     value={
                       formData.localisationId ||
                       data?.localisationId ||
-                      '' ||
-                      ''
+                      "" ||
+                      ""
                     }
                     name="localisationId"
                     color="secondary"
@@ -458,7 +469,7 @@ export default function ProductionFormDialog({ handleClose }) {
                           <MenuItem key={l.village} value={l.idLocalisation}>
                             {l.village}
                           </MenuItem>
-                        )
+                        );
                       }
                     })}
                   </Select>
@@ -473,7 +484,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     labelId="demo-simple-select-filled-label"
                     margin="dense"
                     id="demo-simple-select-filled"
-                    value={formData.magasinId || data?.magasinId || ''}
+                    value={formData.magasinId || data?.magasinId || ""}
                     name="magasinId"
                     onChange={handleChange}
                   >
@@ -500,7 +511,7 @@ export default function ProductionFormDialog({ handleClose }) {
                     value={
                       formData.niveauInstitutionId ||
                       data?.niveauInstitutionId ||
-                      ''
+                      ""
                     }
                     name="niveauInstitutionId"
                     onChange={handleChange}
@@ -530,7 +541,7 @@ export default function ProductionFormDialog({ handleClose }) {
                   }}
                 />
               </Grid> */}
-              {data?.dateDeProduction.toISOString()}
+              {/* {data?.dateDeProduction.toISOString()} */}
               <Grid item sm={12}>
                 <DatePicker
                   id="dateDeProduction"
@@ -540,25 +551,29 @@ export default function ProductionFormDialog({ handleClose }) {
                   fullWidth={true}
                   selectedDate={
                     formData?.dateDeProduction ||
-                    data?.dateDeProduction.toISOString()
+                    data?.dateDeProduction?.toISOString()
                   }
                   handleChange={handleChange}
                   format="d MMMM yyyy"
                   name="dateDeProduction"
+                  firstValue={
+                    formData?.dateDeProduction ||
+                    data?.dateDeProduction?.toISOString()
+                  }
                 />
               </Grid>
             </Grid>
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => close('no', formData)} color="primary">
+          <Button onClick={() => close("no", formData, title)} color="primary">
             Annuler
           </Button>
-          <Button onClick={() => close('yes', formData)} color="primary">
+          <Button onClick={() => close("yes", formData, title)} color="primary">
             Entregistrer
           </Button>
         </DialogActions>
       </Dialog>
     </div>
-  )
+  );
 }

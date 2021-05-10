@@ -1,7 +1,8 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
-require("../backend/main-process");
+const models = require("./backend/models").default;
+require("./backend/main-process/");
 
 const createWindow = async () => {
   let win = new BrowserWindow({
@@ -11,27 +12,32 @@ const createWindow = async () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: isDev,
+      devTools: true,
     },
   });
 
   win.maximize();
-  !isDev && win.removeMenu();
+  !isDev && win.removeMenu()
 
   win.on("closed", () => {
     win = null;
     app.quit();
   });
 
-  win.loadURL(
-    isDev
-      ? "http://localhost:3000"
-      : `file://${path.join(__dirname, "../build/index.html")}`
-  );
+  return models.sequelize
+    .sync()
+    .then(() => {
+      win.loadURL(
+        isDev
+          ? "http://localhost:3000"
+          : `file://${path.join(__dirname, "../build/index.html")}`
+      );
+    })
+    .catch((err) => console.log(err));
 };
 
-app.whenReady().then(async () => {
-  await createWindow();
+app.whenReady().then(() => {
+  createWindow();
 
   app.on("activate", async () => {
     if (BrowserWindow.getAllWindows().length === 0) {

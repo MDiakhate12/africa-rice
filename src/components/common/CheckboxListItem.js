@@ -10,9 +10,9 @@ import { makeStyles, useTheme } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   listItem: {
     padding: "3 2",
-    height: "4ch"
-  }
-}))
+    height: "4ch",
+  },
+}));
 
 export default function CheckboxListItem({
   value,
@@ -23,15 +23,19 @@ export default function CheckboxListItem({
 }) {
   const [checked, setChecked] = React.useState(wasChecked);
 
+  React.useEffect(() => {
+    setChecked(wasChecked);
+  }, []);
+
   const handleChange = (e) => {
     if (wasChecked === false) {
       setChecked(e.target.checked);
-    //   onChecked(e.target);
+      //   onChecked(e.target);
     }
   };
 
   const classes = useStyles();
-  const theme = useTheme()
+  const theme = useTheme();
 
   return (
     <ListItem

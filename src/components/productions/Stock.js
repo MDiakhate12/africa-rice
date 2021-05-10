@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import DataTable from "../common/DataTable";
 import StockCard from "./StockCard";
-import defaultImage from "../../components/images/default.jpg";
 import { Grid } from "@material-ui/core";
 import { GlobalContext } from "../../store/GlobalProvider";
 import CommonDialog from "../common/CommonDialog";
 
 const { ipcRenderer } = window.require("electron");
+const path = window.require("path");
 
 const columns = [
   { type: "string", field: "id", headerName: "idProduction", hide: true },
@@ -45,126 +45,10 @@ const columns = [
 ];
 
 function Stock() {
-  // const [productionsBySpeculation, setProductionBySpec] = useState([]);
-  // const [productionsByVariete, setProductionByVariete] = useState([]);
-  const { openDialog, institution } = useContext(GlobalContext);
-
-  // PRODUCTIONS GROUPED BY SPECULATION
-  // const [speculations, setSpeculations] = useState([
-  //   {
-  //     nomSpeculation: 'Riz',
-  //     dateDerniereProduction: '12 Décembre 2013',
-  //     imageSpeculation: riz,
-  //     quantiteProduite: 2000,
-  //   },
-  //   {
-  //     nomSpeculation: 'Mil',
-  //     dateDerniereProduction: '29 Octobre 2012',
-  //     imageSpeculation: mil,
-  //     quantiteProduite: 3000,
-  //   },
-  //   {
-  //     nomSpeculation: 'Total',
-  //     dateDerniereProduction: '14 Février 2014',
-  //     imageSpeculation: defaultImage,
-  //     quantiteProduite: 5000,
-  //   },
-  // ])
-
-  // const getAllProductions = () => {
-  //   ipcRenderer.send("getByVarietes", {
-  //     institutionId: institution.idInstitution,
-  //   });
-  //   ipcRenderer.once("gotByVarietes", (event, data) => {
-  //     console.log(data);
-  //     let sommeStock = 0;
-  //     let sommeQDispo = 0;
-  //     groupBySpeculation(data).map((value) => {
-  //       sommeStock += value.totalStock;
-  //       sommeQDispo += value.totalQuantiteDisponible;
-  //     });
-  //     const options = {
-  //       // weekday: "long",
-  //       year: "numeric",
-  //       month: "long",
-  //       day: "numeric",
-  //     };
-  //     setProductionByVariete(data);
-  //     setProductionBySpec([
-  //       ...groupBySpeculation(data),
-  //       {
-  //         varieteInstitutionId: 0,
-  //         nomSpeculation: "Total",
-  //         dateDerniereProduction: new Date().toLocaleDateString(
-  //           "fr-FR",
-  //           options
-  //         ),
-  //         imageSpeculation: defaultImage,
-  //         totalStock: sommeStock,
-  //         totalQuantiteDisponible: sommeQDispo,
-  //       },
-  //     ]);
-  //   });
-  // };
-
-  // const groupBySpeculation = (data) => {
-  //   const bySpeculation = {};
-  //   data.map((value) => {
-  //     if (
-  //       !Object.keys(bySpeculation).includes(
-  //         value.VarieteInstitution.speculationInstitutionId.toString()
-  //       )
-  //     ) {
-  //       bySpeculation[value.VarieteInstitution.speculationInstitutionId] = {
-  //         totalPrix: value.totalPrix,
-  //         totalStock: value.totalStock,
-  //         totalQuantiteProduite: value.totalQuantiteProduite,
-  //         totalQuantiteDisponible: value.totalQuantiteDisponible,
-  //         nomSpeculation:
-  //           value.VarieteInstitution.SpeculationInstitution.Speculation
-  //             .nomSpeculation,
-  //         imageSpeculation:
-  //           value.VarieteInstitution.SpeculationInstitution.Speculation
-  //             .imageSpeculation,
-  //         varieteInstitutionId:
-  //           value.VarieteInstitution.speculationInstitutionId,
-  //       };
-  //     } else {
-  //       bySpeculation[
-  //         value.VarieteInstitution.speculationInstitutionId
-  //       ].totalPrix =
-  //         bySpeculation[value.VarieteInstitution.speculationInstitutionId]
-  //           .totalPrix + value.totalPrix;
-  //       bySpeculation[
-  //         value.VarieteInstitution.speculationInstitutionId
-  //       ].totalStock =
-  //         bySpeculation[value.VarieteInstitution.speculationInstitutionId]
-  //           .totalStock + value.totalStock;
-  //       bySpeculation[
-  //         value.VarieteInstitution.speculationInstitutionId
-  //       ].totalQuantiteProduite =
-  //         bySpeculation[value.VarieteInstitution.speculationInstitutionId]
-  //           .totalQuantiteProduite + value.totalQuantiteProduite;
-  //       bySpeculation[
-  //         value.VarieteInstitution.speculationInstitutionId
-  //       ].totalQuantiteDisponible =
-  //         bySpeculation[value.VarieteInstitution.speculationInstitutionId]
-  //           .totalQuantiteDisponible + value.totalQuantiteDisponible;
-  //     }
-  //   });
-  //   return Object.values(bySpeculation);
-  // };
-
-  // useEffect(() => {
-  //   getAllProductions();
-  // }, [institution]);
+  const { openDialog, institution, isDev } = useContext(GlobalContext);
 
   const [productionsBySpeculation, setProductionsBySpeculation] = useState([]);
   const [productionsByVariete, setProductionsByVariete] = useState([]);
-  // const [
-  //   productionsBySpeculationTotal,
-  //   setProductionsBySpeculationTotal,
-  // ] = useState([]);
 
   const getProductionsSumBySpeculation = () => {
     ipcRenderer.send("getProductionsSumBySpeculation", {
@@ -172,12 +56,7 @@ function Stock() {
     });
     ipcRenderer.once("gotProductionsSumBySpeculation", (event, data) => {
       console.log("sum by speculation:", data);
-      // const options = {
-      //   // weekday: "long",
-      //   year: "numeric",
-      //   month: "long",
-      //   day: "numeric",
-      // };
+
       setProductionsBySpeculation([
         ...data.map((production) => ({
           varieteInstitutionId:
@@ -190,18 +69,6 @@ function Stock() {
               .imageSpeculation,
           totalQuantiteDisponible: production.totalQuantiteDisponible,
         })),
-        // {
-        //   varieteInstitutionId: 0,
-        //   nomSpeculation: "Total",
-        //   dateDerniereProduction: new Date().toLocaleDateString(
-        //     "fr-FR",
-        //     options
-        //   ),
-        //   imageSpeculation: defaultImage,
-        //   // totalStock: productionsBySpeculationTotal.totalStock,
-        //   totalQuantiteDisponible:
-        //     productionsBySpeculationTotal.totalQuantiteDisponible,
-        // },
       ]);
     });
   };
@@ -224,7 +91,6 @@ function Stock() {
       console.log("total by speculation:", data);
 
       const options = {
-        // weekday: "long",
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -239,7 +105,7 @@ function Stock() {
             "fr-FR",
             options
           ),
-          imageSpeculation: defaultImage,
+          imageSpeculation: `${isDev ? "" : global.__dirname}/assets/images/default.jpg`,
           totalQuantiteDisponible: data.totalQuantiteDisponible,
         },
       ]);
@@ -250,7 +116,6 @@ function Stock() {
     getProductionsSumBySpeculation();
     getProductionsSumByVarietes();
     getProductionsSumBySpeculationTotal();
-
   }, [institution]);
 
   const handleDialogClose = (response, data) => {

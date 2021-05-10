@@ -23,6 +23,7 @@ import Parametres from "../parametres/Parametres";
 import Rapports from "../rapports/Rapports";
 import LightIcon from "@material-ui/icons/Brightness7";
 import DarkIcon from "@material-ui/icons/Brightness4";
+import InfoIcon from "@material-ui/icons/Info";
 import {
   Box,
   ListItemIcon,
@@ -36,6 +37,7 @@ import { Link } from "react-router-dom";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import Home from "../home/Home";
 import { GlobalContext } from "../../store/GlobalProvider";
+import About from "../about/About";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -118,6 +120,11 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     bottom: "10px",
     marginLeft: theme.spacing(1),
+    display: "flex",
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
   },
 }));
 
@@ -167,6 +174,12 @@ export default function MiniDrawer({ lightMode, toggleMode }) {
       to: "/rapports",
       icon: <EqualizerIcon color="primary" />,
       text: "Rapports",
+    },
+    {
+      isActive: false,
+      to: "/about",
+      icon: <InfoIcon color="primary" />,
+      text: "A propos",
     },
     // {
     //   isActive: false,
@@ -335,23 +348,33 @@ export default function MiniDrawer({ lightMode, toggleMode }) {
           ))}
         </MenuList>
 
-        {open && (
-          <div className={classes.infos}>
-            <div>{institution?.logo}</div>
+        <div className={classes.infos} id="infos" style={{
+          width: "-webkit-fill-available"
+         }}>
+          <img
+            src={institution?.logo}
+            alt=""
+            width={open ? "100px" : "47px"}
+            height={open ? "100px" : "47px"}
+            style={{
+              transition: "all 0.2s",
+              marginBottom: "17px"
+            }}
+          />
 
-            <Typography
-              variant="body1"
-              color="textSecondary"
-              align="center"
-              style={{
-                fontSize: "1rem",
-              }}
-            >
-              {" "}
-              2021 &copy; {institution?.sigle}
-            </Typography>
-          </div>
-        )}
+          <Typography
+            variant="body1"
+            color="textSecondary"
+            align="center"
+            style={{
+              fontSize: open ? "1rem" : "0.7rem",
+              transition: "all 0.2s",
+            }}
+          >
+            {" "}
+            2021 &copy; {institution?.sigle}
+          </Typography>
+        </div>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
@@ -362,6 +385,7 @@ export default function MiniDrawer({ lightMode, toggleMode }) {
           <Route path="/commandes" component={Commandes} />
           <Route path="/parametres" component={Parametres} />
           <Route path="/rapports" component={Rapports} />
+          <Route path="/about" component={About} />
           {/* <Route path="/impressions" component={Impressions} /> */}
         </Switch>
       </main>
@@ -378,7 +402,7 @@ export default function MiniDrawer({ lightMode, toggleMode }) {
           position="relative"
         >
           <Typography variant="body2">
-            2021 &copy; Africa Rice | Mouhammad DIAKHATE & Mor KAIRE
+            2021 &copy; AfricaRice-Seed Scaling Up Project 
           </Typography>
         </Box>
       </footer>

@@ -1,50 +1,74 @@
-import * as React from 'react'
-import { useState } from 'react'
+import * as React from "react";
+import { useState } from "react";
 import ReactMapGL, {
   FullscreenControl,
   GeolocateControl,
-  Marker,
   NavigationControl,
+  ScaleControl,
   Popup,
-} from 'react-map-gl'
-import { GlobalContext } from '../../store/GlobalProvider'
-import * as senegal from './sn.json'
-import PinDropIcon from '@material-ui/icons/PinDrop'
+} from "react-map-gl";
+import { GlobalContext } from "../../store/GlobalProvider";
+import * as senegal from "./sn.json";
 
-// import "mapbox-gl/dist/mapbox-gl.css";
+import 'mapbox-gl/dist/mapbox-gl.css';
 
-import { IconButton } from '@material-ui/core'
+// import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
 
-const { ipcRenderer } = window.require('electron')
-const { events, eventResponse } = require('../../store/utils/events')
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import MapboxWorker from "worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker";
+
+const { ipcRenderer } = window.require("electron");
 
 export default function Map2() {
-  const { institution } = React.useContext(GlobalContext)
+  const { institution } = React.useContext(GlobalContext);
   const [viewport, setViewport] = useState({
-    width: '80vw',
-    height: '80vh',
+    width: "80vw",
+    height: "80vh",
     latitude: 14.4750607,
     longitude: -14.4529612,
-    zoom: 6,
-  })
+    zoom: 7,
+  });
 
-  const [productionsByRegion, setProductionsByRegion] = useState([])
+  const [productionsByRegion, setProductionsByRegion] = useState([]);
 
   const getProductionsSumByRegion = () => {
-    ipcRenderer.send('getProductionsSumByRegion', {
+    ipcRenderer.send("getProductionsSumByRegion", {
       institutionId: institution?.idInstitution,
-    })
-    ipcRenderer.once('gotProductionsSumByRegion', (event, data) => {
-      console.log('getProductionsSumByRegion', data)
-      setProductionsByRegion(data)
-    })
-  }
+    });
+    ipcRenderer.once("gotProductionsSumByRegion", (event, data) => {
+      console.log("getProductionsSumByRegion", data);
+      setProductionsByRegion(data);
+    });
+  };
 
   React.useEffect(() => {
-    getProductionsSumByRegion()
-  }, [institution])
+    getProductionsSumByRegion();
+    console.log(ReactMapGL);
+  }, [institution]);
 
-  const [selectedRegion, setSelectedRegion] = useState()
+  const geolocateStyle = {
+    top: 0,
+    left: 0,
+    padding: "10px",
+  };
+
+  const fullscreenControlStyle = {
+    top: 36,
+    left: 0,
+    padding: "10px",
+  };
+
+  const navStyle = {
+    top: 72,
+    left: 0,
+    padding: "10px",
+  };
+
+  const scaleControlStyle = {
+    bottom: 36,
+    left: 0,
+    padding: "10px",
+  };
 
   return (
     <ReactMapGL
@@ -54,12 +78,14 @@ export default function Map2() {
       scrollZoom={false}
       // mapStyle="mapbox://styles/lilcheikh/cknjlxaqt03p417oannirmtxm" // Dark
       // mapStyle="mapbox://styles/lilcheikh/cknjmc4st1awe18mmh54cr29r" // Navigation
-      mapStyle="mapbox://styles/lilcheikh/cknjmckc20jsl17npo19qnk83" // Satellite
+      // mapStyle="mapbox://styles/lilcheikh/cknjmckc20jsl17npo19qnk83" // Satellite
+      mapStyle="mapbox://styles/mapbox/streets-v11" // Satellite
+
     >
       {productionsByRegion.map((production) => {
         let region = senegal.cities.find(
-          (c) => c.city.toLowerCase() === production.Localisation.region,
-        )
+          (c) => c.city.toLowerCase() === production.Localisation.region
+        );
 
         if (region)
           return (
@@ -69,81 +95,18 @@ export default function Map2() {
               longitude={parseFloat(region.lng)}
             >
               <div>{production.Localisation.region.toUpperCase()}</div>
-              {/* <div>{`Département: ${production.Localisation.departement}`}</div>
-              <div>{`Localité: ${production.Localisation.village}`}</div>
-              <div>{`Varété: ${production.VarieteInstitution.Variete.nomVariete}`}</div> */}
+              {/* <div>{production.Localisation.village}</div> */}
               <div>{`Tot. disponible: ${production.totalQuantiteDisponible} KG`}</div>
               <div>{`Tot. produit: ${production.totalQuantiteProduite} KG`}</div>
             </Popup>
-          )
-        return null
-      })}
-      {/* {productionsByVariete.map((production) => {
-        let region = production.Localisation.region;
-
-        let city = senegal.cities.find((c) => c.city.toLowerCase() === region);
-
-        if (city) {
-          return (
-            <>
-              <Marker
-                key={production.idProduction}
-                latitude={parseFloat(city.lat)}
-                longitude={parseFloat(city.lng)}
-              >
-                <IconButton>
-                  <PinDropIcon
-                    fontSize="large"
-                    color="secondary"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setSelectedRegion(city)
-                    }}
-                  />
-                </IconButton>
-              </Marker>
-            </>
           );
-        } else {
-          return null;
-        }
+        return null;
       })}
 
-      {selectedRegion && (
-        <Popup
-          key={production.VarieteInstitution.varieteId}
-          latitude={parseFloat(senegal.cities[index].lat)}
-          longitude={parseFloat(senegal.cities[index].lng)}
-        >
-          <div>{`Région: ${production.Localisation.region}`}</div>
-          <div>{`Département: ${production.Localisation.departement}`}</div>
-          <div>{`Localité: ${production.Localisation.village}`}</div>
-          <div>{`Varété: ${production.VarieteInstitution.Variete.nomVariete}`}</div>
-          <div>{`Total produit: ${production.totalQuantiteProduite} KG`}</div>
-        </Popup>
-      )} */}
-
-      <NavigationControl
-        style={{
-          top: 10,
-          left: 10,
-        }}
-      />
-      <GeolocateControl
-        style={{
-          bottom: 10,
-          right: 10,
-        }}
-        positionOptions={{ enableHighAccuracy: true }}
-        trackUserLocation={true}
-        auto
-      />
-      <FullscreenControl
-        style={{
-          top: 10,
-          right: 10,
-        }}
-      />
+      <GeolocateControl style={geolocateStyle} />
+      <FullscreenControl style={fullscreenControlStyle} />
+      <NavigationControl style={navStyle} />
+      <ScaleControl style={scaleControlStyle} />
     </ReactMapGL>
-  )
+  );
 }

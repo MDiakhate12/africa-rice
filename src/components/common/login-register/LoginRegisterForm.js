@@ -12,6 +12,7 @@ import {
   Box,
   Typography,
   TextField,
+  CircularProgress,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { GlobalContext } from "../../../store/GlobalProvider";
@@ -69,7 +70,7 @@ export default function LoginRegisterForm() {
   });
 
   const [formStateLogin, setFormStateLogin] = useState({});
-  const { login } = useContext(GlobalContext);
+  const { login, loading, setLoading } = useContext(GlobalContext);
   const history = useHistory();
 
   const timeout = null;
@@ -104,7 +105,7 @@ export default function LoginRegisterForm() {
         };
       });
     } else {
-      return
+      return;
     }
   };
 
@@ -121,6 +122,7 @@ export default function LoginRegisterForm() {
   };
 
   const handleSubmit = (e) => {
+    setLoading(true);
     if (Object.keys(formState).length === 0) return;
 
     for (let [key, value] of Object.entries(error)) {
@@ -147,6 +149,7 @@ export default function LoginRegisterForm() {
         return;
       }
       login(data.payload);
+      setLoading(false);
       history.push("/");
     });
   };
@@ -170,7 +173,7 @@ export default function LoginRegisterForm() {
     event.preventDefault();
   };
 
-  const interval = 1300;
+  const interval = 1500;
 
   const clearOrCheck = (e) => {
     let { name } = e.target;
@@ -253,7 +256,14 @@ export default function LoginRegisterForm() {
         id="container"
       >
         <div className="form-container sign-up-container">
-          <form action="#">
+          <form
+            action="#"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSubmit(e);
+              }
+            }}
+          >
             <h1>Enregistrement</h1>
             {/* <div className="social-container">
               <a href="#" className="social">
@@ -345,7 +355,7 @@ export default function LoginRegisterForm() {
                   fullWidth
                   label="Téléphone"
                   name="telephone"
-                  format='## ### ## ##'
+                  format="## ### ## ##"
                   margin="dense"
                   value={formState?.telephone || ""}
                   className={clsx(classes.margin, classes.textField)}
@@ -503,6 +513,19 @@ export default function LoginRegisterForm() {
               </Grid>
 
               <Grid item sm={12} className={classes.gridContainer}>
+                {/* <Button
+                  color="primary"
+                  variant="contained"
+                  className={classes.addButton}
+                  // size="large"
+                  onClick={handleSubmit}
+                >
+                  {loading ? (
+                    <CircularProgress size="small" color="inherit" />
+                  ) : (
+                    <Typography>Enregistrer</Typography>
+                  )}
+                </Button> */}
                 <Button
                   color="primary"
                   variant="contained"
@@ -522,7 +545,14 @@ export default function LoginRegisterForm() {
           </form>
         </div>
         <div className="form-container sign-in-container">
-          <form action="#">
+          <form
+            action="#"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSubmitLogin(e);
+              }
+            }}
+          >
             <h1>Connexion</h1>
             <Grid container>
               <Grid item sm={12}>

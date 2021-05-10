@@ -1,7 +1,10 @@
+import * as localisations from "./localisation.json"
+
 // const fs = require("fs");
 // const path = require("path");
 const { events, eventResponse } = require('../utils/events')
 const { ipcRenderer } = window.require('electron')
+
 
 // fs.readdir("../../../../scrapping/regions-json", (err, files) => {
 //   let baseName = "";
@@ -57,6 +60,15 @@ const { ipcRenderer } = window.require('electron')
 //   },
 // ]
 
-// localisations.map((localisation) => {
-//   ipcRenderer.send(events.localisation.create, localisation)
-// })
+const initLocalisation = () => {
+    localisations.forEach((localisation) => {
+        ipcRenderer.send(events.localisation.create, localisation)
+        ipcRenderer.once(
+          eventResponse.niveauDeProduction.created,
+          (event, data) => {
+            console.log(data)
+          },
+        )
+      })
+}
+

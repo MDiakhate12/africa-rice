@@ -12,6 +12,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import { makeStyles } from "@material-ui/core";
+import MuiPhoneInput from "material-ui-phone-number";
 
 export default function ClientFormDialog({ handleClose }) {
   const {
@@ -38,6 +39,20 @@ export default function ClientFormDialog({ handleClose }) {
 
   const handleChange = (e) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
+  };
+
+  const handlePhoneChange = (value) => {
+    console.log(value);
+    if (value.length < 9) {
+      setFormState((state) => {
+        return {
+          ...state,
+          telephone: value,
+        };
+      });
+    } else {
+      return;
+    }
   };
 
   return (
@@ -122,7 +137,7 @@ export default function ClientFormDialog({ handleClose }) {
               />{" "}
             </>
           )}
-          <TextField
+          {/* <TextField
             value={formState.telephone || ""}
             onChange={handleChange}
             autoFocus
@@ -132,7 +147,20 @@ export default function ClientFormDialog({ handleClose }) {
             label="Téléphone"
             type="phone"
             fullWidth
-          />{" "}
+          />{" "} */}
+          <MuiPhoneInput
+            defaultCountry="sn"
+            regions={"africa"}
+            countryCodeEditable={false}
+            fullWidth
+            label="Téléphone"
+            name="telephone"
+            format="## ### ## ##"
+            margin="dense"
+            value={formState?.telephone || ""}
+            // variant="filled"
+            onChange={handlePhoneChange}
+          />
           <TextField
             value={formState.email || ""}
             onChange={handleChange}

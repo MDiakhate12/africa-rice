@@ -63,7 +63,7 @@ export default function CommandeLivraisonBySpeculation({ display }) {
 
   const getCommandeSumBySpeculationByState = () => {
     ipcRenderer.send('getCommandeSumBySpeculationByState', {
-      '$Production.institutionId$': institution.idInstitution,
+      '$Production.institutionId$': institution?.idInstitution,
 
     })
     ipcRenderer.once('gotCommandeSumBySpeculationByState', (event, data) => {

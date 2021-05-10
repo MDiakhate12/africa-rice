@@ -65,16 +65,7 @@ export default function Provider() {
       }
     );
   };
-  useEffect(() => {
-    getAll();
 
-    return () => {
-      ipcRenderer.removeAllListeners([
-        eventResponse.niveauDeProduction.gotAll,
-        events.niveauDeProduction.getAll,
-      ]);
-    };
-  }, []);
 
   return [state, add, getOne, getAll, update, deleteById]
 }

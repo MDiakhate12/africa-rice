@@ -1,16 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
-import clsx from 'clsx'
-import { Button, Grid, TextField, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import CustomButton from '../common/CustomButton'
-import photoImage from '../images/photo.svg'
-import { eventResponse, events } from '../../store/utils/events'
-import { GlobalContext } from '../../store/GlobalProvider'
-import CheckboxList from '../common/CheckboxList'
+import React, { useContext, useEffect, useState } from "react";
+import clsx from "clsx";
+import { Button, Grid, TextField, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import CustomButton from "../common/CustomButton";
+import { eventResponse, events } from "../../store/utils/events";
+import { GlobalContext } from "../../store/GlobalProvider";
+import CheckboxList from "../common/CheckboxList";
 
-const { ipcRenderer } = window.require('electron')
-const fs = window.require('fs')
-const path = window.require('path')
+const { ipcRenderer } = window.require("electron");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Institution() {
   const classes = useStyles();
 
-  const { institution, updateInstitution } = useContext(GlobalContext)
+  const { institution, updateInstitution, isDev } = useContext(GlobalContext);
 
   const [formState, setFormState] = useState({});
 
@@ -65,31 +62,28 @@ export default function Institution() {
   };
 
   const showDialog = (e) => {
-    ipcRenderer.send(events.imageDialog.open)
+    console.log(process.env);
+    ipcRenderer.send(events.imageDialog.open);
 
-    ipcRenderer.once(eventResponse.imageDialog.closed, (event, data) => {
-      if (!data.canceled) {
-        let file = data.filePaths[0];
-        let basename = path.basename(file);
-        // let filepath = path.join(__dirname, `../images/${basename}`)
-        let filepath = `../images/${basename}`
+    ipcRenderer.on(eventResponse.imageDialog.closed, (event, data) => {
+      if (data) {
+        console.log(data);
 
-        console.log('file', file)
-        console.log('filepath', filepath)
-        fs.copyFile(file, `src/components/images/${basename}`, (err) => {
-          if (err) throw err
-        })
-        setTimeout(() => {
-          setFormState({
+        setFormState({
+          ...formState,
+          logo: data,
+        });
+
+        updateInstitution({
+          id: formState.idInstitution,
+          data: {
             ...formState,
-            logo: filepath,
-          });
-          console.log("File was copied to destination");
-          console.log("STATE", formState);
-        }, 3000);
+            logo: data,
+          },
+        });
       }
-    })
-  }
+    });
+  };
 
   const onSubmitChecklist = (e) => {};
 
@@ -195,9 +189,11 @@ export default function Institution() {
             <Typography variant="button">Ajouter un logo</Typography>
             <CustomButton
               image={{
-                url: formState?.logo || photoImage,
-                title: 'Ajouter un logo',
-                width: '65%',
+                url:
+                  institution?.logo ||
+                  `${isDev ? "" : global.__dirname}/assets/images/photo.svg`,
+                title: "Ajouter un logo",
+                width: "65%",
               }}
               onClick={showDialog}
             />

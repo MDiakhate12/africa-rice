@@ -8,6 +8,7 @@ import { amber, teal } from "@material-ui/core/colors";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Auth from "./components/auth/Auth";
 import PrivateRoute from "./components/common/PrivateRoute";
+import init from "./postinstall"
 
 function App() {
   const [lightMode, setLightMode] = React.useState(true);

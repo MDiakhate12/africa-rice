@@ -1,7 +1,7 @@
 const { ipcRenderer } = window.require('electron')
 const { events, eventResponse } = require('../utils/events')
 
-const niveaux = [
+const etats = [
   { etat: 'Acceptable' },
   { etat: 'Rejete' },
   { etat: 'Annule' },
@@ -10,9 +10,9 @@ const niveaux = [
   { etat: 'Insuffisant' },
 ]
 
-export const initializeNiveau = () =>
-  niveaux.forEach((niveau) =>
+export const initEtat = () =>
+  etats.forEach((niveau) =>
     ipcRenderer.send(events.etatCommande.create, niveau),
   )
 
-initializeNiveau()
+initEtat()

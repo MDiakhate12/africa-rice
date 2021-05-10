@@ -16,14 +16,19 @@ export default function DatePicker({
   disableFuture,
   disablePast,
   variant,
+  disabled,
+  firstValue,
 }) {
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate, setSelectedDate] = React.useState(
+    firstValue || new Date()
+  );
 
   const handleDateChange = (date) => {
     console.log(date);
     setSelectedDate(date);
     handleChange({ target: { name, value: date.toISOString() } });
   };
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
@@ -37,7 +42,7 @@ export default function DatePicker({
         label={label}
         name={name}
         value={selectedDate}
-        defaultValue={new Date()}
+        disabled={disabled || false}
         onChange={handleDateChange}
         fullWidth={fullWidth}
         KeyboardButtonProps={{

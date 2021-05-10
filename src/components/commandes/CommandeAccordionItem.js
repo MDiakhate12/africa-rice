@@ -62,21 +62,17 @@ function SimpleAccordion({
   const classes = useStyles();
   const [formData, setFormData] = useState({});
   const [productions, setProductions] = useState([]);
-  const [varietes, setVarietes] = useState([]);
   const [speculations, setSpeculations] = useState([]);
   const [niveauxInstitution, setNiveauxInstitution] = useState([]);
   const [expanded, setExpanded] = useState(false);
 
   const { openConfirmDialog, institution } = useContext(GlobalContext);
 
-  // const groupByKey = (key, array) => [
-  //   ...new Map(array.map((item) => [item[key], item])).values(),
-  // ];
-
   const getAllProductions = () => {
     ipcRenderer.send(events.production.getAll, {
       institutionId: institution.idInstitution,
     });
+    
     ipcRenderer.once(eventResponse.production.gotAll, (event, data) => {
       setProductions(data);
 
@@ -89,6 +85,7 @@ function SimpleAccordion({
           )
         ),
       ]);
+
       setNiveauxInstitution([
         ...new Set(
           data.map(

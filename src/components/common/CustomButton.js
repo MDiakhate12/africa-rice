@@ -42,16 +42,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     color: theme.palette.common.white,
   },
-  imageSrc: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    backgroundSize: "center",
-    backgroundPosition: "center 50%",
-    backgroundRepeat: "no-repeat",
-  },
   imageBackdrop: {
     position: "absolute",
     left: 0,
@@ -94,12 +84,7 @@ export default function CustomButton({ image, onClick }) {
           width: image.width,
         }}
       >
-        <span
-          className={classes.imageSrc}
-          style={{
-            backgroundImage: `url(${image.url})`,
-          }}
-        />
+        <img src={image.url} alt="" width="80%" />
         <span className={classes.imageBackdrop} />
         <span className={classes.imageButton}>
           <Typography

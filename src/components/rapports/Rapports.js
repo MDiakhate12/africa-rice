@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, Paper, Switch, Tab, Tabs } from "@material-ui/core";
+import { Grid, Paper, Tab, Tabs } from "@material-ui/core";
 
 import ProductionBySpeculation from "./ProductionBySpeculation";
 import ProductionByVariete from "./ProductionByVariete";
@@ -19,7 +19,6 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import Map2 from "./Map2";
 
 export default function Rapports() {
   const classes = useStyles();
