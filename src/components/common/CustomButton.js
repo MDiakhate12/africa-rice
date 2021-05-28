@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     position: "relative",
-    height: 183,
+    // height: 183,
     [theme.breakpoints.down("xs")]: {
       width: "100% !important", // Overrides inline-style
       height: 100,
@@ -82,6 +82,7 @@ export default function CustomButton({ image, onClick }) {
         onClick={onClick}
         style={{
           width: image.width,
+          height: image.height || 183,
         }}
       >
         <img src={image.url} alt="" width="80%" />

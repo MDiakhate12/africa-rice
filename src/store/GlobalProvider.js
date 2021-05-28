@@ -13,6 +13,8 @@ import NiveauProvider from "./niveau/provider";
 import NiveauInstitutionProvider from "./niveauInstitution/provider";
 import CommonDialogProvider from "./commonDialog/provider";
 import ProductionFormDialogProvider from "./productionFormDialog/provider";
+import SpeculationFormDialogProvider from "./speculationFormDialog/provider";
+import VarieteFormDialogProvider from "./varieteFormDialog/provider";
 import LoadingProvider from "./loading/provider";
 
 const path = require("path");
@@ -123,6 +125,18 @@ export default function GlobalProvider({ children }) {
     closeCommandeUpdateFormDialog,
   ] = CommandeUpdateFormDialogProvider();
 
+  const [
+    speculationFormDialog,
+    openSpeculationFormDialog,
+    closeSpeculationFormDialog,
+  ] = SpeculationFormDialogProvider();
+
+  const [
+    varieteFormDialog,
+    openVarieteFormDialog,
+    closeVarieteFormDialog,
+  ] = VarieteFormDialogProvider();
+
   const [dialog, openDialog, closeDialog] = CommonDialogProvider();
   const [loading, setLoading] = LoadingProvider();
 
@@ -225,6 +239,14 @@ export default function GlobalProvider({ children }) {
 
         loading,
         setLoading,
+
+        speculationFormDialog,
+        openSpeculationFormDialog,
+        closeSpeculationFormDialog,
+
+        varieteFormDialog,
+        openVarieteFormDialog,
+        closeVarieteFormDialog,
       }}
     >
       {children}

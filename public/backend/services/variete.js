@@ -29,14 +29,15 @@ const getVarieteById = async (id) => {
 };
 
 const updateVariete = async (id, data) => {
-  const updated = service.update(Variete, id, data);
+  const updated = await service.update(Variete, id, data);
   console.log(updated.toJSON());
   return updated.toJSON();
 };
 
 const deleteVariete = async (id) => {
-  const deleted = service.deleteByPk(Variete, id);
-  return deleted.toJSON();
+  const deleted = await service.deleteByPk(Variete, id);
+  console.log(deleted);
+  return deleted;
 };
 
 module.exports = {

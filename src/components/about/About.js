@@ -17,11 +17,11 @@ export default function About() {
               marginTop: "5ch",
             }}
           >
-            SSU a été développé au Sénégal par AfricaRice <br />
-            dans le cadre de la mise en œuvre <br /> du projet Seed-Scaling Up. <br /> <br />
+            SSP a été développé au Sénégal par AfricaRice <br />
+            dans le cadre de la mise en œuvre <br /> du projet Seed-Scaling Project. <br /> <br />
             Financé par Feed The Future / USAID. <br /> <br />
-            Avec le concours des développeurs : <br />
-            Mouhammad DIAKHATE & Mor KAIRE
+            {/* Avec le concours des développeurs : <br /> */}
+            {/* Mouhammad DIAKHATE & Mor KAIRE */}
           </Typography>
         </Grid>
       </Grid>

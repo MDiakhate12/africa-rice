@@ -8,21 +8,23 @@ export const reducer = (state, action) => {
       return [action.payload, ...state];
 
     case actions.ON_GET_ONE:
-      return state.find((value) => value.idVaritete === action.payload);
+      return state.find((value) => value.Variete === action.payload);
 
     case actions.ON_GET_ALL:
       return action.payload;
 
     case actions.ON_UPDATE:
       return state.map((value) => {
-        if (value.idVaritete === action.payload.idVaritete) {
-          value = { idVaritete: value.idVaritete, ...action.payload };
+        if (value.Variete === action.payload.Variete) {
+          value = { Variete: value.Variete, ...action.payload };
         }
         return value;
       });
 
     case actions.ON_DELETE:
-      return state.filter((value) => value === action.payload);
+      return state.filter(
+        (value) => value.idVariete !== action.payload.idVariete
+      );
 
     default:
       break;

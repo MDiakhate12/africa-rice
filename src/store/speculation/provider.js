@@ -8,12 +8,13 @@ export default function Provider() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const add = (payload) => {
-    dispatch({ type: actions.ON_ADD, payload });
-    ipcRenderer.send(events.speculation.create);
+    console.log(payload);
+    ipcRenderer.send(events.speculation.create, payload);
 
     ipcRenderer.once(eventResponse.speculation.created, (event, data) => {
-      // console.log("EVENT:", event);
-      console.log("DATA SPECULATION:", data);
+      console.log("EVENT:", event);
+      console.log("DATA:", data);
+      // dispatch({ type: actions.ON_ADD, payload: data });
     });
   };
   const getOne = (payload) => {
@@ -47,13 +48,17 @@ export default function Provider() {
   };
 
   const deleteById = (payload) => {
-    dispatch({ type: actions.ON_DELETE, payload });
-    ipcRenderer.send(events.speculation.delete);
+    console.log('DELETE:', payload)
+    ipcRenderer.send(events.speculation.delete, payload)
 
-    ipcRenderer.once(eventResponse.speculation.deleted, (event, data) => {
-      // console.log("EVENT:", event);
-      console.log("DATA SPECULATION:", data);
-    });
+    ipcRenderer.once(
+      eventResponse.speculation.deleted,
+      (event, data) => {
+        console.log('EVENT:', event)
+        console.log('DATA:', data)
+        dispatch({ type: actions.ON_DELETE, payload })
+      },
+    )
   };
 
   return [state, add, getOne, getAll, update, deleteById];

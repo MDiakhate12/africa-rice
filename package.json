@@ -1,6 +1,6 @@
 {
-  "name": "ssu",
-  "description": "Seed-Scaling Up Project.\nApplication de gestion des semences.",
+  "name": "ssp",
+  "description": "Seed-Scaling Project.\nApplication de gestion des semences.",
   "version": "0.1.0",
   "private": true,
   "main": "./public/electron.js",
@@ -76,8 +76,8 @@
     "url": "https://github.com/MDiakhate12"
   },
   "build": {
-    "appId": "ml.mouhammad.ssu",
-    "productName": "SSU - Seed-Scaling Up",
+    "appId": "ml.mouhammad.ssp",
+    "productName": "SSP - Seed-Scaling Project",
     "win": {
       "icon": "build/favicon.ico"
     },

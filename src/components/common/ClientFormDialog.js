@@ -22,11 +22,23 @@ export default function ClientFormDialog({ handleClose }) {
   } = useContext(GlobalContext);
 
   const close = (response, dataFromOpen = null) => {
+    if (
+      response === "yes" &&
+      ((dataFromOpen.nomCompletStructure === "" &&
+        dataFromOpen.acronyme === "" &&
+        dataFromOpen.prenom === "" &&
+        dataFromOpen.nom === "") ||
+        dataFromOpen.telephone === "" ||
+        dataFromOpen.email === "")
+    ) {
+      return;
+    }
     closeClientFormDialog();
     handleClose(response, dataFromOpen);
+    setFormState(initialState);
   };
 
-  const [formState, setFormState] = useState({
+  const initialState = {
     nomCompletStructure: null,
     acronyme: null,
     prenom: null,
@@ -35,7 +47,8 @@ export default function ClientFormDialog({ handleClose }) {
     email: "",
     estParticulier: "false",
     institutionId: institution?.idInstitution,
-  });
+  };
+  const [formState, setFormState] = useState(initialState);
 
   const handleChange = (e) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
@@ -56,7 +69,13 @@ export default function ClientFormDialog({ handleClose }) {
   };
 
   return (
-    <div>
+    <div
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          close("yes", formState);
+        }
+      }}
+    >
       <Dialog
         open={open}
         onClose={close}
@@ -102,7 +121,6 @@ export default function ClientFormDialog({ handleClose }) {
               <TextField
                 value={formState.acronyme || ""}
                 onChange={handleChange}
-                autoFocus
                 margin="dense"
                 id="acronyme"
                 name="acronyme"
@@ -116,7 +134,6 @@ export default function ClientFormDialog({ handleClose }) {
               <TextField
                 value={formState.prenom || ""}
                 onChange={handleChange}
-                autoFocus
                 margin="dense"
                 id="prenom"
                 name="prenom"
@@ -127,7 +144,6 @@ export default function ClientFormDialog({ handleClose }) {
               <TextField
                 value={formState.nom || ""}
                 onChange={handleChange}
-                autoFocus
                 margin="dense"
                 id="nom"
                 name="nom"
@@ -140,7 +156,6 @@ export default function ClientFormDialog({ handleClose }) {
           {/* <TextField
             value={formState.telephone || ""}
             onChange={handleChange}
-            autoFocus
             margin="dense"
             id="telephone"
             name="telephone"
@@ -164,7 +179,6 @@ export default function ClientFormDialog({ handleClose }) {
           <TextField
             value={formState.email || ""}
             onChange={handleChange}
-            autoFocus
             margin="dense"
             id="email"
             name="email"

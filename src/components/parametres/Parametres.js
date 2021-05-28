@@ -13,6 +13,7 @@ import MagasinProvider from "../../store/magasin/provider";
 import VarieteInstitutionProvider from "../../store/varieteInstitution/provider";
 import SpeculationInstitutionProvider from "../../store/speculationInstitution/provider";
 import { useLocation } from "react-router";
+import Client from "./Client";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -79,6 +80,7 @@ export default function Parametres() {
         >
           <Tab label="Spéculations et Variétés" />
           <Tab label="Magasins" />
+          <Tab label="Clients" />
           <Tab label="Institution" />
         </Tabs>
       </Paper>
@@ -97,7 +99,11 @@ export default function Parametres() {
         </TabPanel>
       </MagasinProvider>
 
-      <TabPanel value={value} index={2}>
+        <TabPanel value={value} index={2}>
+          <Client />
+        </TabPanel>
+
+      <TabPanel value={value} index={3}>
         <Institution />
       </TabPanel>
     </div>

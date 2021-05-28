@@ -5,11 +5,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { GlobalContext } from "../../store/GlobalProvider";
-import { makeStyles } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import {
+  makeStyles,
   FormControl,
   Grid,
   InputLabel,
@@ -225,14 +225,14 @@ function CommandeFormDialog({ handleClose }) {
             <Grid item sm={10}>
               <Accordions>
                 {formState.articles.map((data, index, self) => (
-                  <CommandeAccordionItem
-                    key={index}
-                    index={index}
-                    handleDataChange={handleArticleChange}
-                    handleDeleteArticle={handleDeleteArticle}
-                    closedOnNewAdded={data.expanded}
-                    setExpandedFromDialog={setExpandedFromDialog}
-                  />
+                    <CommandeAccordionItem
+                      key={index}
+                      index={index}
+                      handleDataChange={handleArticleChange}
+                      handleDeleteArticle={handleDeleteArticle}
+                      closedOnNewAdded={data.expanded}
+                      setExpandedFromDialog={setExpandedFromDialog}
+                    />
                 ))}
               </Accordions>
             </Grid>

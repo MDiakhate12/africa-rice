@@ -78,6 +78,8 @@ export default function CommandeLivraisonBySpeculation({ display }) {
   }, [])
 
   const optionsSpeculationByState = {
+    maintainAspectRatio: false,
+
     title: {
       display: true,
       text: 'Quantité commandée VS Quantité Livrée par spéculation',
@@ -88,7 +90,7 @@ export default function CommandeLivraisonBySpeculation({ display }) {
         {
           ticks: {
             beginAtZero: true,
-            stepSize: (max - min) / 10,
+            // stepSize: (max - min) / 10,
           },
         },
       ],
@@ -157,7 +159,7 @@ export default function CommandeLivraisonBySpeculation({ display }) {
   })
 
   return display === 'chart' ? (
-    <Bar data={dataBySpeculationByState} options={optionsSpeculationByState} />
+    <Bar data={dataBySpeculationByState} options={optionsSpeculationByState} height="500" />
   ) : (
     <>
       <DataTable height={350} pageSize={4} columns={columns} rows={rows} />

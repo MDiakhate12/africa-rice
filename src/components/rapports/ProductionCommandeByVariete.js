@@ -100,17 +100,19 @@ export default function ProductionCommandeByVariete({ display }) {
       },
       {
         label: "Stock de sécurité",
-        data: productionsByVariete.map(
-          (production) => production.totalStock
-        ),
+        data: productionsByVariete.map((production) => production.totalStock),
         backgroundColor: Colors[3],
         stack: 0,
       },
       {
         label: "Commande",
-        data: commandesByVariete.map(
-          (commande) => commande.totalQuantiteCommandee
-        ),
+        data: productionsByVariete.map((production) => {
+          let result = commandesByVariete
+            .find((commande) => commande.Production.varieteInstitutionId === production.varieteInstitutionId)
+
+            return result?.totalQuantiteCommandee || 0
+            
+        }),
         backgroundColor: Colors[1],
         stack: 1,
       },
@@ -118,6 +120,7 @@ export default function ProductionCommandeByVariete({ display }) {
   };
 
   const optionsVariete = {
+    maintainAspectRatio: false,
     title: {
       display: true,
       text: "Quantité produite VS Quantité commandée par variété",
@@ -128,7 +131,7 @@ export default function ProductionCommandeByVariete({ display }) {
         {
           ticks: {
             beginAtZero: true,
-            stepSize: (max - min) / 10,
+            stepSize: (max - min) / 1000,
           },
         },
       ],
@@ -145,7 +148,7 @@ export default function ProductionCommandeByVariete({ display }) {
   }));
 
   return display === "chart" ? (
-    <Bar data={dataByVariete} options={optionsVariete} />
+    <Bar data={dataByVariete} options={optionsVariete} height="500" />
   ) : (
     <>
       <DataTable height={350} pageSize={4} columns={columns} rows={rows} />

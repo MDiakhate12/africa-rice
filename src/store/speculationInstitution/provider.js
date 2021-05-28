@@ -72,7 +72,7 @@ export default function SpeculationInstitutionProvider({ children }) {
       (event, data) => {
         console.log('EVENT:', event)
         console.log('DATA:', data)
-        dispatch({ type: actions.ON_DELETE, payload: payload })
+        dispatch({ type: actions.ON_DELETE, payload })
       },
     )
   }

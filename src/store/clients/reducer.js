@@ -22,7 +22,7 @@ export const reducer = (state, action) => {
       });
 
     case actions.ON_DELETE:
-      return state.filter((value) => value === action.payload);
+      return state.filter((value) => value.idClient !== action.payload.idClient);
 
     default:
       break;

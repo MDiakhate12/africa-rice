@@ -28,13 +28,14 @@ const getClientById = async (id) => {
 };
 
 const updateClient = async (id, data) => {
-  const updated = service.update(Client, id, data);
+  const updated = await service.update(Client, id, data);
   console.log(updated);
   return updated;
 };
 
 const deleteClient = async (id) => {
-  const deleted = service.deleteByPk(Client, id);
+  const deleted = await service.deleteByPk(Client, id);
+  console.log(deleted);
   return deleted;
 };
 

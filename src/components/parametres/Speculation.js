@@ -4,11 +4,23 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { Button, Grid } from "@material-ui/core";
+import {
+  Button,
+  Grid,
+  Typography,
+  ListItemSecondaryAction,
+  IconButton,
+} from "@material-ui/core";
 import { GlobalContext } from "../../store/GlobalProvider";
 import SingleLineGridList from "../common/SingleLineGridList";
 import ConfirmDialog from "../common/ConfirmDialog";
 import { SpeculationInstitutionContext } from "../../store/speculationInstitution/provider";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import SpeculationFormDialog from "./SpeculationFormDialog";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { gridColumnsTotalWidthSelector } from "@material-ui/data-grid";
+import ContextMenu from "../common/ContextMenu";
+import { Tooltip } from "@material-ui/core";
 
 const { events, eventResponse } = require("../../store/utils/events");
 const { ipcRenderer } = window.require("electron");
@@ -45,7 +57,6 @@ export default function Speculation() {
     speculationsInstitution,
     getAllSpeculationInstitution,
     addSpeculationInstitution,
-    deleteByIdSpeculationInstitution,
   } = useContext(SpeculationInstitutionContext);
 
   const {
@@ -54,6 +65,8 @@ export default function Speculation() {
     institution,
     getAllSpeculation,
     getAllLocalisation,
+    addSpeculation,
+    openSpeculationFormDialog,
   } = useContext(GlobalContext);
 
   useEffect(() => {
@@ -68,7 +81,7 @@ export default function Speculation() {
         events.localisation.getAll,
       ]);
     };
-  }, [institution]);
+  }, [institution, created]);
 
   useEffect(() => {
     getAllSpeculationInstitution({ institutionId: institution?.idInstitution });
@@ -78,6 +91,9 @@ export default function Speculation() {
 
   const handleChange = (e) => {
     let { name, value } = e.target;
+    if (value === 0) {
+      return openSpeculationFormDialog();
+    }
     setState(value);
     console.log("SPECULATION", { name, value });
   };
@@ -96,10 +112,27 @@ export default function Speculation() {
     setCreated(!created);
   };
 
-  const handleDialogClose = (res, data) => {
+  // const handleDialogClose = (res, data) => {
+  //   if (res === "yes") {
+  //     try {
+  //       if (data?.idSpeculation) {
+  //         return deleteByIdSpeculation(data);
+  //       } else if (data?.idSpeculationInstitution) {
+  //         return deleteByIdSpeculationInstitution(data);
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+  //   return;
+  // };
+
+  const handleSpeculationFormDialogClose = (res, data) => {
     if (res === "yes") {
       try {
-        return deleteByIdSpeculationInstitution(data);
+        console.log(data);
+        addSpeculation(data);
+        setCreated(!created);
       } catch (error) {
         console.error(error);
       }
@@ -107,9 +140,15 @@ export default function Speculation() {
     return;
   };
 
+  const [displayDeleteIcon, setDisplayDeleteIcon] = useState({
+    value: false,
+    index: -1,
+  });
+  
   return (
     <>
-      <ConfirmDialog handleClose={handleDialogClose} />
+      {/* <ConfirmDialog handleClose={handleDialogClose} /> */}
+      <SpeculationFormDialog handleClose={handleSpeculationFormDialogClose} />
       <Grid container spacing={2}>
         <Grid item sm={9} className={classes.secondaryScroll}>
           <SingleLineGridList
@@ -154,6 +193,29 @@ export default function Speculation() {
               color="secondary"
               onChange={handleChange}
             >
+              <MenuItem key={0} value={0}>
+                <Grid
+                  container
+                  align="center"
+                  justify="space-between"
+                  spacing={2}
+                >
+                  <Grid item>
+                    <Typography
+                      variant="button"
+                      style={{
+                        fontSize: "0.6rem",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Ajouter une nouvelle
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <AddCircleIcon color="primary" fontSize="small" />
+                  </Grid>
+                </Grid>
+              </MenuItem>
               {speculations
                 .filter(
                   (s) =>
@@ -161,9 +223,64 @@ export default function Speculation() {
                       .map((si) => si.speculationId)
                       .includes(s.idSpeculation)
                 )
-                .map((speculation) => (
-                  <MenuItem key={speculation.idSpeculation} value={speculation}>
-                    {speculation.nomSpeculation}
+                .map((speculation, index) => (
+                  <MenuItem
+                    key={speculation.idSpeculation}
+                    value={speculation}
+                    id="bro"
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      onMouseEnter={(e) => {
+                        // console.log(e);
+                        // e.preventDefault();
+                        // e.stopPropagation();
+                        setDisplayDeleteIcon({ value: true, index });
+                      }}
+                      onMouseLeave={(e) => {
+                        // console.log(e);
+                        // e.preventDefault();
+                        // e.stopPropagation();
+                        setDisplayDeleteIcon({ value: false, index: -1 });
+                      }}
+                      // onClick={(e) => {
+                      //   e.preventDefault();
+                      //   e.stopPropagation();
+                      // }}
+                    >
+                      {speculation.nomSpeculation}
+                      <ListItemSecondaryAction>
+                        <Tooltip title="Supprimer">
+                          <IconButton
+                            style={{
+                              visibility:
+                                displayDeleteIcon.index === index &&
+                                displayDeleteIcon.value === true &&
+                                speculation.nomSpeculation !==
+                                  state.nomSpeculation
+                                  ? "visible"
+                                  : "hidden",
+                            }}
+                            edge="end"
+                            aria-label="delete"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              openConfirmDialog({
+                                title: "Suppression",
+                                content: `Attention! Cette action supprimera définitivement la spéculation ${speculation.nomSpeculation} de la base de données.`,
+                                data: speculation,
+                              });
+                            }}
+                          >
+                            <DeleteIcon color="secondary" fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </ListItemSecondaryAction>
+                    </div>
                   </MenuItem>
                 ))}
             </Select>

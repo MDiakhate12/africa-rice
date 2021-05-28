@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -33,10 +32,22 @@ export default function ConfirmDialog({ handleClose, maxWidth }) {
           <DialogContentText>{content}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => close("no", data)} color="secondary">
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              close("no", data);
+            }}
+            color="secondary"
+          >
             Non
           </Button>
-          <Button onClick={() => close("yes", data)} color="primary">
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              close("yes", data);
+            }}
+            color="primary"
+          >
             Oui
           </Button>
         </DialogActions>

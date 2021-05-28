@@ -9,18 +9,18 @@ export default function Provider() {
 
   const add = (payload) => {
     dispatch({ type: actions.ON_ADD, payload });
-    ipcRenderer.send(events.speculation.create);
+    ipcRenderer.send(events.client.create);
 
-    ipcRenderer.once(eventResponse.speculation.created, (event, data) => {
+    ipcRenderer.once(eventResponse.client.created, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
   };
   const getOne = (payload) => {
     dispatch({ type: actions.ON_GET_ONE, payload });
-    ipcRenderer.send(events.speculation.getOne);
+    ipcRenderer.send(events.client.getOne);
 
-    ipcRenderer.once(eventResponse.speculation.gotOne, (event, data) => {
+    ipcRenderer.once(eventResponse.client.gotOne, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -28,9 +28,9 @@ export default function Provider() {
 
   const getAll = () => {
     dispatch({ type: actions.ON_GET_ALL });
-    ipcRenderer.send(events.speculation.getAll);
+    ipcRenderer.send(events.client.getAll);
 
-    ipcRenderer.once(eventResponse.speculation.gotAll, (event, data) => {
+    ipcRenderer.once(eventResponse.client.gotAll, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
@@ -38,22 +38,26 @@ export default function Provider() {
 
   const update = (payload) => {
     dispatch({ type: actions.ON_UPDATE, payload });
-    ipcRenderer.send(events.speculation.update);
+    ipcRenderer.send(events.client.update);
 
-    ipcRenderer.once(eventResponse.speculation.updated, (event, data) => {
+    ipcRenderer.once(eventResponse.client.updated, (event, data) => {
       console.log("EVENT:", event);
       console.log("DATA:", data);
     });
   };
 
   const deleteById = (payload) => {
-    dispatch({ type: actions.ON_DELETE, payload });
-    ipcRenderer.send(events.speculation.delete);
+    console.log('DELETE:', payload)
+    ipcRenderer.send(events.client.delete, payload)
 
-    ipcRenderer.once(eventResponse.speculation.deleted, (event, data) => {
-      console.log("EVENT:", event);
-      console.log("DATA:", data);
-    });
+    ipcRenderer.once(
+      eventResponse.client.deleted,
+      (event, data) => {
+        console.log('EVENT:', event)
+        console.log('DATA:', data)
+        dispatch({ type: actions.ON_DELETE, payload })
+      },
+    )
   };
 
   return [state, add, getOne, getAll, update, deleteById];

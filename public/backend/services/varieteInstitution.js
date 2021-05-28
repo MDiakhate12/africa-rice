@@ -38,7 +38,7 @@ const getVarieteInstitutionById = async (id) => {
 }
 
 const updateVarieteInstitution = async (id, data) => {
-  const updated = service.update(VarieteInstitution, id, data)
+  const updated = await service.update(VarieteInstitution, id, data)
   console.log(updated.toJSON())
   return updated.toJSON()
 }

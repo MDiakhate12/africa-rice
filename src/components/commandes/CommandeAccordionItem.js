@@ -72,7 +72,7 @@ function SimpleAccordion({
     ipcRenderer.send(events.production.getAll, {
       institutionId: institution.idInstitution,
     });
-    
+
     ipcRenderer.once(eventResponse.production.gotAll, (event, data) => {
       setProductions(data);
 
@@ -118,6 +118,14 @@ function SimpleAccordion({
     handleDataChange(e, index);
   };
 
+  const [tooltip, setTooltip] = useState(
+    `Cliquer pour ${
+      expanded === "panel-" + index || expandedFromDialog
+        ? "réduire"
+        : "étendre"
+    }`
+  );
+
   return (
     <>
       <Accordion
@@ -125,29 +133,67 @@ function SimpleAccordion({
         onChange={handleToggle(`panel-${index}`)}
         expandIcon={<ExpandMoreIcon />}
       >
-        <AccordionSummary
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-          classes={{
-            content: classes.accordionSummaryContent,
-          }}
-        >
-          <Typography className={classes.heading}>
-            {formData?.production?.VarieteInstitution?.Variete?.nomVariete
-              ? `${formData?.production?.VarieteInstitution?.Variete?.nomVariete} - ${formData?.production?.Localisation?.village}`
-              : `Article ${index}`}
-          </Typography>
+        <Tooltip title={tooltip}>
+          <AccordionSummary
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+            classes={{
+              content: classes.accordionSummaryContent,
+            }}
+            onMouseEnter={(e) => {
+              console.log(e.target.localName);
+              e.preventDefault();
+              e.stopPropagation();
+              setTooltip(
+                `Cliquer pour ${
+                  expanded === "panel-" + index || expandedFromDialog
+                    ? "réduire"
+                    : "étendre"
+                }`
+              );
+            }}
+          >
+            <Typography className={classes.heading}>
+              {formData?.production?.VarieteInstitution?.Variete?.nomVariete
+                ? `${formData?.production?.VarieteInstitution?.Variete?.nomVariete} - ${formData?.production?.Localisation?.village}`
+                : `Article ${index}`}
+            </Typography>
 
-          <Typography className={classes.secondaryHeading}>
-            {formData?.production?.prixUnitaire && formData?.quantite
-              ? `${
-                  formData?.production?.prixUnitaire * formData?.quantite
-                } FCFA`
-              : `Prix ${index}`}
-          </Typography>
-
-          <Tooltip title="Supprimer l'article">
+            <Typography className={classes.secondaryHeading}>
+              {formData?.production?.prixUnitaire && formData?.quantite
+                ? `${
+                    formData?.production?.prixUnitaire * formData?.quantite
+                  } FCFA`
+                : `Prix ${index}`}
+            </Typography>
+            {/* 
+            <Tooltip
+              title="Supprimer l'article"
+              onMouseEnter={(e) => {
+                console.log("B:", e.target.localName);
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            > */}
             <IconButton
+              onMouseEnter={(e) => {
+                console.log(e);
+                setTooltip("Supprimer l'article");
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onMouseLeave={(e) => {
+                console.log(e);
+                setTooltip(
+                  `Cliquer pour ${
+                    expanded === "panel-" + index || expandedFromDialog
+                      ? "réduire"
+                      : "étendre"
+                  }`
+                );
+                e.preventDefault();
+                e.stopPropagation();
+              }}
               onClick={(event) => {
                 event.stopPropagation();
                 if (Object.keys(formData).length === 0)
@@ -163,8 +209,10 @@ function SimpleAccordion({
             >
               <DeleteIcon color="secondary" />
             </IconButton>
-          </Tooltip>
-        </AccordionSummary>
+            {/* </Tooltip> */}
+          </AccordionSummary>
+        </Tooltip>
+
         <AccordionDetails>
           <Grid container>
             <Grid item sm={12}>

@@ -86,6 +86,7 @@ export default function CommandeLivraisonByVariete({ display }) {
   }, [])
 
   const optionsVarieteByState = {
+    maintainAspectRatio: false,
     title: {
       display: true,
       text: 'Quantité commandée VS Quantité Livrée par variété',
@@ -96,7 +97,7 @@ export default function CommandeLivraisonByVariete({ display }) {
         {
           ticks: {
             beginAtZero: true,
-            stepSize: (max - min) / 10,
+            // stepSize: (max - min) / 10,
           },
         },
       ],
@@ -173,7 +174,7 @@ export default function CommandeLivraisonByVariete({ display }) {
   })
 
   return display === 'chart' ? (
-    <Bar data={dataByVarieteByState} options={optionsVarieteByState} />
+    <Bar data={dataByVarieteByState} options={optionsVarieteByState} height="500" />
   ) : (
     <>
       <DataTable height={350} pageSize={4} columns={columns} rows={rows} />

@@ -45,7 +45,7 @@ export default function Home() {
               marginTop: "2.5ch",
             }}
           >
-            SSU
+            SSP
           </Typography>{" "}
         </Grid>
         <Grid item>
@@ -57,7 +57,7 @@ export default function Home() {
               fontWeight: "bold",
             }}
           >
-            Seed-Scaling Up
+            Seed-Scaling Project
           </Typography>
         </Grid>
         <Grid item>

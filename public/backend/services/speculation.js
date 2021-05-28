@@ -28,15 +28,15 @@ const getSpeculationById = async (id) => {
 };
 
 const updateSpeculation = async (id, data) => {
-  const updated = service.update(Speculation, id, data);
+  const updated = await service.update(Speculation, id, data);
   console.log(updated.toJSON());
   return updated.toJSON();
 };
 
 const deleteSpeculation = async (id) => {
-  const deleted = service.deleteByPk(Speculation, id);
-  console.log(deleted.toJSON());
-  return deleted.toJSON();
+  const deleted = await service.deleteByPk(Speculation, id);
+  console.log(deleted);
+  return deleted;
 };
 
 module.exports = {

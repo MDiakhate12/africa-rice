@@ -9,7 +9,7 @@ export default function SpeculationVariete() {
     <div>
       <Grid container spacing={2}>
         <Grid item sm={12}>
-          <Grid container spacing={6} justify="space-between">
+          <Grid container spacing={9} justify="space-between">
             <Grid item sm={3}>
               <Typography variant="button">Nos Spéculations</Typography>
             </Grid>

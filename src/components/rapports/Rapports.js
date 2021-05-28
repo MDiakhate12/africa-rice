@@ -31,7 +31,7 @@ export default function Rapports() {
   };
 
   return (
-    <div>
+    <div className={classes.container}>
       <div className={classes.root}>
         <Paper>
           <Tabs
@@ -143,6 +143,11 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+    height: "max-content",
+  },
+  container: {
+    flexGrow: 1,
+    height: "max-content",
   },
 }));
 

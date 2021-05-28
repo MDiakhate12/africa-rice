@@ -78,8 +78,8 @@ export default function Map2() {
       scrollZoom={false}
       // mapStyle="mapbox://styles/lilcheikh/cknjlxaqt03p417oannirmtxm" // Dark
       // mapStyle="mapbox://styles/lilcheikh/cknjmc4st1awe18mmh54cr29r" // Navigation
-      // mapStyle="mapbox://styles/lilcheikh/cknjmckc20jsl17npo19qnk83" // Satellite
-      mapStyle="mapbox://styles/mapbox/streets-v11" // Satellite
+      mapStyle="mapbox://styles/lilcheikh/cknjmckc20jsl17npo19qnk83" // Satellite
+      // mapStyle="mapbox://styles/mapbox/streets-v11" // Satellite
 
     >
       {productionsByRegion.map((production) => {

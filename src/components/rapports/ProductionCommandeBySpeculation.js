@@ -98,9 +98,19 @@ export default function ProductionCommandeBySpeculation({ display }) {
       },
       {
         label: "Commande",
-        data: commandesBySpeculation.map(
-          (commande) => commande.totalQuantiteCommandee
-        ),
+        // data: commandesBySpeculation.map(
+        //   (commande) => commande.totalQuantiteCommandee
+        // ),
+        data: productionsBySpeculation.map((production) => {
+          let result = commandesBySpeculation.find(
+            (commande) =>
+              commande.Production.VarieteInstitution
+                .speculationInstitutionId ===
+              production.VarieteInstitution.speculationInstitutionId
+          );
+
+          return result?.totalQuantiteCommandee || 0;
+        }),
         backgroundColor: Colors[1],
         stack: 1,
       },
@@ -108,6 +118,7 @@ export default function ProductionCommandeBySpeculation({ display }) {
   };
 
   const optionsSpeculation = {
+    maintainAspectRatio: false,
     title: {
       display: true,
       text: "Quantité produite VS Quantité commandée par spéculation  ",
@@ -118,7 +129,7 @@ export default function ProductionCommandeBySpeculation({ display }) {
         {
           ticks: {
             beginAtZero: true,
-            stepSize: (max - min) / 10,
+            // stepSize: (max - min) / 10,
           },
         },
       ],
@@ -135,7 +146,7 @@ export default function ProductionCommandeBySpeculation({ display }) {
   }));
 
   return display === "chart" ? (
-    <Bar data={dataBySpeculation} options={optionsSpeculation} />
+    <Bar data={dataBySpeculation} options={optionsSpeculation} height="500" />
   ) : (
     <>
       <DataTable height={350} pageSize={4} columns={columns} rows={rows} />
