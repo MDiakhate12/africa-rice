@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { XGrid, GridToolbar } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
@@ -116,28 +116,28 @@ const useStyles = makeStyles((theme) => ({
 
 function SettingsPanel(props) {
   const { onApply, type, size, theme } = props;
-  const [sizeState, setSize] = React.useState(size);
-  const [typeState, setType] = React.useState(type);
-  const [selectedPaginationValue, setSelectedPaginationValue] = React.useState(-1);
-  const [activeTheme, setActiveTheme] = React.useState(theme);
+  const [sizeState, setSize] = useState(size);
+  const [typeState, setType] = useState(type);
+  const [selectedPaginationValue, setSelectedPaginationValue] = useState(-1);
+  const [activeTheme, setActiveTheme] = useState(theme);
 
-  const handleSizeChange = React.useCallback((event) => {
+  const handleSizeChange = useCallback((event) => {
     setSize(Number(event.target.value));
   }, []);
 
-  const handleDatasetChange = React.useCallback((event) => {
+  const handleDatasetChange = useCallback((event) => {
     setType(event.target.value);
   }, []);
 
-  const handlePaginationChange = React.useCallback((event) => {
+  const handlePaginationChange = useCallback((event) => {
     setSelectedPaginationValue(event.target.value);
   }, []);
 
-  const handleThemeChange = React.useCallback((event) => {
+  const handleThemeChange = useCallback((event) => {
     setActiveTheme(event.target.value);
   }, []);
 
-  const handleApplyChanges = React.useCallback(() => {
+  const handleApplyChanges = useCallback(() => {
     onApply({
       size: sizeState,
       type: typeState,
@@ -203,16 +203,16 @@ SettingsPanel.propTypes = {
 export default function AdvancedDataTable() {
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();
-  const [isAntDesign, setIsAntDesign] = React.useState(false);
-  const [type, setType] = React.useState('Commodity');
-  const [size, setSize] = React.useState(100);
+  const [isAntDesign, setIsAntDesign] = useState(false);
+  const [type, setType] = useState('Commodity');
+  const [size, setSize] = useState(100);
   const { loading, data, setRowLength, loadNewData } = useDemoData({
     dataSet: type,
     rowLength: size,
     maxColumns: 20,
   });
 
-  const [pagination, setPagination] = React.useState({
+  const [pagination, setPagination] = useState({
     pagination: false,
     autoPageSize: false,
     pageSize: undefined,

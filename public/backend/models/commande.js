@@ -86,7 +86,7 @@ module.exports = (sequelize) => {
       onDelete: 'CASCADE',
       foreignKey: {
         name: 'productionId',
-        allowNull: false,
+        allowNull: true,
       },
     })
   }

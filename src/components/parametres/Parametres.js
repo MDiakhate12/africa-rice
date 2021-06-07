@@ -1,9 +1,8 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Speculation from "./Speculation";
 import Magasin from "./Magasin";
 import Institution from "./Institution";
 import { Box, Typography } from "@material-ui/core";
@@ -56,13 +55,13 @@ export default function Parametres() {
   const tab = parseInt(useQuery().get("tab"));
 
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     tab && setValue(tab);
   }, [tab]);
 

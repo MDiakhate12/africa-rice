@@ -1,5 +1,5 @@
 import InstitutionProvider from "./institution/provider";
-import React, { createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import SpeculationProvider from "./speculation/provider";
 import VarieteProvider from "./variete/provider";
 import ZoneProvider from "./zone/provider";
@@ -140,9 +140,9 @@ export default function GlobalProvider({ children }) {
   const [dialog, openDialog, closeDialog] = CommonDialogProvider();
   const [loading, setLoading] = LoadingProvider();
 
-  const [isDev, _] = React.useState(global.__filename.includes("init.js"));
+  const [isDev, _] = useState(global.__filename.includes("init.js"));
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("APP_IMAGE:", path.resolve("assets/images/africa-rice.webp"));
     console.log("APP_DIRNAME:", global.__dirname);
     console.log("APP_FILENAME:", global.__filename);

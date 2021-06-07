@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer } from "react";
+import { useState, useContext, useEffect, useReducer } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Variete() {
-  const [created, setCreated] = React.useState(false);
+  const [created, setCreated] = useState(false);
 
   const {
     varietesInstitution,
@@ -131,8 +131,7 @@ export default function Variete() {
       sortable: false,
       // hide: true,
       renderCell: (params) => (
-        <Tooltip
-          title={
+        <Tooltip arrow          title={
             params.api.getSelectedRows().length > 1
               ? `Supprimer les variétés sélectionnées`
               : `Supprimer ${params.getValue("Variete").nomVariete}`
@@ -180,7 +179,7 @@ export default function Variete() {
                     return `${result}, ${row?.Variete?.nomVariete}`;
                   }
                 })} ?
-                \nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`;
+                \nAttention! Vous devez d'abord supprimer toutes les productions qui en dépendent.`;
 
                 data = selectedRows.map((row) =>
                   removeIdAndAssociations("id", row)
@@ -189,7 +188,7 @@ export default function Variete() {
                 title = "Suppression";
                 data = removeIdAndAssociations("id", params.row);
 
-                content = `Souhaitez vous réellement supprimer la variété ${params?.row?.Variete?.nomVariete} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`;
+                content = `Souhaitez vous réellement supprimer la variété ${params?.row?.Variete?.nomVariete} ?\nAttention! Vous devez d'abord supprimer toutes les productions qui en dépendent.`;
               }
 
               openConfirmDialog({
@@ -315,7 +314,7 @@ export default function Variete() {
     return;
   };
 
-  const [displayDeleteIcon, setDisplayDeleteIcon] = React.useState({
+  const [displayDeleteIcon, setDisplayDeleteIcon] = useState({
     value: false,
     index: -1,
   });
@@ -436,7 +435,7 @@ export default function Variete() {
                         >
                           {variete.nomVariete}
                           <ListItemSecondaryAction>
-                            <Tooltip title="Supprimer">
+                            <Tooltip arrow title="Supprimer">
                               <IconButton
                                 style={{
                                   visibility:

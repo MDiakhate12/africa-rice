@@ -1,11 +1,11 @@
 import { ButtonBase } from "@material-ui/core";
-import React from "react";
+import { useRef, useEffect, useReducer } from "react";
 import "./Carousel.css";
 
 function useTilt(active) {
-  const ref = React.useRef(null);
+  const ref = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!ref.current || !active) {
       return;
     }
@@ -105,9 +105,9 @@ export default function Carousel({ slides }) {
     }
   };
 
-  const [state, dispatch] = React.useReducer(slidesReducer, initialState);
+  const [state, dispatch] = useReducer(slidesReducer, initialState);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let timeout = setTimeout(() => dispatch({ type: "NEXT" }, 1000));
     return clearTimeout(timeout)
   }, []);

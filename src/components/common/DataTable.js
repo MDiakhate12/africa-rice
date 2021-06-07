@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   DataGrid,
   GridToolbarContainer,
@@ -7,6 +6,7 @@ import {
   GridFilterToolbarButton,
 } from "@material-ui/data-grid";
 import { makeStyles } from "@material-ui/core";
+import { useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,6 +36,12 @@ export default function DataTable({
   autoHeight,
 }) {
   const classes = useStyles();
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(rows.length === 0)
+  }, [rows])
+
   return (
     <div elevation={1} style={{ height: height || 420, width: "100%" }}>
       <DataGrid
@@ -48,6 +54,7 @@ export default function DataTable({
         rowHeight={35}
         autoHeight={autoHeight || false}
         hideFooterSelectedRowCount
+        loading={loading}
         components={{
           Toolbar: CustomToolbar,
           // Toolbar: GridToolbar,

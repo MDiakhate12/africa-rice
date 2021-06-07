@@ -1,13 +1,14 @@
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import DataTable from "../common/DataTable";
 import { makeStyles } from "@material-ui/core/styles";
 import Badge from "@material-ui/core/Badge";
-import { Button } from "@material-ui/core";
+import { Button, MenuItem } from "@material-ui/core";
 import CommandeFormDialog from "./CommandeFormDialog";
 import { GlobalContext } from "../../store/GlobalProvider";
 import ContextMenu from "../common/ContextMenu";
 import CommandeUpdateFormDialog from "./CommandeUpdateFormDialog";
 import ConfirmDialog from "../common/ConfirmDialog";
+import { Select } from "@material-ui/core";
 // import ConfirmDialog from "../common/ConfirmDialog";
 
 const { ipcRenderer } = window.require("electron");
@@ -102,33 +103,6 @@ function TraitementCommandes() {
     },
     {
       type: "string",
-      field: "localisation",
-      headerName: "Localité",
-      width: 210,
-      renderCell: (params) =>
-        `${params.getValue("Production")?.Localisation?.village}`,
-      valueGetter: (params) =>
-        `${params.getValue("Production")?.Localisation?.village}`,
-    },
-    {
-      type: "number",
-      field: "quantite",
-      headerName: "quantite",
-      width: 130,
-      renderCell: (params) => `${params.getValue("quantite")} KG`,
-      // valueGetter: (params) => params.getValue("quantite"),
-    },
-    {
-      type: "number",
-      field: "montant",
-      headerName: "montant",
-      width: 130,
-      renderCell: (params) => `${params.getValue("montant")} FCFA`,
-      // valueGetter: (params) => params.getValue("montant"),
-    },
-
-    {
-      type: "string",
       field: "etat",
       headerName: "Etat",
       renderCell: getEtat,
@@ -137,59 +111,9 @@ function TraitementCommandes() {
     },
     {
       type: "string",
-      field: "dateExpressionBesoinClient",
-      headerName: "Commandé le",
-      width: 130,
-      renderCell: (params) =>
-        `${params
-          .getValue("dateExpressionBesoinClient")
-          .toLocaleString("fr-FR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}`,
-    },
-    {
-      type: "string",
-      field: "dateEnlevementSouhaitee",
-      headerName: "Enlevement souhaite",
-      width: 130,
-      renderCell: (params) =>
-        `${params.getValue("dateEnlevementSouhaitee").toLocaleString("fr-FR", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}`,
-    },
-    {
-      type: "string",
-      field: "dateEnlevementReelle",
-      headerName: "Enlevé le",
-      valueFormatter: (params) =>
-        params.value?.toLocaleString("fr-FR", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }) || "Pas encore enlevee",
-      width: 180,
-    },
-    {
-      type: "string",
-      field: "clientId",
-      headerName: "Client",
-      renderCell: (params) =>
-        params.getValue("Client").nomCompletStructure ||
-        `${params.getValue("Client").prenom} ${params.getValue("Client").nom}`,
-      valueGetter: (params) =>
-        params.getValue("Client").nomCompletStructure ||
-        `${params.getValue("Client").prenom} ${params.getValue("Client").nom}`,
-      width: 130,
-    },
-    {
-      type: "string",
       field: "action",
       headerName: "Traitement de la commande",
-      width: 280,
+      width: 230,
       renderCell: (params) => {
         const etat = params.getValue("EtatCommande").etat;
         let etatSuivants = [];
@@ -219,23 +143,101 @@ function TraitementCommandes() {
         }
         return (
           <div>
-            {etatSuivants.map((etatSuivant) => (
-              <Button
-                onClick={
-                  (evt) => onClick(evt, params, etatSuivant)
-                  // openConfirmDialog({
-                  //   title: "Traitement de la commande",
-                  //   content: `Faire passer la commande à l'état <${etat}> ?`,
-                  //   data: {evt, params, etatSuivant},
-                  // })
-                }
-              >
-                {etatSuivant}
-              </Button>
-            ))}
+            {etatSuivants.length <= 1 ? (
+              etatSuivants.length === 0 ? (
+                ""
+              ) : (
+                <Button>{etatSuivants[0]}R</Button>
+              )
+            ) : (
+              <Select value={0}>
+                <MenuItem value={0} disabled>
+                  Traiter la commande
+                </MenuItem>
+                {etatSuivants.map((etatSuivant) => (
+                  <MenuItem
+                    key={etatSuivant}
+                    onClick={(evt) => onClick(evt, params, etatSuivant)}
+                    value={etatSuivant}
+                  >
+                    {etatSuivant}r
+                  </MenuItem>
+                ))}
+                )
+              </Select>
+            )}
           </div>
         );
       },
+    },
+    {
+      type: "number",
+      field: "quantite",
+      headerName: "Quantité (KG)",
+      width: 150,
+      // renderCell: (params) => `${params.getValue("quantite")} KG`,
+      // valueGetter: (params) => params.getValue("quantite"),
+    },
+    {
+      type: "number",
+      field: "montant",
+      headerName: "montant",
+      hide: true,
+      width: 130,
+      renderCell: (params) => `${params.getValue("montant")} FCFA`,
+      // valueGetter: (params) => params.getValue("montant"),
+    },
+    {
+      type: "string",
+      field: "dateExpressionBesoinClient",
+      headerName: "Date de commande",
+      // hide: true,
+      width: 180,
+      renderCell: (params) =>
+        `${params
+          .getValue("dateExpressionBesoinClient")
+          .toLocaleString("fr-FR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}`,
+    },
+    {
+      type: "string",
+      field: "dateEnlevementSouhaitee",
+      headerName: "Date d'enlèvement souhaitée",
+      width: 220,
+      renderCell: (params) =>
+        `${params.getValue("dateEnlevementSouhaitee").toLocaleString("fr-FR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}`,
+    },
+    {
+      type: "string",
+      field: "dateEnlevementReelle",
+      headerName: "Enlevé le",
+      hide: true,
+      valueFormatter: (params) =>
+        params.value?.toLocaleString("fr-FR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }) || "Pas encore enlevee",
+      width: 180,
+    },
+    {
+      type: "string",
+      field: "clientId",
+      headerName: "Client",
+      renderCell: (params) =>
+        params.getValue("Client").nomCompletStructure ||
+        `${params.getValue("Client").prenom} ${params.getValue("Client").nom}`,
+      valueGetter: (params) =>
+        params.getValue("Client").nomCompletStructure ||
+        `${params.getValue("Client").prenom} ${params.getValue("Client").nom}`,
+      width: 130,
     },
   ];
   const [commandes, setCommandes] = useState([]);
@@ -470,11 +472,15 @@ function TraitementCommandes() {
         <DataTable
           columns={columns}
           rows={commandes
-            ?.filter((c) => c.EtatCommande.etat !== "Enleve")
+            ?.filter(
+              (c) =>
+                c.EtatCommande.etat !== "Enleve" &&
+                c.EtatCommande.etat !== "Accepte"
+            )
             .map((m) => ({ id: m.idCommande, ...m }))}
           pageSize={12}
           height="470px"
-          disableColumnSelector
+          // disableColumnSelector
           // autoHeight={true}
         />
       </div>

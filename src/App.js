@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, useMemo } from "react";
+import { useEffect, useContext, useState } from "react";
 import "./App.css";
 import { GlobalContext } from "./store/GlobalProvider";
 import MiniDrawer from "./components/common/MiniDrawer";
@@ -11,7 +11,7 @@ import PrivateRoute from "./components/common/PrivateRoute";
 import init from "./postinstall"
 
 function App() {
-  const [lightMode, setLightMode] = React.useState(true);
+  const [lightMode, setLightMode] = useState(true);
 
   const theme = createMuiTheme({
     "@global": {

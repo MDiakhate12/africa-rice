@@ -1,11 +1,11 @@
 import { Grid } from "@material-ui/core";
-import React, { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 import Typography from "@material-ui/core/Typography";
 import { GlobalContext } from "../../store/GlobalProvider";
 
 export default function Home() {
-  const { isDev } = React.useContext(GlobalContext);
+  const { isDev } = useContext(GlobalContext);
 
   useEffect(() => {
     console.log(global)

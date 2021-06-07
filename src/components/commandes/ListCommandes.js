@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import DataTable from "../common/DataTable";
 import { makeStyles } from "@material-ui/core/styles";
 import Badge from "@material-ui/core/Badge";
@@ -90,7 +90,7 @@ function ListCommandes() {
     {
       type: "string",
       field: "productionId",
-      headerName: "Production",
+      headerName: "Variété",
       width: 160,
       renderCell: (params) =>
         `${
@@ -106,6 +106,7 @@ function ListCommandes() {
       field: "localisation",
       headerName: "Localité",
       width: 210,
+      hide: true,
       renderCell: (params) =>
         `${params.getValue("Production")?.Localisation?.village}`,
       valueGetter: (params) =>
@@ -114,9 +115,10 @@ function ListCommandes() {
     {
       type: "number",
       field: "quantite",
-      headerName: "quantite",
-      width: 130,
-      renderCell: (params) => `${params.getValue("quantite")} KG`,
+      headerName: "Quantité (KG)",
+      width: 160,
+      // hide: true,
+      // renderCell: (params) => `${params.getValue("quantite")} KG`,
       // valueGetter: (params) => params.getValue("quantite"),
     },
     {
@@ -124,6 +126,7 @@ function ListCommandes() {
       field: "montant",
       headerName: "montant",
       width: 130,
+      hide: true,
       renderCell: (params) => `${params.getValue("montant")} FCFA`,
       // valueGetter: (params) => params.getValue("montant"),
     },
@@ -140,8 +143,8 @@ function ListCommandes() {
     {
       type: "string",
       field: "dateExpressionBesoinClient",
-      headerName: "Commandé le",
-      width: 130,
+      headerName: "Date de commande",
+      width: 180,
       renderCell: (params) =>
         `${params
           .getValue("dateExpressionBesoinClient")
@@ -154,8 +157,8 @@ function ListCommandes() {
     {
       type: "string",
       field: "dateEnlevementSouhaitee",
-      headerName: "Enlevement souhaite",
-      width: 130,
+      headerName: "Date d'enlèvement souhaitée",
+      width: 220,
       renderCell: (params) =>
         `${params.getValue("dateEnlevementSouhaitee").toLocaleString("fr-FR", {
           year: "numeric",
@@ -311,7 +314,7 @@ function ListCommandes() {
       data.articles.map((article) => {
         const commande = {};
         commande.clientId = clientId;
-        commande.productionId = article.production.idProduction;
+        commande.productionId = article.production?.idProduction;
         commande.quantite = article.quantite;
         commande.dateExpressionBesoinClient =
           article.dateExpressionBesoinClient;
@@ -458,8 +461,11 @@ function ListCommandes() {
         className={classes.formDialog}
         handleClose={handleCommandeUpdateFormDialogClose}
       />
+
       <Button
         color="primary"
+        variant="contained"
+        style={{ marginBottom: "7px" }}
         onClick={() =>
           openCommandeFormDialog({
             title: "Nouvelle Commande",
@@ -475,7 +481,7 @@ function ListCommandes() {
           columns={columns}
           rows={commandes?.map((m) => ({ id: m.idCommande, ...m }))}
           pageSize={12}
-          height="470px" 
+          height="470px"
           disableColumnSelector
           // autoHeight={true}
         />

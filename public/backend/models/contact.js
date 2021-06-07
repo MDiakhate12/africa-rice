@@ -47,6 +47,15 @@ module.exports = (sequelize) => {
       comment: null,
       field: 'email',
     },
+    addresse: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: 'addresse',
+    },
   }
   const options = {
     tableName: 'contact',
@@ -61,27 +70,6 @@ module.exports = (sequelize) => {
       onDelete: 'CASCADE',
       foreignKey: {
         name: 'clientId',
-        allowNull: false,
-      },
-    })
-    ContactModel.belongsTo(models.Magasin, {
-      onDelete: 'CASCADE',
-      foreignKey: {
-        name: 'magasinId',
-        allowNull: false,
-      },
-    })
-    ContactModel.belongsTo(models.Institution, {
-      onDelete: 'CASCADE',
-      foreignKey: {
-        name: 'institutionId',
-        allowNull: false,
-      },
-    })
-    ContactModel.belongsTo(models.Localisation, {
-      onDelete: 'CASCADE',
-      foreignKey: {
-        name: 'localisationId',
         allowNull: false,
       },
     })

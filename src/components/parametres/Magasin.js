@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer } from 'react'
+import { useContext, useEffect, useReducer } from 'react';
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -98,7 +98,7 @@ export default function Magasin() {
               title: 'Suppression',
               content: `Souhaitez vous réellement supprimer le magasin ${params.getValue(
                 'nomMagasin',
-              )} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`,
+              )} ?\nAttention! Vous devez d'abord supprimer tous les productions qui en dépendent.`,
               data: removeIdAndAssociations('id', params.row),
             })
             // console.log(removeIdAndAssociations("id", params.row))

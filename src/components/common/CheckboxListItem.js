@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -21,9 +21,9 @@ export default function CheckboxListItem({
   wasChecked,
   onChecked,
 }) {
-  const [checked, setChecked] = React.useState(wasChecked);
+  const [checked, setChecked] = useState(wasChecked);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setChecked(wasChecked);
   }, []);
 

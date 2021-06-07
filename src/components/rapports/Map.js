@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ReactMapGL, {
   FullscreenControl,
   GeolocateControl,
@@ -20,7 +19,7 @@ import MapboxWorker from "worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker";
 const { ipcRenderer } = window.require("electron");
 
 export default function Map2() {
-  const { institution } = React.useContext(GlobalContext);
+  const { institution } = useContext(GlobalContext);
   const [viewport, setViewport] = useState({
     width: "80vw",
     height: "80vh",
@@ -41,7 +40,7 @@ export default function Map2() {
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     getProductionsSumByRegion();
     console.log(ReactMapGL);
   }, [institution]);

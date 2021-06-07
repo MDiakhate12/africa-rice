@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import { Grid, Paper, Tab, Tabs } from "@material-ui/core";
-
+import { useContext, useEffect, useState } from "react";
 import ProductionBySpeculation from "./ProductionBySpeculation";
 import ProductionByVariete from "./ProductionByVariete";
 import CommandeBySpeculation from "./CommandeBySpeculation";
@@ -9,26 +7,60 @@ import ProductionCommandeBySpeculation from "./ProductionCommandeBySpeculation";
 import ProductionCommandeByVariete from "./ProductionCommandeByVariete";
 import CommandeLivraisonBySpeculation from "./CommandeLivraisonBySpeculation";
 import CommandeLivraisonByVariete from "./CommandeLivraisonByVariete";
-import { Box, Typography } from "@material-ui/core";
+import {
+  Box,
+  Typography,
+  InputLabel,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  Grid,
+  MenuItem,
+  Paper,
+  Select,
+  Tab,
+  Tabs,
+} from "@material-ui/core";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Map from "./Map";
 
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
+import { GlobalContext } from "../../store/GlobalProvider";
 
 export default function Rapports() {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   const [display, setDisplay] = useState("chart");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const {
+    speculations,
+
+    getAllSpeculation,
+  } = useContext(GlobalContext);
+
+  const [state, setState] = useState({
+    idSpeculation: 1,
+  });
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+
+    setState({
+      ...state,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    getAllSpeculation();
+  }, []);
 
   return (
     <div className={classes.container}>
@@ -51,28 +83,61 @@ export default function Rapports() {
       </div>
 
       {value < 2 && (
-        <Box marginTop={3}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">Affichage</FormLabel>
-            <RadioGroup
-              aria-label="display"
-              name="display"
-              value={display}
-              onChange={(e) => setDisplay(e.target.value)}
-            >
-              <FormControlLabel
-                value="chart"
-                control={<Radio />}
-                label="Graphique"
-              />
-              <FormControlLabel
-                value="table"
-                control={<Radio />}
-                label="Tableau"
-              />
-            </RadioGroup>
-          </FormControl>
-        </Box>
+        <Grid id="ddd" container justify="space-between" alignItems="center">
+          <Grid item>
+            <Box marginTop={3}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Affichage</FormLabel>
+                <RadioGroup
+                  aria-label="display"
+                  name="display"
+                  value={display}
+                  onChange={(e) => setDisplay(e.target.value)}
+                >
+                  <FormControlLabel
+                    value="chart"
+                    control={<Radio />}
+                    label="Graphique"
+                  />
+                  <FormControlLabel
+                    value="table"
+                    control={<Radio />}
+                    label="Tableau"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Box>
+          </Grid>
+
+          {value === 1 ? (
+            <Grid item id="dh">
+              <Box marginTop={3}>
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel color="secondary">Spéculations</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-filled-label"
+                    id="demo-simple-select-filled"
+                    value={state.idSpeculation || ""}
+                    name="idSpeculation"
+                    color="secondary"
+                    onChange={handleFilterChange}
+                  >
+                    {speculations.map((speculation, index) => (
+                      <MenuItem
+                        key={speculation.idSpeculation}
+                        value={speculation.idSpeculation}
+                      >
+                        {speculation.nomSpeculation}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+          ) : (
+            ""
+          )}
+        </Grid>
       )}
       {/* <FormControlLabel
         control={
@@ -108,19 +173,19 @@ export default function Rapports() {
       <TabPanel value={value} index={1}>
         <Grid container spacing={2}>
           <Grid item sm={6}>
-            <ProductionByVariete display={display} />
+            <ProductionByVariete filter={state} display={display} />
           </Grid>
 
           <Grid item sm={6}>
-            <CommandeByVariete display={display} />
+            <CommandeByVariete filter={state} display={display} />
           </Grid>
 
           <Grid item sm={6}>
-            <ProductionCommandeByVariete display={display} />
+            <ProductionCommandeByVariete filter={state} display={display} />
           </Grid>
 
           <Grid item sm={6}>
-            <CommandeLivraisonByVariete display={display} />
+            <CommandeLivraisonByVariete filter={state} display={display} />
           </Grid>
         </Grid>
       </TabPanel>
@@ -148,6 +213,10 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flexGrow: 1,
     height: "max-content",
+  },
+  formControl: {
+    marginBottom: theme.spacing(1),
+    width: "25ch",
   },
 }));
 

@@ -1,11 +1,11 @@
-import React from "react";
+import { createRef, Component } from "react";
 import "./Slider.css";
 
 // =========================
 // Slide
 // =========================
 
-class Slide extends React.Component {
+class Slide extends Component {
   constructor(props) {
     super(props);
 
@@ -13,7 +13,7 @@ class Slide extends React.Component {
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleSlideClick = this.handleSlideClick.bind(this);
     this.imageLoaded = this.imageLoaded.bind(this);
-    this.slide = React.createRef();
+    this.slide = createRef();
   }
 
   handleMouseMove(event) {
@@ -96,7 +96,7 @@ const SliderControl = ({ type, title, handleClick }) => {
 // Slider
 // =========================
 
-export class Slider extends React.Component {
+export class Slider extends Component {
   constructor(props) {
     super(props);
 

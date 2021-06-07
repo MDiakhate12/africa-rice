@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -27,8 +27,8 @@ export default function DrawerItem({ children, text, to, isActive, index }) {
 
   ///////////////////////////
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const location = useLocation();
 
   const handleClickListItem = (event) => {

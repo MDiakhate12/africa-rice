@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -51,7 +51,7 @@ export default function StockCard({
   },
 }) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -73,8 +73,10 @@ export default function StockCard({
           </IconButton>
         }
         title={
-          nomSpeculation?.substring(0, 1).toUpperCase() +
-          nomSpeculation?.substring(1)
+          <Typography variant="button" color="primary">
+            {nomSpeculation?.substring(0, 1).toUpperCase() +
+              nomSpeculation?.substring(1)}
+          </Typography>
         }
         subheader={dateDerniereProduction}
       />
@@ -110,7 +112,7 @@ export default function StockCard({
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <Tooltip title="Ouvrir les stock des variétés correpondantes">
+        <Tooltip arrow title="Ouvrir les stock des variétés correpondantes">
           <Button
             variant="outlined"
             color="primary"
@@ -126,8 +128,7 @@ export default function StockCard({
         {/* <IconButton aria-label="share">
           <ShareIcon />
         </IconButton> */}
-        <Tooltip
-          title={`${
+        <Tooltip arrow          title={`${
             expanded ? "Cacher" : "Montrer"
           }  les stock des variétés correpondantes`}
         >

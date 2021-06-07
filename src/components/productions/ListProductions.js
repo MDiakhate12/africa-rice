@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Box, Button } from "@material-ui/core";
 import DataTable from "../common/DataTable";
 import AddProduction from "./AddProduction";
 import ContextMenu from "../common/ContextMenu";
 import { GlobalContext } from "../../store/GlobalProvider";
 import ConfirmDialog from "../common/ConfirmDialog";
+import { Tooltip } from "@material-ui/core";
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
 
@@ -105,11 +106,8 @@ const columns = [
 export default function Productions() {
   const [productions, setProductions] = useState([]);
   const [created, setCreated] = useState(false);
-  const {
-    openProductionFormDialog,
-    institution,
-    openConfirmDialog,
-  } = useContext(GlobalContext);
+  const { openProductionFormDialog, institution, openConfirmDialog } =
+    useContext(GlobalContext);
 
   const handleOpen = () => {
     // setOpen(true);
@@ -266,9 +264,17 @@ export default function Productions() {
         handleDelete={handleDelete}
       />
 
-      <Button color="primary" onClick={handleOpen}>
-        Ajouter une Production
-      </Button>
+      <Tooltip arrow title="Cliquer pour ajouter une nouvelle production">
+        <Button
+          color="primary"
+          variant="contained"
+          style={{ marginBottom: "7px" }}
+          onClick={handleOpen}
+        >
+          Ajouter une Production
+        </Button>
+      </Tooltip>
+
       {/* <Modal
         open={open}
         onClose={handleClose}

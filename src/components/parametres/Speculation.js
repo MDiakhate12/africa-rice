@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -169,7 +169,7 @@ export default function Speculation() {
                 console.log(removeAssociations(speculation));
                 openConfirmDialog({
                   title: "Suppression",
-                  content: `Souhaitez vous réellement supprimer la spéculation ${speculation.Speculation.nomSpeculation} ?\nAttention! Vous devez d'abord supprimer tous les produits qui en dépendent.`,
+                  content: `Souhaitez vous réellement supprimer la spéculation ${speculation.Speculation.nomSpeculation} ?\nAttention! Vous devez d'abord supprimer toutes les variétés qui en dépendent.`,
                   data: removeAssociations(speculation),
                 });
               },
@@ -253,7 +253,7 @@ export default function Speculation() {
                     >
                       {speculation.nomSpeculation}
                       <ListItemSecondaryAction>
-                        <Tooltip title="Supprimer">
+                        <Tooltip arrow title="Supprimer">
                           <IconButton
                             style={{
                               visibility:

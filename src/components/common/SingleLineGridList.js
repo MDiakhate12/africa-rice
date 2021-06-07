@@ -1,4 +1,3 @@
-import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
@@ -62,7 +61,7 @@ export default function SingleLineGridList({ data }) {
               titlePosition="top"
               className={classes.tileBar}
               actionIcon={
-                <Tooltip title={`Supprimer ${tile.title}`}>
+                <Tooltip arrow title={`Supprimer ${tile.title}`}>
                   <IconButton
                     aria-label={`info about ${tile.title}`}
                     className={classes.icon}

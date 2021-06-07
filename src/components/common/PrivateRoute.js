@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 import { GlobalContext } from "../../store/GlobalProvider";
 

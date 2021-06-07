@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import * as React from 'react';
 import DataTable from '../common/DataTable'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -67,7 +68,7 @@ const columnSpeculation = [
 function StockState() {
   const [productionsBySpeculation, setProductionBySpec] = useState([])
   const [productionsByVariete, setProductionByVariete] = useState([])
-  const [choice, setChoice] = React.useState('speculation')
+  const [choice, setChoice] = useState('speculation')
 
   const getAllProductions = () => {
     ipcRenderer.send('getByVarietes')

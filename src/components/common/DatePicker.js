@@ -1,5 +1,5 @@
 import "date-fns";
-import React from "react";
+import { useState } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
@@ -19,7 +19,7 @@ export default function DatePicker({
   disabled,
   firstValue,
 }) {
-  const [selectedDate, setSelectedDate] = React.useState(
+  const [selectedDate, setSelectedDate] = useState(
     firstValue || new Date()
   );
 

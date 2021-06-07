@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -78,17 +78,33 @@ function CommandeFormDialog({ handleClose }) {
   };
 
   const close = (response, dataFromOpen = null) => {
-    closeCommandeFormDialog();
-    handleClose(response, dataFromOpen);
-    setFormState({
-      clientId: "",
-      articles: [
-        {
-          dateExpressionBesoinClient: new Date(),
-          dateEnlevementSouhaitee: new Date(),
-        },
-      ],
-    });
+    console.log("dataFromOpen: ", dataFromOpen);
+    if (
+      response === "yes" &&
+      (formState.clientId === "" ||
+        formState.articles.some(
+          (article) =>
+            (article.idNiveau && article.idNiveau === "") ||
+            (article.idSpeculation && article.idSpeculation === "") ||
+            (article.idVariete && article.idVariete === "") ||
+            (article.production && article.production === "") ||
+            (article.quantite && article.quantite === "")
+        ))
+    )
+      return
+    else {
+      closeCommandeFormDialog();
+      handleClose(response, dataFromOpen);
+      setFormState({
+        clientId: "",
+        articles: [
+          {
+            dateExpressionBesoinClient: new Date(),
+            dateEnlevementSouhaitee: new Date(),
+          },
+        ],
+      });
+    }
   };
 
   const handleChange = (e) => {
@@ -210,7 +226,7 @@ function CommandeFormDialog({ handleClose }) {
             </Grid>
             <Grid item sm={2}>
               {" "}
-              <Tooltip title="Ajouter un nouveau client">
+              <Tooltip arrow title="Ajouter un nouveau client">
                 <IconButton
                   onClick={() => openClientFormDialog()}
                   color="secondary"
@@ -225,19 +241,19 @@ function CommandeFormDialog({ handleClose }) {
             <Grid item sm={10}>
               <Accordions>
                 {formState.articles.map((data, index, self) => (
-                    <CommandeAccordionItem
-                      key={index}
-                      index={index}
-                      handleDataChange={handleArticleChange}
-                      handleDeleteArticle={handleDeleteArticle}
-                      closedOnNewAdded={data.expanded}
-                      setExpandedFromDialog={setExpandedFromDialog}
-                    />
+                  <CommandeAccordionItem
+                    key={index}
+                    index={index}
+                    handleDataChange={handleArticleChange}
+                    handleDeleteArticle={handleDeleteArticle}
+                    closedOnNewAdded={data.expanded}
+                    setExpandedFromDialog={setExpandedFromDialog}
+                  />
                 ))}
               </Accordions>
             </Grid>
             <Grid item sm={2}>
-              <Tooltip title="Ajouter un nouvel article">
+              <Tooltip arrow title="Ajouter une autre semence">
                 <IconButton
                   onClick={addCommandeArticle}
                   color="secondary"
@@ -253,7 +269,22 @@ function CommandeFormDialog({ handleClose }) {
           <Button onClick={() => close("no", formState)} color="secondary">
             Annuler
           </Button>
-          <Button onClick={() => close("yes", formState)} color="primary">
+          <Button
+            onClick={() =>
+              formState.clientId === "" ||
+              formState.articles.some(
+                (article) =>
+                  (article.idNiveau && article.idNiveau === "") ||
+                  (article.idSpeculation && article.idSpeculation === "") ||
+                  (article.idVariete && article.idVariete === "") ||
+                  (article.production && article.production === "") ||
+                  (article.quantite && article.quantite === "")
+              )
+                ? {}
+                : close("yes", formState)
+            }
+            color="primary"
+          >
             Entregistrer
           </Button>
         </DialogActions>

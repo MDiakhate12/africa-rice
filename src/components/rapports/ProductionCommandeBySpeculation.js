@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Pie, Line, Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
 import { GlobalContext } from "../../store/GlobalProvider";
 import { Colors } from "./Colors";
+import { Typography } from "@material-ui/core";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -16,22 +17,22 @@ const columns = [
   {
     type: "string",
     field: "production",
-    headerName: "Production",
-    width: 160,
+    headerName: "Spéculation",
+    width: 130,
     renderCell: getNomSpeculation,
     valueGetter: getNomSpeculation,
   },
   {
     type: "number",
     field: "totalQuantiteDisponible",
-    width: 130,
-    headerName: "Total produit",
+    width: 200,
+    headerName: "Quantité produite (KG)",
   },
   {
     type: "number",
     field: "totalQuantiteCommandee",
-    headerName: "Total commandé",
-    width: 150,
+    headerName: "Quantité commandée (KG)",
+    width: 200,
   },
 ];
 
@@ -121,7 +122,7 @@ export default function ProductionCommandeBySpeculation({ display }) {
     maintainAspectRatio: false,
     title: {
       display: true,
-      text: "Quantité produite VS Quantité commandée par spéculation  ",
+      text: "Quantité produite contre Quantité commandée par spéculation",
       // position: "bottom",
     },
     scales: {
@@ -149,6 +150,13 @@ export default function ProductionCommandeBySpeculation({ display }) {
     <Bar data={dataBySpeculation} options={optionsSpeculation} height="500" />
   ) : (
     <>
+      <Typography
+        variant="button"
+        align="center"
+        style={{ display: "flex", justifyContent: "center" }}
+      >
+        Quantité produite contre Quantité commandée par spéculation
+      </Typography>
       <DataTable height={350} pageSize={4} columns={columns} rows={rows} />
     </>
   );

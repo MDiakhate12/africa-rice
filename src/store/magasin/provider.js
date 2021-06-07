@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { actions } from "../actions";
 import { initialState, reducer } from "./reducer";
 const { events, eventResponse } = require("../utils/events");

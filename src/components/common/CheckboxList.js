@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import CommentIcon from "@material-ui/icons/Comment";
@@ -118,11 +118,11 @@ export default function CheckboxList() {
                   disabled={wasChecked}
                   icon={
                     wasChecked ? (
-                      <Tooltip title="Niveau pris en charge">
+                      <Tooltip arrow title="Niveau pris en charge">
                         <DoneAllIcon color="primary" />
                       </Tooltip>
                     ) : (
-                      <Tooltip title="Niveau non pris en charge">
+                      <Tooltip arrow title="Niveau non pris en charge">
                         <RemoveCircleOutlineIcon />
                       </Tooltip>
                     )

@@ -22,14 +22,14 @@ const getContactById = async (id) => {
 
 const updateContact = async (id, data) => {
   const updated = service.update(Contact, id, data)
-  console.log(updated.toJSON())
-  return updated.toJSON()
+  console.log(updated)
+  return updated
 }
 
 const deleteContact = async (id) => {
   const deleted = service.deleteByPk(Contact, id)
-  console.log(deleted.toJSON())
-  return deleted.toJSON()
+  console.log(deleted)
+  return deleted
 }
 
 module.exports = {

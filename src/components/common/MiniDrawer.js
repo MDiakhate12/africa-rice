@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
+import * as React from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -131,7 +132,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MiniDrawer({ lightMode, toggleMode }) {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const location = useLocation();
 
   const { logout, institution } = useContext(GlobalContext);
@@ -189,7 +190,7 @@ export default function MiniDrawer({ lightMode, toggleMode }) {
     // },
   ];
 
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [currentItem, setCurrentItem] = useState(items[0]);
 
   const handleMenuItemClick = (event, index) => {
@@ -199,7 +200,7 @@ export default function MiniDrawer({ lightMode, toggleMode }) {
     setCurrentItem(items[index]);
   };
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const shown = Boolean(anchorEl);
 
   const handleMenu = (event) => {
@@ -232,12 +233,12 @@ export default function MiniDrawer({ lightMode, toggleMode }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h1" className={classes.title}>
-            Gestion des semences
+            Gestion des stocks de semences
           </Typography>
 
           <Typography variant="button">{currentItem.text}</Typography>
 
-          <Tooltip title={`Basculer en mode ${lightMode ? "sombre" : "clair"}`}>
+          <Tooltip arrow title={`Basculer en mode ${lightMode ? "sombre" : "clair"}`}>
             <IconButton onClick={toggleMode}>
               {lightMode ? <DarkIcon /> : <LightIcon />}
             </IconButton>
@@ -336,7 +337,7 @@ export default function MiniDrawer({ lightMode, toggleMode }) {
                   selected: classes.selected,
                 }}
               >
-                {/* <Tooltip title={text}> */}
+                {/* <Tooltip arrow title={text}> */}
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText
                   primary={text}
@@ -402,7 +403,7 @@ export default function MiniDrawer({ lightMode, toggleMode }) {
           position="relative"
         >
           <Typography variant="body2">
-            2021 &copy; AfricaRice-Seed Scaling Up Project 
+            2021 &copy; AfricaRice-Seed Scaling Project 
           </Typography>
         </Box>
       </footer>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DataTable from "../common/DataTable";
 import StockCard from "./StockCard";
 import { Grid } from "@material-ui/core";
@@ -115,7 +115,7 @@ function Stock() {
   useEffect(() => {
     getProductionsSumBySpeculation();
     getProductionsSumByVarietes();
-    getProductionsSumBySpeculationTotal();
+    // getProductionsSumBySpeculationTotal();
   }, [institution]);
 
   const handleDialogClose = (response, data) => {

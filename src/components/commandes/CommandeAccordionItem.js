@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -50,6 +50,15 @@ const useStyles = makeStyles((theme) => ({
   // formControl: {
   //   marginBottom: theme.spacing(1),
   // },
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: "rgba(0, 0, 0, 0.87)",
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+  formControl: {
+    marginBottom: theme.spacing(1),
+  },
 }));
 
 function SimpleAccordion({
@@ -60,13 +69,35 @@ function SimpleAccordion({
   handleDeleteArticle,
 }) {
   const classes = useStyles();
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    idNiveau: "",
+    idSpeculation: "",
+    idVariete: "",
+    production: "",
+    quantite: "",
+  });
   const [productions, setProductions] = useState([]);
-  const [speculations, setSpeculations] = useState([]);
-  const [niveauxInstitution, setNiveauxInstitution] = useState([]);
+  const [selectedProductions, setSelectedProductions] = useState([]);
+  // const [speculations, setSpeculations] = useState([]);
+  const [niveaux, setNiveau] = useState([]);
   const [expanded, setExpanded] = useState(false);
+  const [visibility, setVisibility] = useState(false);
 
-  const { openConfirmDialog, institution } = useContext(GlobalContext);
+  const {
+    openConfirmDialog,
+    institution,
+    getAllSpeculation,
+    speculations,
+    getAllVariete,
+    varietes,
+  } = useContext(GlobalContext);
+
+  const getNiveau = () => {
+    ipcRenderer.send(events.niveauDeProduction.getAll);
+    ipcRenderer.once(eventResponse.niveauDeProduction.gotAll, (event, data) => {
+      setNiveau(data);
+    });
+  };
 
   const getAllProductions = () => {
     ipcRenderer.send(events.production.getAll, {
@@ -76,29 +107,33 @@ function SimpleAccordion({
     ipcRenderer.once(eventResponse.production.gotAll, (event, data) => {
       setProductions(data);
 
-      setSpeculations([
-        ...new Set(
-          data.map(
-            (production) =>
-              production.VarieteInstitution.SpeculationInstitution.Speculation
-                .nomSpeculation
-          )
-        ),
-      ]);
+      console.log("PROD", data);
+      // setSpeculations([
+      //   ...new Set(
+      //     data.map(
+      //       (production) =>
+      //         production.VarieteInstitution.SpeculationInstitution.Speculation
+      //           .nomSpeculation
+      //     )
+      //   ),
+      // ]);
 
-      setNiveauxInstitution([
-        ...new Set(
-          data.map(
-            (production) =>
-              production.NiveauInstitution.NiveauDeProduction.nomNiveau
-          )
-        ),
-      ]);
+      // setNiveauxInstitution([
+      //   ...new Set(
+      //     data.map(
+      //       (production) =>
+      //         production.niveauDeProduction.NiveauDeProduction.nomNiveau
+      //     )
+      //   ),
+      // ]);
     });
   };
 
   useEffect(() => {
     getAllProductions();
+    getAllSpeculation();
+    getAllVariete();
+    getNiveau();
 
     // console.log("productions:", productions);
     // console.log("niveaux:", niveauxInstitution);
@@ -114,8 +149,38 @@ function SimpleAccordion({
     const { name, value } = e.target;
     console.log(name, value);
 
+    if (name === "idVariete") {
+      let hasProductions = (production) =>
+        production?.VarieteInstitution?.SpeculationInstitution
+          ?.speculationId === formData.idSpeculation &&
+        production?.VarieteInstitution?.varieteId === value &&
+        production?.NiveauInstitution?.niveauId === formData.idNiveau;
+
+      setSelectedProductions(productions.filter(hasProductions));
+    }
+
     setFormData({ ...formData, [name]: value });
     handleDataChange(e, index);
+
+    if (
+      name === "idNiveau" ||
+      name === "idSpeculation" ||
+      name === "idVariete"
+    ) {
+      let hasProductions = (production) =>
+        production?.VarieteInstitution?.SpeculationInstitution
+          ?.speculationId ===
+          (name === "idSpeculation" ? value : formData.idSpeculation) &&
+        production?.VarieteInstitution?.varieteId ===
+          (name === "idVariete" ? value : formData.idVariete) &&
+        production?.NiveauInstitution?.niveauId ===
+          (name === "idNiveau" ? value : formData.idNiveau);
+
+      setFormData({ ...formData, [name]: value, production: "" });
+      handleDataChange({ target: { name: "production", value: "" } }, index);
+      setSelectedProductions(productions.filter(hasProductions));
+      setVisibility(productions.some(hasProductions));
+    }
   };
 
   const [tooltip, setTooltip] = useState(
@@ -133,7 +198,16 @@ function SimpleAccordion({
         onChange={handleToggle(`panel-${index}`)}
         expandIcon={<ExpandMoreIcon />}
       >
-        <Tooltip title={tooltip}>
+        <Tooltip
+          className={classes.tooltip}
+          arrow
+          title={tooltip}
+          placement={
+            tooltip.includes("étendre") || tooltip.includes("réduire")
+              ? "bottom-start"
+              : "bottom-end"
+          }
+        >
           <AccordionSummary
             aria-controls="panel1a-content"
             id="panel1a-header"
@@ -152,11 +226,27 @@ function SimpleAccordion({
                 }`
               );
             }}
+            onMouseLeave={(e) => {
+              console.log(e);
+              // if (e.relatedTarget.className.includes("MuiAccordionSummary")) {
+              //   setTooltip(
+              //     `Cliquer pour ${
+              //       expanded === "panel-" + index || expandedFromDialog
+              //         ? "réduire"
+              //         : "étendre"
+              //     }`
+              //   );
+              // } else {
+              setTooltip("");
+              // }
+              e.preventDefault();
+              e.stopPropagation();
+            }}
           >
             <Typography className={classes.heading}>
               {formData?.production?.VarieteInstitution?.Variete?.nomVariete
                 ? `${formData?.production?.VarieteInstitution?.Variete?.nomVariete} - ${formData?.production?.Localisation?.village}`
-                : `Article ${index}`}
+                : `Semence N°${index + 1}`}
             </Typography>
 
             <Typography className={classes.secondaryHeading}>
@@ -167,8 +257,7 @@ function SimpleAccordion({
                 : `Prix ${index}`}
             </Typography>
             {/* 
-            <Tooltip
-              title="Supprimer l'article"
+            <Tooltip arrow              title="Supprimer l'article"
               onMouseEnter={(e) => {
                 console.log("B:", e.target.localName);
                 e.preventDefault();
@@ -178,19 +267,13 @@ function SimpleAccordion({
             <IconButton
               onMouseEnter={(e) => {
                 console.log(e);
-                setTooltip("Supprimer l'article");
+                setTooltip("Retirer cette semence");
                 e.preventDefault();
                 e.stopPropagation();
               }}
               onMouseLeave={(e) => {
                 console.log(e);
-                setTooltip(
-                  `Cliquer pour ${
-                    expanded === "panel-" + index || expandedFromDialog
-                      ? "réduire"
-                      : "étendre"
-                  }`
-                );
+                setTooltip("");
                 e.preventDefault();
                 e.stopPropagation();
               }}
@@ -220,24 +303,23 @@ function SimpleAccordion({
                 fullWidth
                 margin="dense"
                 variant="filled"
-                className={classes.formControl}
+                // className={classes.formControl}
               >
                 <InputLabel id="Niveau-label">Niveau</InputLabel>
                 <Select
                   labelId="Niveau-label"
                   id="Niveau-select"
-                  value={formData?.niveau || ""}
-                  name="niveau"
+                  value={formData?.idNiveau || ""}
+                  name="idNiveau"
                   onChange={handleChange}
                   fullWidth
                 >
-                  {niveauxInstitution.map((niveau) => (
-                    <MenuItem key={niveau} value={niveau}>
-                      {niveau}
+                  {niveaux.map((niveau) => (
+                    <MenuItem key={niveau.idNiveau} value={niveau.idNiveau}>
+                      {niveau.nomNiveau}
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>Niveau de production</FormHelperText>
               </FormControl>
             </Grid>
             <Grid item sm={12}>
@@ -245,23 +327,25 @@ function SimpleAccordion({
                 fullWidth
                 margin="dense"
                 variant="filled"
-                className={classes.formControl}
+                // className={classes.formControl}
               >
                 <InputLabel id="Spéculation-label">Spéculation</InputLabel>
                 <Select
                   labelId="Spéculation-label"
                   id="Spéculation-select"
-                  value={formData?.speculation || ""}
-                  name="speculation"
+                  value={formData?.idSpeculation || ""}
+                  name="idSpeculation"
                   onChange={handleChange}
                 >
                   {speculations.map((speculation) => (
-                    <MenuItem key={speculation} value={speculation}>
-                      {speculation}
+                    <MenuItem
+                      key={speculation.idSpeculation}
+                      value={speculation.idSpeculation}
+                    >
+                      {speculation.nomSpeculation}
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>Spéculation désirée</FormHelperText>
               </FormControl>
             </Grid>
             <Grid item sm={12}>
@@ -271,43 +355,64 @@ function SimpleAccordion({
                 variant="filled"
                 className={classes.formControl}
               >
-                <InputLabel id="Production-label">Production</InputLabel>
+                <InputLabel id="Production-label">Variété</InputLabel>
                 <Select
-                  labelId="Production-label"
-                  id="Production-select"
-                  value={formData.production || ""}
-                  name="production"
+                  labelId="Variete-label"
+                  id="Variete-select"
+                  value={formData.idVariete || ""}
+                  name="idVariete"
                   onChange={handleChange}
                 >
-                  {productions?.map((production) => {
-                    if (
-                      production?.VarieteInstitution?.SpeculationInstitution
-                        ?.Speculation?.nomSpeculation ===
-                        formData.speculation &&
-                      production?.NiveauInstitution?.NiveauDeProduction
-                        .nomNiveau === formData.niveau
-                    ) {
-                      return (
-                        <MenuItem
-                          key={production?.idProduction}
-                          value={production}
-                        >
-                          {`${production?.VarieteInstitution?.Variete?.nomVariete} - ${production?.Localisation?.village}`}
-                        </MenuItem>
-                      );
-                    }
-                  })}
+                  {varietes
+                    ?.filter(
+                      (variete) =>
+                        variete?.speculationId === formData.idSpeculation
+                    )
+                    .map((variete) => (
+                      <MenuItem
+                        key={variete?.idVariete}
+                        value={variete.idVariete}
+                      >
+                        {variete?.nomVariete}
+                      </MenuItem>
+                    ))}
                 </Select>
-                <FormHelperText>
-                  Production commandée{" "}
-                  {formData?.production?.VarieteInstitution?.Variete?.nomVariete
-                    ? ` - ${formData?.production?.prixUnitaire} FCFA`
-                    : ""}
-                </FormHelperText>
               </FormControl>
             </Grid>
+            {visibility ? (
+              <Grid item sm={12}>
+                <FormControl
+                  fullWidth
+                  margin="dense"
+                  variant="filled"
+                  className={classes.formControl}
+                >
+                  <InputLabel id="Production-label">
+                    Productions disponible pour cette variété
+                  </InputLabel>
+                  <Select
+                    labelId="Production-label"
+                    id="Production-select"
+                    value={formData.production || 0}
+                    name="production"
+                    onChange={handleChange}
+                  >
+                    {selectedProductions.map((production) => (
+                      <MenuItem
+                        key={production?.idProduction}
+                        value={production}
+                      >
+                        {`${production?.VarieteInstitution?.Variete?.nomVariete} (cultivé à ${production?.Localisation?.village})`}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            ) : (
+              ""
+            )}
             <Grid item sm={12}>
-              <FormControl variant="filled" fullWidth>
+              <FormControl variant="filled" fullWidth required>
                 <InputLabel id="Quantité-label" color="secondary">
                   Quantité
                 </InputLabel>
@@ -329,9 +434,6 @@ function SimpleAccordion({
                     <InputAdornment position="end">Kg</InputAdornment>
                   }
                 />
-                <FormHelperText>
-                  Quantité désirée pour cette production
-                </FormHelperText>
               </FormControl>{" "}
             </Grid>
             <Grid item sm={12}>

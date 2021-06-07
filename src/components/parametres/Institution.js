@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import clsx from "clsx";
 import { Button, Grid, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -204,7 +204,7 @@ export default function Institution() {
         </Grid>
         {/* 
         <Grid item sm={3}>
-          <Tooltip title="Ajouter un contact">
+          <Tooltip arrow title="Ajouter un contact">
             <IconButton>
               <PersonAddIcon />
             </IconButton>
