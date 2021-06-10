@@ -1,15 +1,10 @@
 import { Typography } from "@material-ui/core";
-import { useEffect, useState, useContext } from "react";
-import { Pie, Line, Bar } from "react-chartjs-2";
-import { GlobalContext } from "../../store/GlobalProvider";
+import { Pie } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
 import { Colors } from "./Colors";
 
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
-
 const getNomVariete = (params) =>
-  params.getValue("Production").VarieteInstitution.Variete.nomVariete;
+  params.getValue("VarieteInstitution").Variete.nomVariete;
 
 const columns = [
   { type: "string", field: "id", headerName: "idCommande", hide: true },
@@ -31,41 +26,12 @@ const columns = [
 
 export default function CommandeByVariete({
   display,
+  commandesByVariete,
   filter: { idSpeculation },
 }) {
-  const { institution } = useContext(GlobalContext);
-  const [commandesByVariete, setCommandesByVariete] = useState([]);
-
-  const getCommandeSumByVarietes = () => {
-    ipcRenderer.send("getCommandeSumByVarietes", {
-      institutionId: institution?.idInstitution,
-    });
-    ipcRenderer.once("gotCommandeSumByVarietes", (event, data) => {
-      setCommandesByVariete(
-        data.filter(
-          (v) =>
-            v.Production.VarieteInstitution.Variete.speculationId ===
-            idSpeculation
-        )
-      );
-      console.log(
-        "YEAAAAH",
-        data.filter(
-          (v) =>
-            v.Production.VarieteInstitution.Variete.speculationId ===
-            idSpeculation
-        )
-      );
-    });
-  };
-
-  useEffect(() => {
-    getCommandeSumByVarietes();
-  }, [institution, idSpeculation]);
-
   const dataByVariete = {
     labels: commandesByVariete.map(
-      (commande) => commande.Production.VarieteInstitution.Variete.nomVariete
+      (commande) => commande.VarieteInstitution.Variete.nomVariete
     ),
     datasets: [
       {
@@ -99,11 +65,10 @@ export default function CommandeByVariete({
   //   return <Bar data={dataByVariete} options={optionsVariete} />;
   // }
 
-  const rows = commandesByVariete
-    .map((v) => ({
-      id: v.Production.VarieteInstitution.varieteId,
-      ...v,
-    }));
+  const rows = commandesByVariete.map((v) => ({
+    id: v.VarieteInstitution.varieteId,
+    ...v,
+  }));
 
   return display === "chart" ? (
     <Pie data={dataByVariete} options={optionsVariete} />

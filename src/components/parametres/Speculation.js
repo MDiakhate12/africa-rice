@@ -10,17 +10,14 @@ import {
   Typography,
   ListItemSecondaryAction,
   IconButton,
+  Tooltip,
 } from "@material-ui/core";
 import { GlobalContext } from "../../store/GlobalProvider";
 import SingleLineGridList from "../common/SingleLineGridList";
-import ConfirmDialog from "../common/ConfirmDialog";
 import { SpeculationInstitutionContext } from "../../store/speculationInstitution/provider";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import SpeculationFormDialog from "./SpeculationFormDialog";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { gridColumnsTotalWidthSelector } from "@material-ui/data-grid";
-import ContextMenu from "../common/ContextMenu";
-import { Tooltip } from "@material-ui/core";
 
 const { events, eventResponse } = require("../../store/utils/events");
 const { ipcRenderer } = window.require("electron");

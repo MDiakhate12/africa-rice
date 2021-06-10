@@ -74,6 +74,15 @@ module.exports = (sequelize) => {
       },
     })
 
+    CommandeModel.belongsTo(models.Institution, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'institutionId',
+        allowNull: false,
+        defaultValue: 1,
+      },
+    })
+
     CommandeModel.belongsTo(models.EtatCommande, {
       onDelete: 'CASCADE',
       foreignKey: {
@@ -86,6 +95,14 @@ module.exports = (sequelize) => {
       onDelete: 'CASCADE',
       foreignKey: {
         name: 'productionId',
+        allowNull: true,
+      },
+    })
+
+    CommandeModel.belongsTo(models.VarieteInstitution, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        name: 'varieteInstitutionId',
         allowNull: true,
       },
     })

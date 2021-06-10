@@ -26,11 +26,18 @@ const createCommande = async (data) => {
 const getAllCommandes = async (arg = {}) => {
   let option = {
     order: [["idCommande", "DESC"]],
+    where: { ...arg },
     include: [
+      {
+        model: VarieteInstitution,
+        include: [
+          Variete,
+          { model: SpeculationInstitution, include: Speculation },
+        ],
+      },
       Client,
       {
         model: Production,
-        where: { ...arg },
         include: [
           Localisation,
           {
@@ -76,24 +83,20 @@ const deleteCommande = async (id) => {
 
 const getCommandeSumBySpeculation = async (arg = {}) => {
   let option = {
+    where: { ...arg },
     include: [
       {
-        model: Production,
-        where: { ...arg },
+        model: VarieteInstitution,
         include: [
-          {
-            model: VarieteInstitution,
-            include: [
-              Variete,
-              { model: SpeculationInstitution, include: Speculation },
-            ],
-          },
+          Variete,
+          { model: SpeculationInstitution, include: Speculation },
         ],
       },
+      Production,
     ],
-    group: ["Production.VarieteInstitution.speculationInstitutionId"],
+    group: ["VarieteInstitution.speculationInstitutionId"],
     attributes: [
-      "Production.VarieteInstitution.speculationInstitutionId",
+      "VarieteInstitution.speculationInstitutionId",
       [
         sequelize.fn("sum", sequelize.col("quantite")),
         "totalQuantiteCommandee",
@@ -109,28 +112,24 @@ const getCommandeSumBySpeculation = async (arg = {}) => {
 
 const getCommandeSumBySpeculationByState = async (arg = {}) => {
   let option = {
+    where: { ...arg },
     include: [
-      EtatCommande,
       {
-        model: Production,
-        where: { ...arg },
+        model: VarieteInstitution,
         include: [
-          {
-            model: VarieteInstitution,
-            include: [
-              Variete,
-              { model: SpeculationInstitution, include: Speculation },
-            ],
-          },
+          Variete,
+          { model: SpeculationInstitution, include: Speculation },
         ],
       },
+      EtatCommande,
+      Production,
     ],
     group: [
       "etatId",
-      "Production.VarieteInstitution.SpeculationInstitution.speculationId",
+      "VarieteInstitution.SpeculationInstitution.speculationId",
     ],
     attributes: [
-      "Production.VarieteInstitution.SpeculationInstitution.speculationId",
+      "VarieteInstitution.SpeculationInstitution.speculationId",
       "etatId",
       [
         sequelize.fn("sum", sequelize.col("quantite")),
@@ -147,22 +146,18 @@ const getCommandeSumBySpeculationByState = async (arg = {}) => {
 
 const getCommandeSumByVarietes = async (arg = {}) => {
   let option = {
+    where: { ...arg },
     include: [
       {
-        model: Production,
-        where: { ...arg },
+        model: VarieteInstitution,
         include: [
-          {
-            model: VarieteInstitution,
-            include: [
-              Variete,
-              { model: SpeculationInstitution, include: Speculation },
-            ],
-          },
+          Variete,
+          { model: SpeculationInstitution, include: Speculation },
         ],
       },
+      Production,
     ],
-    group: ["Production.VarieteInstitution.varieteId"],
+    group: ["VarieteInstitution.varieteId"],
     attributes: [
       [
         sequelize.fn("sum", sequelize.col("quantite")),
@@ -179,24 +174,20 @@ const getCommandeSumByVarietes = async (arg = {}) => {
 
 const getCommandeSumByVarieteByState = async (arg = {}) => {
   let option = {
+    where: { ...arg },
     include: [
       {
-        model: Production,
-        where: { ...arg },
+        model: VarieteInstitution,
         include: [
-          {
-            model: VarieteInstitution,
-            include: [
-              Variete,
-              { model: SpeculationInstitution, include: Speculation },
-            ],
-          },
+          Variete,
+          { model: SpeculationInstitution, include: Speculation },
         ],
       },
+      Production,
     ],
-    group: ["etatId", "Production.VarieteInstitution.varieteId"],
+    group: ["etatId", "VarieteInstitution.varieteId"],
     attributes: [
-      "Production.VarieteInstitution.varieteId",
+      "VarieteInstitution.varieteId",
       "etatId",
       [
         sequelize.fn("sum", sequelize.col("quantite")),

@@ -1,4 +1,10 @@
-import { useContext, useEffect, useReducer, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -72,32 +78,52 @@ function SimpleAccordion({
   const [formData, setFormData] = useState({
     idNiveau: "",
     idSpeculation: "",
-    idVariete: "",
+    idVarieteInstitution: "",
     production: "",
     quantite: "",
   });
   const [productions, setProductions] = useState([]);
   const [selectedProductions, setSelectedProductions] = useState([]);
-  // const [speculations, setSpeculations] = useState([]);
-  const [niveaux, setNiveau] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [visibility, setVisibility] = useState(false);
 
-  const {
-    openConfirmDialog,
-    institution,
-    getAllSpeculation,
-    speculations,
-    getAllVariete,
-    varietes,
-  } = useContext(GlobalContext);
+  const [speculations, setSpeculation] = useState([]);
+  const [varietes, setVarietes] = useState([]);
+  const [niveaux, setNiveau] = useState([]);
+
+  const getVarietesInstitution = useCallback(() => {
+    ipcRenderer.send(events.varieteInstitution.getAll, {
+      institutionId: institution?.idInstitution,
+    });
+    ipcRenderer.once(eventResponse.varieteInstitution.gotAll, (event, data) => {
+      setVarietes(data);
+      console.log(data);
+    });
+  }, []);
+
+  const getSpeculationsInstitution = () => {
+    ipcRenderer.send(events.speculationInstitution.getAll, {
+      institutionId: institution?.idInstitution,
+    });
+    ipcRenderer.once(
+      eventResponse.speculationInstitution.gotAll,
+      (event, data) => {
+        setSpeculation(data.map((d) => d.Speculation));
+        console.log(data.map((d) => d.Speculation));
+      }
+    );
+  };
 
   const getNiveau = () => {
-    ipcRenderer.send(events.niveauDeProduction.getAll);
-    ipcRenderer.once(eventResponse.niveauDeProduction.gotAll, (event, data) => {
-      setNiveau(data);
+    ipcRenderer.send(events.niveauInstitution.getAll, {
+      institutionId: institution?.idInstitution,
+    });
+    ipcRenderer.once(eventResponse.niveauInstitution.gotAll, (event, data) => {
+      setNiveau(data.map((d) => d.NiveauDeProduction));
     });
   };
+
+  const { openConfirmDialog, institution } = useContext(GlobalContext);
 
   const getAllProductions = () => {
     ipcRenderer.send(events.production.getAll, {
@@ -131,8 +157,8 @@ function SimpleAccordion({
 
   useEffect(() => {
     getAllProductions();
-    getAllSpeculation();
-    getAllVariete();
+    getSpeculationsInstitution();
+    getVarietesInstitution();
     getNiveau();
 
     // console.log("productions:", productions);
@@ -165,14 +191,14 @@ function SimpleAccordion({
     if (
       name === "idNiveau" ||
       name === "idSpeculation" ||
-      name === "idVariete"
+      name === "idVarieteInstitution"
     ) {
       let hasProductions = (production) =>
         production?.VarieteInstitution?.SpeculationInstitution
           ?.speculationId ===
           (name === "idSpeculation" ? value : formData.idSpeculation) &&
-        production?.VarieteInstitution?.varieteId ===
-          (name === "idVariete" ? value : formData.idVariete) &&
+        production?.varieteInstitutionId ===
+          (name === "idVarieteInstitution" ? value : formData.idVarieteInstitution) &&
         production?.NiveauInstitution?.niveauId ===
           (name === "idNiveau" ? value : formData.idNiveau);
 
@@ -359,21 +385,21 @@ function SimpleAccordion({
                 <Select
                   labelId="Variete-label"
                   id="Variete-select"
-                  value={formData.idVariete || ""}
-                  name="idVariete"
+                  value={formData.idVarieteInstitution || ""}
+                  name="idVarieteInstitution"
                   onChange={handleChange}
                 >
                   {varietes
                     ?.filter(
-                      (variete) =>
-                        variete?.speculationId === formData.idSpeculation
+                      ({ Variete }) =>
+                        Variete?.speculationId === formData.idSpeculation
                     )
                     .map((variete) => (
                       <MenuItem
-                        key={variete?.idVariete}
-                        value={variete.idVariete}
+                        key={variete?.idVarieteInstitution}
+                        value={variete.idVarieteInstitution}
                       >
-                        {variete?.nomVariete}
+                        {variete?.Variete?.nomVariete}
                       </MenuItem>
                     ))}
                 </Select>

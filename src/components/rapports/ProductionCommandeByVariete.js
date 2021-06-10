@@ -1,18 +1,14 @@
-import { useEffect, useState, useContext } from "react";
-import { Pie, Line, Bar } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
 import { Colors } from "./Colors";
-import { GlobalContext } from "../../store/GlobalProvider";
 import { Typography } from "@material-ui/core";
 
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
 
 const getNomVariete = (params) =>
-  params.getValue("Production").VarieteInstitution.Variete.nomVariete;
+  params.getValue("VarieteInstitution").Variete.nomVariete;
 
 const getNomSpeculation = (params) =>
-  params.getValue("Production").VarieteInstitution.SpeculationInstitution
+  params.getValue("VarieteInstitution").SpeculationInstitution
     .Speculation.nomSpeculation;
 
 const columns = [
@@ -49,56 +45,13 @@ const columns = [
 ];
 
 export default function ProductionCommandeByVariete({
+  productionsByVariete,
+  commandesByVariete,
   display,
-  filter: { idSpeculation },
 }) {
-  const { institution } = useContext(GlobalContext);
-  const [commandesByVariete, setCommandesByVariete] = useState([]);
-  const [max, setMax] = useState();
-  const [min, setMin] = useState();
 
-  const getCommandeSumByVarietes = () => {
-    ipcRenderer.send("getCommandeSumByVarietes", {
-      institutionId: institution?.idInstitution,
-    });
-    ipcRenderer.once("gotCommandeSumByVarietes", (event, data) => {
-      setCommandesByVariete(
-        data.filter(
-          (v) =>
-            v.Production.VarieteInstitution.Variete.speculationId ===
-            idSpeculation
-        )
-      );
-      console.log("DIIAAAAF", data);
-    });
-  };
 
-  useEffect(() => {
-    getCommandeSumByVarietes();
-  }, [institution, idSpeculation]);
-
-  const [productionsByVariete, setProductionsByVariete] = useState([]);
-
-  const getProductionsSumByVarietes = () => {
-    ipcRenderer.send("getByVarietes", {
-      institution: institution?.idInstitution,
-    });
-    ipcRenderer.once("gotByVarietes", (event, data) => {
-      console.log(data);
-      setProductionsByVariete(
-        data.filter(
-          (v) => v.VarieteInstitution.Variete.speculationId === idSpeculation
-        )
-      );
-      // setMax(Math.max(...data.map((p) => p.totalQuantiteProduite)));
-      // setMax(Math.min(...data.map((p) => p.totalQuantiteProduite)));
-    });
-  };
-
-  useEffect(() => {
-    getProductionsSumByVarietes();
-  }, [institution, idSpeculation]);
-
+ 
   const dataByVariete = {
     labels: productionsByVariete.map(
       (production) => production.VarieteInstitution.Variete.nomVariete
@@ -119,11 +72,11 @@ export default function ProductionCommandeByVariete({
       //   stack: 0,
       // },
       {
-        label: "Commande",
+        label: "Quantité commandée",
         data: productionsByVariete.map((production) => {
           let result = commandesByVariete.find(
             (commande) =>
-              commande.Production.varieteInstitutionId ===
+              commande.VarieteInstitution.idVarieteInstitution ===
               production.varieteInstitutionId
           );
 
@@ -146,7 +99,6 @@ export default function ProductionCommandeByVariete({
         {
           ticks: {
             beginAtZero: true,
-            stepSize: (max - min) / 1000,
           },
         },
       ],
@@ -157,7 +109,7 @@ export default function ProductionCommandeByVariete({
   // }
 
   const rows = commandesByVariete.map((v, i) => ({
-    id: v.Production.VarieteInstitution.SpeculationInstitution.speculationId,
+    id: v.VarieteInstitution.SpeculationInstitution.speculationId,
     ...v,
     ...productionsByVariete[i],
   }));

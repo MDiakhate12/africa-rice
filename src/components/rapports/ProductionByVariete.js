@@ -31,28 +31,10 @@ const columns = [
 
 export default function ProductionByVariete({
   display,
+  productionsByVariete,
   filter: { idSpeculation },
 }) {
-  const { institution } = useContext(GlobalContext);
-  const [productionsByVariete, setProductionsByVariete] = useState([]);
 
-  const getProductionsSumByVarietes = () => {
-    ipcRenderer.send("getByVarietes", {
-      institutionId: institution?.idInstitution,
-    });
-    ipcRenderer.once("gotByVarietes", (event, data) => {
-      console.log(data);
-      setProductionsByVariete(
-        data.filter(
-          (v) => v.VarieteInstitution.Variete.speculationId === idSpeculation
-        )
-      );
-    });
-  };
-
-  useEffect(() => {
-    getProductionsSumByVarietes();
-  }, [institution, idSpeculation]);
 
   const dataByVariete = {
     labels: productionsByVariete.map(

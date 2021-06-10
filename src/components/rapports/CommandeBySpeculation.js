@@ -1,15 +1,10 @@
-import { useEffect, useState, useContext } from "react";
-import { Pie, Line, Bar } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
-import { GlobalContext } from "../../store/GlobalProvider";
 import { Colors } from "./Colors";
 import { Typography } from "@material-ui/core";
 
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
-
 const getNomSpeculation = (params) =>
-  params.getValue("Production").VarieteInstitution.SpeculationInstitution
+  params.getValue("VarieteInstitution").SpeculationInstitution
     .Speculation.nomSpeculation;
 
 const columns = [
@@ -30,24 +25,10 @@ const columns = [
   },
 ];
 
-export default function CommandesBySpeculation({ display }) {
-  const { institution } = useContext(GlobalContext);
-  const [commandesBySpeculation, setCommandesBySpeculation] = useState([]);
-
-  const getCommandeSumBySpeculation = () => {
-    ipcRenderer.send("getCommandeSumBySpeculation", {
-      institutionId: institution?.idInstitution,
-    });
-    ipcRenderer.once("gotCommandeSumBySpeculation", (event, data) => {
-      console.log(data);
-      setCommandesBySpeculation(data);
-    });
-  };
-
-  useEffect(() => {
-    getCommandeSumBySpeculation();
-  }, [institution]);
-
+export default function CommandesBySpeculation({
+  display,
+  commandesBySpeculation,
+}) {
   const optionsSpeculation = {
     title: {
       display: true,
@@ -59,8 +40,8 @@ export default function CommandesBySpeculation({ display }) {
   const dataBySpeculation = {
     labels: commandesBySpeculation.map(
       (commande) =>
-        commande.Production.VarieteInstitution.SpeculationInstitution
-          .Speculation.nomSpeculation
+        commande.VarieteInstitution.SpeculationInstitution.Speculation
+          .nomSpeculation
     ),
     datasets: [
       {
@@ -77,7 +58,7 @@ export default function CommandesBySpeculation({ display }) {
   // }
 
   const rows = commandesBySpeculation.map((v) => ({
-    id: v.Production.VarieteInstitution.SpeculationInstitution.speculationId,
+    id: v.VarieteInstitution.SpeculationInstitution.speculationId,
     ...v,
   }));
 

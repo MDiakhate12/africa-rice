@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import ProductionBySpeculation from "./ProductionBySpeculation";
 import ProductionByVariete from "./ProductionByVariete";
 import CommandeBySpeculation from "./CommandeBySpeculation";
@@ -29,25 +29,31 @@ import Map from "./Map";
 
 import { GlobalContext } from "../../store/GlobalProvider";
 
+const { ipcRenderer } = window.require("electron");
+const { events, eventResponse } = require("../../store/utils/events");
+
 export default function Rapports() {
   const classes = useStyles();
-  const [value, setValue] = useState(0);
 
+  const { institution } = useContext(GlobalContext);
+
+  const [value, setValue] = useState(0);
   const [display, setDisplay] = useState("chart");
+  const [state, setState] = useState({ idSpeculation: 1 });
+
+  const [speculations, setSpeculation] = useState([]);
+
+  const [commandesByVariete, setCommandesByVariete] = useState([]);
+  const [productionsByVariete, setProductionsByVariete] = useState([]);
+  const [commandesBySpeculation, setCommandesBySpeculation] = useState([]);
+  const [productionsBySpeculation, setProductionsBySpeculation] = useState([]);
+  const [commandeByVarieteByState, setCommandeByVarieteByState] = useState([]);
+  const [commandeBySpeculationByState, setCommandeBySpeculationByState] =
+    useState([]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  const {
-    speculations,
-
-    getAllSpeculation,
-  } = useContext(GlobalContext);
-
-  const [state, setState] = useState({
-    idSpeculation: 1,
-  });
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -58,9 +64,111 @@ export default function Rapports() {
     });
   };
 
-  useEffect(() => {
-    getAllSpeculation();
+  const getSpeculationsInstitution = () => {
+    ipcRenderer.send(events.speculationInstitution.getAll, {
+      institutionId: institution?.idInstitution,
+    });
+    ipcRenderer.once(
+      eventResponse.speculationInstitution.gotAll,
+      (event, data) => {
+        setSpeculation(data.map((d) => d.Speculation));
+        console.log(data.map((d) => d.Speculation));
+      }
+    );
+  };
+
+  const getCommandeSumByVarietes = useCallback(() => {
+    ipcRenderer.send("getCommandeSumByVarietes", {
+      institutionId: institution?.idInstitution,
+    });
+    ipcRenderer.once("gotCommandeSumByVarietes", (event, data) => {
+      setCommandesByVariete(
+        data.filter(
+          (v) =>
+            v.VarieteInstitution.Variete.speculationId === state.idSpeculation
+        )
+      );
+      console.log("DIIAAAAF", data);
+    });
+  }, [state.idSpeculation]);
+
+  const getProductionsSumByVarietes = useCallback(() => {
+    ipcRenderer.send("getByVarietes", {
+      institutionId: institution?.idInstitution,
+    });
+    ipcRenderer.once("gotByVarietes", (event, data) => {
+      console.log(data);
+      setProductionsByVariete(
+        data.filter(
+          (v) =>
+            v.VarieteInstitution.Variete.speculationId === state.idSpeculation
+        )
+      );
+    });
+  }, [state.idSpeculation]);
+
+  const getCommandeSumBySpeculation = useCallback(() => {
+    ipcRenderer.send("getCommandeSumBySpeculation", {
+      institutionId: institution?.idInstitution,
+    });
+    ipcRenderer.once("gotCommandeSumBySpeculation", (event, data) => {
+      setCommandesBySpeculation(data);
+      console.log("DIIAAAAF", data);
+    });
   }, []);
+
+  const getProductionsSumBySpeculation = useCallback(() => {
+    ipcRenderer.send("getProductionsSumBySpeculation", {
+      institutionId: institution?.idInstitution,
+    });
+    ipcRenderer.once("gotProductionsSumBySpeculation", (event, data) => {
+      console.log(data);
+      setProductionsBySpeculation(data);
+      // setMax(Math.max(...data.map((p) => p.totalQuantiteDisponible)));
+      // setMax(Math.min(...data.map((p) => p.totalQuantiteDisponible)));
+    });
+  }, []);
+
+  const getCommandeSumByVarieteByState = useCallback(() => {
+    ipcRenderer.send("getCommandeSumByVarieteByState", {
+      "$Production.institutionId$": institution?.idInstitution,
+    });
+    ipcRenderer.once("gotCommandeSumByVarieteByState", (event, data) => {
+      setCommandeByVarieteByState(
+        data.filter(
+          (v) =>
+            v.VarieteInstitution.Variete.speculationId === state.idSpeculation
+        )
+      );
+      console.log("BY STATE: ", data);
+    });
+  }, [state.idSpeculation]);
+
+  const getCommandeSumBySpeculationByState = useCallback(() => {
+    ipcRenderer.send("getCommandeSumBySpeculationByState", {
+      "$Production.institutionId$": institution?.idInstitution,
+    });
+    ipcRenderer.once("gotCommandeSumBySpeculationByState", (event, data) => {
+      setCommandeBySpeculationByState(data);
+      console.log("BY STATE: ", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    getSpeculationsInstitution();
+  }, []);
+
+  useEffect(() => {
+    getProductionsSumBySpeculation();
+    getCommandeSumBySpeculation();
+    getCommandeSumBySpeculationByState();
+  }, []);
+
+  useEffect(() => {
+    getProductionsSumByVarietes();
+    getCommandeSumByVarietes();
+    getCommandeSumByVarieteByState();
+  }, [state.idSpeculation]);
 
   return (
     <div className={classes.container}>
@@ -153,19 +261,33 @@ export default function Rapports() {
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
           <Grid item sm={6}>
-            <ProductionBySpeculation display={display} />
+            <ProductionBySpeculation
+              productionsBySpeculation={productionsBySpeculation}
+              display={display}
+            />
           </Grid>
 
           <Grid item sm={6}>
-            <CommandeBySpeculation display={display} />
+            <CommandeBySpeculation
+              commandesBySpeculation={commandesBySpeculation}
+              display={display}
+            />
           </Grid>
 
           <Grid item sm={6}>
-            <ProductionCommandeBySpeculation display={display} />
+            <ProductionCommandeBySpeculation
+              commandesBySpeculation={commandesBySpeculation}
+              productionsBySpeculation={productionsBySpeculation}
+              display={display}
+            />
           </Grid>
 
           <Grid item sm={6}>
-            <CommandeLivraisonBySpeculation display={display} />
+            <CommandeLivraisonBySpeculation
+              commandesBySpeculation={commandesBySpeculation}
+              commandeBySpeculationByState={commandeBySpeculationByState}
+              display={display}
+            />
           </Grid>
         </Grid>
       </TabPanel>
@@ -173,19 +295,37 @@ export default function Rapports() {
       <TabPanel value={value} index={1}>
         <Grid container spacing={2}>
           <Grid item sm={6}>
-            <ProductionByVariete filter={state} display={display} />
+            <ProductionByVariete
+              productionsByVariete={productionsByVariete}
+              filter={state}
+              display={display}
+            />
           </Grid>
 
           <Grid item sm={6}>
-            <CommandeByVariete filter={state} display={display} />
+            <CommandeByVariete
+              commandesByVariete={commandesByVariete}
+              filter={state}
+              display={display}
+            />
           </Grid>
 
           <Grid item sm={6}>
-            <ProductionCommandeByVariete filter={state} display={display} />
+            <ProductionCommandeByVariete
+              commandesByVariete={commandesByVariete}
+              productionsByVariete={productionsByVariete}
+              filter={state}
+              display={display}
+            />
           </Grid>
 
           <Grid item sm={6}>
-            <CommandeLivraisonByVariete filter={state} display={display} />
+            <CommandeLivraisonByVariete
+              commandesByVariete={commandesByVariete}
+              commandeByVarieteByState={commandeByVarieteByState}
+              filter={state}
+              display={display}
+            />
           </Grid>
         </Grid>
       </TabPanel>

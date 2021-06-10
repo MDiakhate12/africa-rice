@@ -86,7 +86,7 @@ function CommandeFormDialog({ handleClose }) {
           (article) =>
             (article.idNiveau && article.idNiveau === "") ||
             (article.idSpeculation && article.idSpeculation === "") ||
-            (article.idVariete && article.idVariete === "") ||
+            (article.idVarieteInstitution && article.idVarieteInstitution === "") ||
             (article.production && article.production === "") ||
             (article.quantite && article.quantite === "")
         ))
@@ -276,7 +276,7 @@ function CommandeFormDialog({ handleClose }) {
                 (article) =>
                   (article.idNiveau && article.idNiveau === "") ||
                   (article.idSpeculation && article.idSpeculation === "") ||
-                  (article.idVariete && article.idVariete === "") ||
+                  (article.idVarieteInstitution && article.idVarieteInstitution === "") ||
                   (article.production && article.production === "") ||
                   (article.quantite && article.quantite === "")
               )

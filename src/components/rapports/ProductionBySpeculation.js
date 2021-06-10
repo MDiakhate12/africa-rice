@@ -1,12 +1,7 @@
 import { Typography } from "@material-ui/core";
-import { useEffect, useState, useContext } from "react";
-import { Pie, Line, Bar } from "react-chartjs-2";
-import { GlobalContext } from "../../store/GlobalProvider";
+import { Pie } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
 import { Colors } from "./Colors";
-
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
 
 const getNomSpeculation = (params) =>
   params.getValue("VarieteInstitution").SpeculationInstitution.Speculation
@@ -43,25 +38,10 @@ const columns = [
   // },
 ];
 
-export default function ProductionBySpeculation({ display }) {
-  const { institution } = useContext(GlobalContext);
-  const [productionsBySpeculation, setProductionsBySpeculation] = useState([]);
-
-  const getProductionsSumBySpeculation = () => {
-    ipcRenderer.send("getProductionsSumBySpeculation", {
-      institutionId: institution?.idInstitution,
-    });
-    ipcRenderer.once("gotProductionsSumBySpeculation", (event, data) => {
-      console.log(data);
-      setProductionsBySpeculation(data);
-    });
-  };
-
-  useEffect(() => {
-    getProductionsSumBySpeculation();
-    // console.log(productions)
-  }, [institution]);
-
+export default function ProductionBySpeculation({
+  display,
+  productionsBySpeculation,
+}) {
   const dataBySpeculations = {
     labels: productionsBySpeculation.map(
       (production) =>

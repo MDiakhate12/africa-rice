@@ -1,18 +1,13 @@
-import { useEffect, useState, useContext } from "react";
 import { Colors } from "./Colors";
 import { Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
-import { GlobalContext } from "../../store/GlobalProvider";
 import { Typography } from "@material-ui/core";
 
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
-
 const getNomVariete = (params) =>
-  params.getValue("Production").VarieteInstitution.Variete.nomVariete;
+  params.getValue("VarieteInstitution").Variete.nomVariete;
 
 const getNomSpeculation = (params) =>
-  params.getValue("Production").VarieteInstitution.SpeculationInstitution
+  params.getValue("VarieteInstitution").SpeculationInstitution
     .Speculation.nomSpeculation;
 
 const columns = [
@@ -50,55 +45,10 @@ const columns = [
 
 export default function CommandeLivraisonByVariete({
   display,
+  commandesByVariete,
+  commandeByVarieteByState,
   filter: { idSpeculation },
 }) {
-  const { institution } = useContext(GlobalContext);
-  const [commandesByVariete, setCommandeByVariete] = useState([]);
-  const [commandeByVarieteByState, setCommandeByVarieteByState] = useState([]);
-
-  const [max, setMax] = useState();
-  const [min, setMin] = useState();
-
-  const getCommandeSumByVariete = () => {
-    ipcRenderer.send("getCommandeSumByVarietes", {
-      institutionId: institution?.idInstitution,
-    });
-    ipcRenderer.once("gotCommandeSumByVarietes", (event, data) => {
-      setCommandeByVariete(
-        data.filter(
-          (v) =>
-            v.Production.VarieteInstitution.Variete.speculationId ===
-            idSpeculation
-        )
-      );
-      // setMax(Math.max(...data.map((p) => p.totalQuantiteDisponible)));
-      // setMax(Math.min(...data.map((p) => p.totalQuantiteDisponible)));
-    });
-  };
-
-  useEffect(() => {
-    getCommandeSumByVariete();
-  }, [institution, idSpeculation]);
-
-  const getCommandeSumByVarieteByState = () => {
-    ipcRenderer.send("getCommandeSumByVarieteByState", {
-      "$Production.institutionId$": institution.idInstitution,
-    });
-    ipcRenderer.once("gotCommandeSumByVarieteByState", (event, data) => {
-      setCommandeByVarieteByState(
-        data.filter(
-          (v) =>
-            v.Production.VarieteInstitution.Variete.speculationId ===
-            idSpeculation
-        )
-      );
-      console.log("BY STATE: ", data);
-    });
-  };
-
-  useEffect(() => {
-    getCommandeSumByVarieteByState();
-  }, [institution, idSpeculation]);
 
   const optionsVarieteByState = {
     maintainAspectRatio: false,
@@ -120,13 +70,13 @@ export default function CommandeLivraisonByVariete({
   };
 
   const labels = commandesByVariete.map(
-    (commande) => commande.Production.VarieteInstitution.Variete.nomVariete
+    (commande) => commande.VarieteInstitution.Variete.nomVariete
   );
 
   const commandeByVarieteByStateLabels = commandeByVarieteByState
     .filter((commande) => commande.etatId === 5)
     .map(
-      (commande) => commande.Production.VarieteInstitution.Variete.nomVariete
+      (commande) => commande.VarieteInstitution.Variete.nomVariete
     );
 
   const commandesEnlevees = commandeByVarieteByState.filter(
@@ -160,7 +110,7 @@ export default function CommandeLivraisonByVariete({
           // if (commandeByVarieteByStateLabels.includes(label)) {
           //   return commandeByVarieteByState.find(
           //     (commande) =>
-          //       commande.Production.VarieteInstitution.SpeculationInstitution
+          //       commande.VarieteInstitution.SpeculationInstitution
           //         .Speculation.nomSpeculation === label
           //   ).totalQuantiteCommandee;
           // }
@@ -182,7 +132,7 @@ export default function CommandeLivraisonByVariete({
 
   const rows = commandesByVariete.map((v, i) => {
     return {
-      id: `${v.Production.VarieteInstitution.SpeculationInstitution.speculationId}${v.etatId}`,
+      id: `${v.VarieteInstitution.SpeculationInstitution.speculationId}${v.etatId}`,
       ...v,
       totalQuantiteEnleve: totalEnleve[i],
     };

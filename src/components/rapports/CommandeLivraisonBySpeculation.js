@@ -1,15 +1,10 @@
-import { useEffect, useState, useContext } from "react";
 import { Colors } from "./Colors";
-import { Pie, Line, Bar } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
-import { GlobalContext } from "../../store/GlobalProvider";
 import { Typography } from "@material-ui/core";
 
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
-
 const getNomSpeculation = (params) =>
-  params.getValue("Production").VarieteInstitution.SpeculationInstitution
+  params.getValue("VarieteInstitution").SpeculationInstitution
     .Speculation.nomSpeculation;
 
 const columns = [
@@ -36,45 +31,11 @@ const columns = [
   },
 ];
 
-export default function CommandeLivraisonBySpeculation({ display }) {
-  const { institution } = useContext(GlobalContext);
-  const [commandesBySpeculation, setCommandesBySpeculation] = useState([]);
-  const [commandeBySpeculationByState, setCommandeBySpeculationByState] =
-    useState([]);
-
-  const [max, setMax] = useState();
-  const [min, setMin] = useState();
-
-  const getCommandeSumBySpeculation = () => {
-    ipcRenderer.send("getCommandeSumBySpeculation", {
-      institutionId: institution?.idInstitution,
-    });
-    ipcRenderer.once("gotCommandeSumBySpeculation", (event, data) => {
-      setCommandesBySpeculation(data);
-      setMax(Math.max(...data.map((p) => p.totalQuantiteDisponible)));
-      setMax(Math.min(...data.map((p) => p.totalQuantiteDisponible)));
-    });
-  };
-
-  useEffect(() => {
-    getCommandeSumBySpeculation();
-  }, [institution]);
-
-  const getCommandeSumBySpeculationByState = () => {
-    ipcRenderer.send("getCommandeSumBySpeculationByState", {
-      "$Production.institutionId$": institution?.idInstitution,
-    });
-    ipcRenderer.once("gotCommandeSumBySpeculationByState", (event, data) => {
-      setCommandeBySpeculationByState(data);
-      console.log("BY STATE: ", data);
-    });
-  };
-
-  useEffect(() => {
-    getCommandeSumBySpeculation();
-    getCommandeSumBySpeculationByState();
-  }, []);
-
+export default function CommandeLivraisonBySpeculation({
+  display,
+  commandesBySpeculation,
+  commandeBySpeculationByState,
+}) {
   const optionsSpeculationByState = {
     maintainAspectRatio: false,
 
@@ -97,7 +58,7 @@ export default function CommandeLivraisonBySpeculation({ display }) {
 
   const labels = commandesBySpeculation.map(
     (commande) =>
-      commande.Production.VarieteInstitution.SpeculationInstitution.Speculation
+      commande.VarieteInstitution.SpeculationInstitution.Speculation
         .nomSpeculation
   );
 
@@ -105,8 +66,8 @@ export default function CommandeLivraisonBySpeculation({ display }) {
     .filter((commande) => commande.etatId === 5)
     .map(
       (commande) =>
-        commande.Production.VarieteInstitution.SpeculationInstitution
-          .Speculation.nomSpeculation
+        commande.VarieteInstitution.SpeculationInstitution.Speculation
+          .nomSpeculation
     );
 
   const commandesEnlevees = commandeBySpeculationByState.filter(
@@ -150,7 +111,7 @@ export default function CommandeLivraisonBySpeculation({ display }) {
 
   const rows = commandesBySpeculation.map((v, i) => {
     return {
-      id: `${v.Production.VarieteInstitution.SpeculationInstitution.speculationId}${v.etatId}`,
+      id: `${v.VarieteInstitution.SpeculationInstitution.speculationId}${v.etatId}`,
       ...v,
       totalQuantiteEnleve: totalEnleve[i],
     };

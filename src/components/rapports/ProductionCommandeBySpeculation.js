@@ -1,12 +1,8 @@
-import { useEffect, useState, useContext } from "react";
-import { Pie, Line, Bar } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
 import { GlobalContext } from "../../store/GlobalProvider";
 import { Colors } from "./Colors";
 import { Typography } from "@material-ui/core";
-
-const { ipcRenderer } = window.require("electron");
-const { events, eventResponse } = require("../../store/utils/events");
 
 const getNomSpeculation = (params) =>
   params.getValue("VarieteInstitution").SpeculationInstitution.Speculation
@@ -36,44 +32,11 @@ const columns = [
   },
 ];
 
-export default function ProductionCommandeBySpeculation({ display }) {
-  const { institution } = useContext(GlobalContext);
-  const [commandesBySpeculation, setCommandesBySpeculation] = useState([]);
-  const [max, setMax] = useState();
-  const [min, setMin] = useState();
-
-  const getCommandeSumBySpeculation = () => {
-    ipcRenderer.send("getCommandeSumBySpeculation", {
-      institutionId: institution?.idInstitution,
-    });
-    ipcRenderer.once("gotCommandeSumBySpeculation", (event, data) => {
-      setCommandesBySpeculation(data);
-      console.log("DIIAAAAF", data);
-    });
-  };
-
-  useEffect(() => {
-    getCommandeSumBySpeculation();
-  }, [institution]);
-
-  const [productionsBySpeculation, setProductionsBySpeculation] = useState([]);
-
-  const getProductionsSumBySpeculation = () => {
-    ipcRenderer.send("getProductionsSumBySpeculation", {
-      institutionId: institution?.idInstitution,
-    });
-    ipcRenderer.once("gotProductionsSumBySpeculation", (event, data) => {
-      console.log(data);
-      setProductionsBySpeculation(data);
-      setMax(Math.max(...data.map((p) => p.totalQuantiteDisponible)));
-      setMax(Math.min(...data.map((p) => p.totalQuantiteDisponible)));
-    });
-  };
-
-  useEffect(() => {
-    getProductionsSumBySpeculation();
-  }, []);
-
+export default function ProductionCommandeBySpeculation({
+  display,
+  productionsBySpeculation,
+  commandesBySpeculation,
+}) {
   const dataBySpeculation = {
     labels: productionsBySpeculation.map(
       (production) =>
@@ -89,14 +52,14 @@ export default function ProductionCommandeBySpeculation({ display }) {
         backgroundColor: Colors[0],
         stack: 0,
       },
-      {
-        label: "Stock de sécurité",
-        data: productionsBySpeculation.map(
-          (production) => production.totalStock
-        ),
-        backgroundColor: Colors[3],
-        stack: 0,
-      },
+      // {
+      //   label: "Stock de sécurité",
+      //   data: productionsBySpeculation.map(
+      //     (production) => production.totalStock
+      //   ),
+      //   backgroundColor: Colors[3],
+      //   stack: 0,
+      // },
       {
         label: "Commande",
         // data: commandesBySpeculation.map(
@@ -105,8 +68,7 @@ export default function ProductionCommandeBySpeculation({ display }) {
         data: productionsBySpeculation.map((production) => {
           let result = commandesBySpeculation.find(
             (commande) =>
-              commande.Production.VarieteInstitution
-                .speculationInstitutionId ===
+              commande.VarieteInstitution.speculationInstitutionId ===
               production.VarieteInstitution.speculationInstitutionId
           );
 
@@ -141,7 +103,7 @@ export default function ProductionCommandeBySpeculation({ display }) {
   // }
 
   const rows = commandesBySpeculation.map((v, i) => ({
-    id: v.Production.VarieteInstitution.SpeculationInstitution.speculationId,
+    id: v.VarieteInstitution.SpeculationInstitution.speculationId,
     ...v,
     ...productionsBySpeculation[i],
   }));

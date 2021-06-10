@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import DataTable from "../common/DataTable";
 import { makeStyles } from "@material-ui/core/styles";
 import Badge from "@material-ui/core/Badge";
@@ -37,7 +37,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ListCommandes() {
+function ListCommandes({
+  getAllCommandes,
+  createCommande,
+  setCreated,
+  created,
+  commandes,
+}) {
   const classes = useStyles();
   const {
     openCommandeFormDialog,
@@ -77,13 +83,13 @@ function ListCommandes() {
       width: 140,
       renderCell: (params) =>
         `${
-          params.getValue("Production")?.VarieteInstitution
-            ?.SpeculationInstitution?.Speculation.nomSpeculation
+          params.getValue("VarieteInstitution")?.SpeculationInstitution
+            ?.Speculation.nomSpeculation
         }`,
       valueGetter: (params) =>
         `${
-          params.getValue("Production")?.VarieteInstitution
-            ?.SpeculationInstitution?.Speculation.nomSpeculation
+          params.getValue("VarieteInstitution")?.SpeculationInstitution
+            ?.Speculation.nomSpeculation
         }`,
     },
 
@@ -93,13 +99,9 @@ function ListCommandes() {
       headerName: "Variété",
       width: 160,
       renderCell: (params) =>
-        `${
-          params.getValue("Production")?.VarieteInstitution?.Variete?.nomVariete
-        }`,
+        `${params.getValue("VarieteInstitution")?.Variete?.nomVariete}`,
       valueGetter: (params) =>
-        `${
-          params.getValue("Production")?.VarieteInstitution?.Variete?.nomVariete
-        }`,
+        `${params.getValue("VarieteInstitution")?.Variete?.nomVariete}`,
     },
     {
       type: "string",
@@ -245,17 +247,6 @@ function ListCommandes() {
       },
     },
   ];
-  const [commandes, setCommandes] = useState([]);
-
-  const getAllCommandes = () => {
-    ipcRenderer.send(events.commande.getAll, {
-      institutionId: institution?.idInstitution,
-    });
-    ipcRenderer.once(eventResponse.commande.gotAll, (ev, data) => {
-      console.log(data);
-      setCommandes(data);
-    });
-  };
 
   // const handleDialogClose = (res, data) => {
   //   console.log(data)
@@ -295,17 +286,6 @@ function ListCommandes() {
     });
   };
 
-  const [created, setCreated] = useState(false);
-  useEffect(() => {
-    getAllCommandes();
-    console.log("INSTITUTION FROM COMMANDE", institution);
-  }, [created]);
-
-  const createCommande = (data) => {
-    ipcRenderer.send(events.commande.create, data);
-    getAllCommandes();
-  };
-
   // OnSubmit de la creation de commande
   const handleCommandeFormDialogClose = (res, data) => {
     if (res === "yes") {
@@ -314,7 +294,8 @@ function ListCommandes() {
       data.articles.map((article) => {
         const commande = {};
         commande.clientId = clientId;
-        commande.productionId = article.production?.idProduction;
+        commande.productionId = article?.production?.idProduction;
+        commande.varieteInstitutionId = article.idVarieteInstitution;
         commande.quantite = article.quantite;
         commande.dateExpressionBesoinClient =
           article.dateExpressionBesoinClient;
@@ -323,7 +304,13 @@ function ListCommandes() {
         ipcRenderer.send(events.etatCommande.getAll);
         ipcRenderer.once(eventResponse.etatCommande.gotAll, (ev, etats) => {
           console.log(etats);
-          if (commande.quantite > article.production.quantiteDisponible) {
+          if (!article?.production?.idProduction) {
+            commande.etatId = etats.filter(
+              (etat) => etat.etat === "Indisponible"
+            )[0].idEtat;
+          } else if (
+            commande.quantite > article.production.quantiteDisponible
+          ) {
             commande.etatId = etats.filter(
               (etat) => etat.etat === "Insuffisant"
             )[0].idEtat;
@@ -457,6 +444,7 @@ function ListCommandes() {
         className={classes.formDialog}
         handleClose={handleCommandeFormDialogClose}
       />
+
       <CommandeUpdateFormDialog
         className={classes.formDialog}
         handleClose={handleCommandeUpdateFormDialogClose}

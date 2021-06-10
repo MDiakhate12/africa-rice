@@ -2,14 +2,11 @@ import { useContext, useState, useEffect } from "react";
 import DataTable from "../common/DataTable";
 import { makeStyles } from "@material-ui/core/styles";
 import Badge from "@material-ui/core/Badge";
-import { Button, MenuItem } from "@material-ui/core";
-import CommandeFormDialog from "./CommandeFormDialog";
+import { Button, MenuItem,Select } from "@material-ui/core";
 import { GlobalContext } from "../../store/GlobalProvider";
 import ContextMenu from "../common/ContextMenu";
 import CommandeUpdateFormDialog from "./CommandeUpdateFormDialog";
 import ConfirmDialog from "../common/ConfirmDialog";
-import { Select } from "@material-ui/core";
-// import ConfirmDialog from "../common/ConfirmDialog";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -34,16 +31,23 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#00C677",
   },
   InsuffisantBadge: {
-    backgroundColor: "#FF0077",
+    backgroundColor: "#ffdb00",
+  },
+  IndisponibleBadge: {
+    backgroundColor: "#ff0000",
+    color: "white"
   },
 }));
 
-function TraitementCommandes() {
+function TraitementCommandes({ 
+  getAllCommandes,
+  setCreated,
+  created,
+  commandes,
+}) {
   const classes = useStyles();
   const {
-    openCommandeFormDialog,
     openCommandeUpdateFormDialog,
-    institution,
     openConfirmDialog,
   } = useContext(GlobalContext);
 
@@ -77,12 +81,12 @@ function TraitementCommandes() {
       width: 140,
       renderCell: (params) =>
         `${
-          params.getValue("Production")?.VarieteInstitution
+          params.getValue("VarieteInstitution")
             ?.SpeculationInstitution?.Speculation.nomSpeculation
         }`,
       valueGetter: (params) =>
         `${
-          params.getValue("Production")?.VarieteInstitution
+          params.getValue("VarieteInstitution")
             ?.SpeculationInstitution?.Speculation.nomSpeculation
         }`,
     },
@@ -90,15 +94,15 @@ function TraitementCommandes() {
     {
       type: "string",
       field: "productionId",
-      headerName: "Production",
+      headerName: "Variété",
       width: 160,
       renderCell: (params) =>
         `${
-          params.getValue("Production")?.VarieteInstitution?.Variete?.nomVariete
+          params.getValue("VarieteInstitution")?.Variete?.nomVariete
         }`,
       valueGetter: (params) =>
         `${
-          params.getValue("Production")?.VarieteInstitution?.Variete?.nomVariete
+          params.getValue("VarieteInstitution")?.Variete?.nomVariete
         }`,
     },
     {
@@ -136,6 +140,9 @@ function TraitementCommandes() {
             // etatSuivant = 'primary'
             break;
           case "Insuffisant":
+            etatSuivants.push("Rejete");
+            break;
+          case "Indisponible":
             etatSuivants.push("Rejete");
             break;
           default:
@@ -240,25 +247,7 @@ function TraitementCommandes() {
       width: 130,
     },
   ];
-  const [commandes, setCommandes] = useState([]);
-
-  const getAllCommandes = () => {
-    ipcRenderer.send(events.commande.getAll, {
-      institutionId: institution?.idInstitution,
-    });
-    ipcRenderer.once(eventResponse.commande.gotAll, (ev, data) => {
-      console.log(data);
-      setCommandes(data);
-    });
-  };
-
-  // const handleDialogClose = (res, data) => {
-  //   console.log(data)
-  //   if (res === "yes") {
-  //     return onClick(data.evt, data.params, data.etatSuivant);
-  //   }
-  //   return;
-  // };
+  
 
   const onClick = (evt, params, etat) => {
     const { row, id } = params;
@@ -288,54 +277,6 @@ function TraitementCommandes() {
       ipcRenderer.send(events.commande.update, data);
       getAllCommandes();
     });
-  };
-
-  const [created, setCreated] = useState(false);
-  useEffect(() => {
-    getAllCommandes();
-    console.log("INSTITUTION FROM COMMANDE", institution);
-  }, [created]);
-
-  const createCommande = (data) => {
-    ipcRenderer.send(events.commande.create, data);
-    getAllCommandes();
-  };
-
-  // OnSubmit de la creation de commande
-  const handleCommandeFormDialogClose = (res, data) => {
-    if (res === "yes") {
-      console.log(data);
-      const { clientId } = data;
-      data.articles.map((article) => {
-        const commande = {};
-        commande.clientId = clientId;
-        commande.productionId = article.production.idProduction;
-        commande.quantite = article.quantite;
-        commande.dateExpressionBesoinClient =
-          article.dateExpressionBesoinClient;
-        commande.dateEnlevementSouhaitee = article.dateEnlevementSouhaitee;
-        commande.montant = article.quantite * article.production.prixUnitaire;
-        ipcRenderer.send(events.etatCommande.getAll);
-        ipcRenderer.once(eventResponse.etatCommande.gotAll, (ev, etats) => {
-          console.log(etats);
-          if (commande.quantite > article.production.quantiteDisponible) {
-            commande.etatId = etats.filter(
-              (etat) => etat.etat === "Insuffisant"
-            )[0].idEtat;
-          } else {
-            commande.etatId = etats.filter(
-              (etat) => etat.etat === "Acceptable"
-            )[0].idEtat;
-          }
-          console.log(commande);
-          createCommande(commande);
-        });
-        // commande.etatId = 1
-        // createCommande(commande)
-      });
-      return;
-    }
-    return;
   };
 
   const handleCommandeUpdateFormDialogClose = (res, data) => {
@@ -448,10 +389,6 @@ function TraitementCommandes() {
         handleDelete={handleDelete}
       />
 
-      <CommandeFormDialog
-        className={classes.formDialog}
-        handleClose={handleCommandeFormDialogClose}
-      />
       <CommandeUpdateFormDialog
         className={classes.formDialog}
         handleClose={handleCommandeUpdateFormDialogClose}

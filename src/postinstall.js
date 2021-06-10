@@ -406,6 +406,7 @@ const etats = [
   { etat: "Accepte" },
   { etat: "Enleve" },
   { etat: "Insuffisant" },
+  { etat: "Indisponible" },
 ];
 
 const initNiveau = async () => {
