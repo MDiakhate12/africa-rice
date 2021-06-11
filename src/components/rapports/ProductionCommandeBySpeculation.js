@@ -1,6 +1,5 @@
 import { Bar } from "react-chartjs-2";
 import DataTable from "../common/DataTable";
-import { GlobalContext } from "../../store/GlobalProvider";
 import { Colors } from "./Colors";
 import { Typography } from "@material-ui/core";
 
@@ -37,18 +36,39 @@ export default function ProductionCommandeBySpeculation({
   productionsBySpeculation,
   commandesBySpeculation,
 }) {
+  const labelsUnion = [
+    ...new Set([
+      ...productionsBySpeculation.map(
+        (production) =>
+          production.VarieteInstitution.SpeculationInstitution.Speculation
+            .nomSpeculation
+      ),
+      ...commandesBySpeculation.map(
+        (commande) =>
+          commande.VarieteInstitution.SpeculationInstitution.Speculation
+            .nomSpeculation
+      ),
+    ]),
+  ];
+
+  console.log("YYYYYYYYYYYYY", labelsUnion);
+
   const dataBySpeculation = {
-    labels: productionsBySpeculation.map(
-      (production) =>
-        production.VarieteInstitution.SpeculationInstitution.Speculation
-          .nomSpeculation
-    ),
+    labels: labelsUnion,
     datasets: [
       {
         label: "Quantité disponible",
-        data: productionsBySpeculation.map(
-          (production) => production.totalQuantiteDisponible
-        ),
+        // data: productionsBySpeculation.map(
+        //   (production) => production.totalQuantiteDisponible
+        // ),
+        data: labelsUnion.map((label) => {
+          let result = productionsBySpeculation.find(
+            (production) =>
+              production.VarieteInstitution.SpeculationInstitution.Speculation
+                .nomSpeculation === label
+          );
+          return result?.totalQuantiteProduite || 0;
+        }),
         backgroundColor: Colors[0],
         stack: 0,
       },
@@ -65,13 +85,21 @@ export default function ProductionCommandeBySpeculation({
         // data: commandesBySpeculation.map(
         //   (commande) => commande.totalQuantiteCommandee
         // ),
-        data: productionsBySpeculation.map((production) => {
+        // data: productionsBySpeculation.map((production) => {
+        //   let result = commandesBySpeculation.find(
+        //     (commande) =>
+        //       commande.VarieteInstitution.speculationInstitutionId ===
+        //       production.VarieteInstitution.speculationInstitutionId
+        //   );
+
+        //   return result?.totalQuantiteCommandee || 0;
+        // }),
+        data: labelsUnion.map((label) => {
           let result = commandesBySpeculation.find(
             (commande) =>
-              commande.VarieteInstitution.speculationInstitutionId ===
-              production.VarieteInstitution.speculationInstitutionId
+              commande.VarieteInstitution.SpeculationInstitution.Speculation
+                .nomSpeculation === label
           );
-
           return result?.totalQuantiteCommandee || 0;
         }),
         backgroundColor: Colors[1],

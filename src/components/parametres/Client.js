@@ -1,11 +1,16 @@
 import { useState, useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, IconButton, Typography } from "@material-ui/core";
+import { Button, IconButton, Tooltip, Typography } from "@material-ui/core";
 import DataTable from "../common/DataTable";
 import { GlobalContext } from "../../store/GlobalProvider";
 import DeleteIcon from "@material-ui/icons/Delete";
+// import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import ContactsIcon from "@material-ui/icons/Contacts";
 import ConfirmDialog from "../common/ConfirmDialog";
 import ClientFormDialog from "../common/ClientFormDialog";
+import { PersonAdd } from "@material-ui/icons";
+import ContactFormDialog from "../common/ContactFormDialog";
+import CommonDialog from "../common/CommonDialog";
 
 const { ipcRenderer } = window.require("electron");
 const { events, eventResponse } = require("../../store/utils/events");
@@ -38,8 +43,46 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Client() {
-  const { institution, openConfirmDialog, openClientFormDialog } =
-    useContext(GlobalContext);
+  const {
+    institution,
+    openDialog,
+    openConfirmDialog,
+    openClientFormDialog,
+    openContactFormDialog,
+  } = useContext(GlobalContext);
+
+  const contactColumns = [
+    {
+      type: "string",
+      field: "prenom",
+      headerName: "Prénom",
+      width: 170,
+    },
+    {
+      type: "string",
+      field: "nom",
+      headerName: "Nom",
+      width: 170,
+    },
+    {
+      type: "string",
+      field: "telephone",
+      headerName: "Téléphone",
+      width: 170,
+    },
+    {
+      type: "string",
+      field: "email",
+      headerName: "Email",
+      width: 170,
+    },
+    {
+      type: "string",
+      field: "addresse",
+      headerName: "Addresse",
+      width: 170,
+    },
+  ];
 
   const columns = [
     { type: "string", field: "id", headerName: "idClient", hide: true },
@@ -99,6 +142,42 @@ export default function Client() {
     },
     {
       type: "string",
+      field: "viewContact",
+      headerName: "Contacts",
+      width: 120,
+      renderCell: (params) => (
+        <Tooltip title="Voir les contacts de ce client">
+          <IconButton
+            onClick={() => {
+              console.log(params.row.idClient);
+              ipcRenderer.send(events.contact.getAll, {
+                clientId: params.row.idClient,
+              });
+              ipcRenderer.once(eventResponse.contact.gotAll, (ev, data) => {
+                console.log(data);
+                openDialog({
+                  title: `Contacts du client ${
+                    params.row.estParticulier === "true"
+                      ? `${params.row.prenom} ${params.row.nom}`
+                      : params.row.nomCompletStructure
+                  }`,
+                  content: (
+                    <DataTable
+                      columns={contactColumns}
+                      rows={data.map((v) => ({ id: v.idContact, ...v }))}
+                    />
+                  ),
+                });
+              });
+            }}
+          >
+            <ContactsIcon color="primary" />
+          </IconButton>
+        </Tooltip>
+      ),
+    },
+    {
+      type: "string",
       field: "delete",
       headerName: "Supprimer",
       width: 120,
@@ -131,20 +210,19 @@ export default function Client() {
   ];
 
   const [clients, setClients] = useState([]);
-  const [updated, setUpdated] = useState(false);
 
   const getClients = () => {
     ipcRenderer.send(events.client.getAll, {
       institutionId: institution?.idInstitution,
     });
-    ipcRenderer.on(eventResponse.client.gotAll, (ev, data) => {
+    ipcRenderer.once(eventResponse.client.gotAll, (ev, data) => {
       setClients(data);
     });
   };
 
   useEffect(() => {
     getClients();
-  }, [updated]);
+  }, []);
 
   const handleDialogClose = (res, data) => {
     if (res === "yes") {
@@ -157,6 +235,18 @@ export default function Client() {
             clients.filter((client) => client.idClient !== data.idClient)
           );
         });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return;
+  };
+  const handleContactFormDialogClose = (res, data) => {
+    if (res === "yes") {
+      try {
+        console.log(data);
+        ipcRenderer.send(events.contact.create, data);
+        ipcRenderer.on(eventResponse.contact.created, (ev, data) => {});
       } catch (error) {
         console.error(error);
       }
@@ -184,14 +274,24 @@ export default function Client() {
     <>
       <ConfirmDialog handleClose={handleDialogClose} />
       <ClientFormDialog handleClose={handleClientFormDialogClose} />
+      <CommonDialog handleClose={() => {}} />
+      <ContactFormDialog handleClose={handleContactFormDialogClose} />
 
       <Button
         color="primary"
         variant="contained"
-        style={{ marginBottom: "7px" }}
+        style={{ marginBottom: "7px", marginRight: "4px" }}
         onClick={() => openClientFormDialog()}
       >
         Ajouter un client
+      </Button>
+      <Button
+        color="primary"
+        variant="contained"
+        style={{ marginBottom: "7px" }}
+        onClick={() => openContactFormDialog()}
+      >
+        Ajouter un contact
       </Button>
       <DataTable
         columns={columns}

@@ -79,6 +79,7 @@ export default function Parametres() {
         >
           <Tab label="Spéculations et Variétés" />
           <Tab label="Magasins" />
+          {/* <Tab label="Zones" /> */}
           <Tab label="Clients" />
           <Tab label="Institution" />
         </Tabs>
@@ -98,9 +99,13 @@ export default function Parametres() {
         </TabPanel>
       </MagasinProvider>
 
-        <TabPanel value={value} index={2}>
-          <Client />
-        </TabPanel>
+      {/* <TabPanel value={value} index={2}>
+        <Zone />
+      </TabPanel> */}
+
+      <TabPanel value={value} index={2}>
+        <Client />
+      </TabPanel>
 
       <TabPanel value={value} index={3}>
         <Institution />

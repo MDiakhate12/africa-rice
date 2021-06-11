@@ -3,13 +3,12 @@ import DataTable from "../common/DataTable";
 import { Colors } from "./Colors";
 import { Typography } from "@material-ui/core";
 
-
 const getNomVariete = (params) =>
   params.getValue("VarieteInstitution").Variete.nomVariete;
 
 const getNomSpeculation = (params) =>
-  params.getValue("VarieteInstitution").SpeculationInstitution
-    .Speculation.nomSpeculation;
+  params.getValue("VarieteInstitution").SpeculationInstitution.Speculation
+    .nomSpeculation;
 
 const columns = [
   { type: "string", field: "id", headerName: "idProduction", hide: true },
@@ -49,19 +48,33 @@ export default function ProductionCommandeByVariete({
   commandesByVariete,
   display,
 }) {
+  const labelsUnion = [
+    ...new Set([
+      ...productionsByVariete.map(
+        (production) => production.VarieteInstitution.Variete.nomVariete
+      ),
+      ...commandesByVariete.map(
+        (commande) => commande.VarieteInstitution.Variete.nomVariete
+      ),
+    ]),
+  ];
 
-
- 
+  console.log("DDDDDDDDDDDDDDDD", labelsUnion);
   const dataByVariete = {
-    labels: productionsByVariete.map(
-      (production) => production.VarieteInstitution.Variete.nomVariete
-    ),
+    labels: labelsUnion,
     datasets: [
       {
         label: "Quantité produite",
-        data: productionsByVariete.map(
-          (production) => production.totalQuantiteProduite
-        ),
+        data: labelsUnion.map((label) => {
+          let result = productionsByVariete.find(
+            (production) =>
+              production.VarieteInstitution.Variete.nomVariete === label
+          );
+          return result?.totalQuantiteProduite || 0;
+        }),
+        // data: productionsByVariete.map(
+        //   (production) => {production.totalQuantiteProduite}
+        // ),
         backgroundColor: Colors[0],
         stack: 0,
       },
@@ -73,15 +86,33 @@ export default function ProductionCommandeByVariete({
       // },
       {
         label: "Quantité commandée",
-        data: productionsByVariete.map((production) => {
+        data: labelsUnion.map((label) => {
+          // let cmds = commandesByVariete.map((commande) => {
+          //   if (!commande?.Production) {
+          //     console.log("object")
+          //     let value = -1 * parseInt(commande.totalQuantiteCommandee)
+          //     commande["totalQuantiteCommandee"] = value;
+          //   }
+          //   return commande;
+          // });
+
+          // console.log("DYEEDUH", cmds);
           let result = commandesByVariete.find(
             (commande) =>
-              commande.VarieteInstitution.idVarieteInstitution ===
-              production.varieteInstitutionId
+              commande.VarieteInstitution.Variete.nomVariete === label
           );
 
           return result?.totalQuantiteCommandee || 0;
         }),
+        // data: productionsByVariete.map((production) => {
+        //   let result = commandesByVariete.find(
+        //     (commande) =>
+        //       commande.VarieteInstitution.idVarieteInstitution ===
+        //       production.varieteInstitutionId
+        //   );
+
+        //   return result?.totalQuantiteCommandee || 0;
+        // }),
         backgroundColor: Colors[1],
         stack: 1,
       },
